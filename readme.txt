@@ -15,7 +15,9 @@ This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a co
 
 Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
 
-This plugin requires Akismet to be active in order to work.
+A little note on your dashboard will tell you how many spam comments have been automatically discarded by the plugin.
+
+**Note: this plugin requires Akismet to be active in order to work.**
 
 == Installation ==
 
