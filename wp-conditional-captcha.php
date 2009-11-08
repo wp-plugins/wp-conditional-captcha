@@ -80,7 +80,7 @@ class conditional_captcha {
 	
 	function conditional_captcha_rightnow() {
 		if ($count = get_option('conditional_captcha_count') ) {
-			$text = sprintf('%1$s spam comments have been automatically discarded by the <em>Conditional Captcha</em> plugin.', number_format_i18n($count) );
+			$text = sprintf('%1$s spam comments have been automatically discarded by the <em>Conditional CAPTCHA</em> plugin.', number_format_i18n($count) );
 			echo "<p class='conditional-comments-stats'>$text</p>\n";
 		}
 	}
