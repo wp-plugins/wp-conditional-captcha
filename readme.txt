@@ -1,4 +1,4 @@
-=== Conditional Captcha for Wordpress ===
+=== Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
