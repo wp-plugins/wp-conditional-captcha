@@ -19,6 +19,8 @@ A little note on your dashboard will tell you how many spam comments have been a
 
 **Note: this plugin requires Akismet to be active in order to work.**
 
+If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
+
 == Installation ==
 
 1. Upload `conditional-captcha.php` to the `/wp-content/plugins/` directory
