@@ -5,7 +5,7 @@ Requires at least: 2.7
 Tested up to: 2.8.5
 Stable tag: trunk
 
-A plugin that asks the commenter to do a CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
+A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
 == Description ==
 
