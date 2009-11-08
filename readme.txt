@@ -1,4 +1,4 @@
-=== XHTML Content Negotiation for Wordpress ===
+=== Conditional Captcha for Wordpress ===
 Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
