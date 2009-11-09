@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.1
+Version: 1.2
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -32,6 +32,7 @@ class conditional_captcha {
 	private $key;
 	private $akismet_installed;
 	private $options;
+	private $cssfile;
 	
 	/* constructor for PHP <5 */
 	function conditional_captcha() { return $this->__construct(); }
@@ -49,6 +50,7 @@ class conditional_captcha {
 			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
 			add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
 			$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
+			$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
 		}
 	}
 	
@@ -79,8 +81,9 @@ class conditional_captcha {
 						<?php
 					}
 				}
-				update_option('conditional_captcha_options', $opts);
 			}
+			$opts['style'] = $_POST['style'];
+			update_option('conditional_captcha_options', $opts);
 		}
 	?>
 	<div class="wrap">
@@ -101,6 +104,9 @@ class conditional_captcha {
 		</ul>
 		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey">sign up for one here</a> (it's free)</small></p>
 	</div>
+	<p>If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:</p>
+	<textarea name="style" rows="10" cols='100'><?php if(!empty($opts['style'])) echo $opts['style']; else echo(file_get_contents($this->cssfile) );?></textarea>
+	<p><small>Empty this box completely if you want to revert back to the default style.</small></p>
 	<p class="submit"><input type="submit" name="submit" value="Update settings" /></p>
 	</form>
 	</div>
@@ -125,7 +131,7 @@ class conditional_captcha {
 			/* then a captcha has been completed... verify, and kill if it fails */
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
-				wp_die ($result.' Your comment will not be accepted.', 'Comment Rejected', array('response'=>403) );
+				conditional_captcha_page('Comment Rejected', '<p>'.$result.' Your comment will not be accepted.</p>');
 			}
 			else {
 				/* rewind the stats */
@@ -140,17 +146,17 @@ class conditional_captcha {
 	}
 
 	function do_captcha() {
-		$html = '</p><form method="post" style="padding-bottom: 1em">';
+		$html = '<p>Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.</p><form method="post">';
 		/* insert the original post contents as hidden values */
 		foreach ($_POST as $k => $v) $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
 		/* and then the captcha */
 		$html .= $this->create_captcha();
 		$html .= wp_nonce_field('conditional_captcha', 'captcha_nonce', false, false);
-		$html .= '<input type="submit" value="I\'m human!" style="margin-top: 1em" /></form><p style="display: none">';
+		$html .= '<input class="submit" type="submit" value="I\'m human!" /></form>';
 		
 		/* stats - this count will be reversed if they correctly complete the CAPTCHA */
 		update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
-		wp_die('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.' . $html, 'Verification Required', array('response' => 403) );
+		$this->conditional_captcha_page('Verification required', $html);
 	}
 	
 	function conditional_captcha_rightnow() {
@@ -160,7 +166,34 @@ class conditional_captcha {
 		}
 	}
 
-	private function create_captcha() {
+	function conditional_captcha_page($title, $message) {
+		$style = empty($this->options['style']) ? file_get_contents($this->cssfile) : $this->options['style'];
+		/* generates a page where the captcha can be completed - style can be modified */
+		if (!did_action('admin_head')) :
+			if(!headers_sent() ){
+				status_header(403);
+				nocache_headers();
+				header('Content-Type: text/html; charset=utf-8');
+			}
+		?>
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml" <?php if(function_exists('language_attributes')) language_attributes();?>>
+		<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title><?php echo $title ?></title>
+		<style type="text/css"><?php echo $style;?></style>
+		</head>
+		<body id="conditional_captcha">
+		<?php endif; ?>
+			<?php echo $message; ?>
+		</body>
+		<!-- Ticket #8942, IE bug fix: always pad the error page with enough characters such that it is greater than 512 bytes, even after gzip compression abcdefghijklmnopqrstuvwxyz1234567890aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz11223344556677889900abacbcbdcdcededfefegfgfhghgihihjijikjkjlklkmlmlnmnmononpopoqpqprqrqsrsrtstsubcbcdcdedefefgfabcadefbghicjkldmnoepqrfstugvwxhyz1i234j567k890laabmbccnddeoeffpgghqhiirjjksklltmmnunoovppqwqrrxsstytuuzvvw0wxx1yyz2z113223434455666777889890091abc2def3ghi4jkl5mno6pqr7stu8vwx9yz11aab2bcc3dd4ee5ff6gg7hh8ii9j0jk1kl2lmm3nnoo4p5pq6qrr7ss8tt9uuvv0wwx1x2yyzz13aba4cbcb5dcdc6dedfef8egf9gfh0ghg1ihi2hji3jik4jkj5lkl6kml7mln8mnm9ono -->
+		</html>
+		<?php
+		die();
+	}
+
+private function create_captcha() {
 		if($this->options['captcha-type'] == 'recaptcha') {
 			/* get recaptcha form */
 			$insert = recaptcha_get_html($this->options['recaptcha-public-key']);
