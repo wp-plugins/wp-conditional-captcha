@@ -80,7 +80,7 @@ class conditional_captcha {
 					}
 				}
 			}
-			$opts['style'] = $_POST['style'];
+			$opts['style'] = strip_tags($_POST['style']); /* css only please */
 			update_option('conditional_captcha_options', $opts);
 		}
 	?>
