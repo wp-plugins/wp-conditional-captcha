@@ -25,8 +25,6 @@ Author URI: http://rayofsolaris.co.uk/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/*  Parts of this code are based ideas from the tantan spam plugin by wordpress.org user joetan */
-
 require_once (WP_PLUGIN_DIR.'/wp-conditional-captcha/recaptchalib.php');
 class conditional_captcha {
 	private $key;
