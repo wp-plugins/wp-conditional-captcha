@@ -140,13 +140,13 @@ class conditional_captcha {
 	}
 
 	function do_captcha() {
-		$html = '</p><form method="post">';
+		$html = '</p><form method="post" style="padding-bottom: 1em">';
 		/* insert the original post contents as hidden values */
 		foreach ($_POST as $k => $v) $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
 		/* and then the captcha */
 		$html .= $this->create_captcha();
 		$html .= wp_nonce_field('conditional_captcha', 'captcha_nonce', false, false);
-		$html .= '<input type="submit" value="I\'m human!" /></form><p>';
+		$html .= '<input type="submit" value="I\'m human!" style="margin-top: 1em" /></form><p style="display: none">';
 		
 		/* stats - this count will be reversed if they correctly complete the CAPTCHA */
 		update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
