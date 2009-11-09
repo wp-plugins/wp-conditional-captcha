@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.2
+Version: 1.2.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -37,6 +37,9 @@ class conditional_captcha {
 	
 	function __construct() {
 		$this->akismet_installed = defined('AKISMET_VERSION');
+		$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
+		$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
+		
 		add_action('admin_menu', array(&$this, 'settings_menu') );
 		
 		/* initiate options for backward compatibility */
@@ -47,8 +50,6 @@ class conditional_captcha {
 		if($this->akismet_installed) {
 			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
 			add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
-			$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
-			$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
 		}
 	}
 	
