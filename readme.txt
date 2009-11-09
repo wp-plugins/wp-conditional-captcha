@@ -21,6 +21,9 @@ If you have any problems or suggestions, please [post a note here](http://rayofs
 
 == Changelog ==
 
+= 1.2.1 =
+* Bugfix: PHP warning when accessing the settings page while Akismet is disabled.
+
 = 1.2 =
 * Added the ability for the user to modify the CSS used to display the CAPTCHA
 
