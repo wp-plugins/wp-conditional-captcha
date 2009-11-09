@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.0
+Version: 1.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -25,24 +25,103 @@ Author URI: http://rayofsolaris.co.uk/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/*  Parts of this code are based on the tantan spam plugin by wordpress.org user joetan */
+/*  Parts of this code are based ideas from the tantan spam plugin by wordpress.org user joetan */
 
+require_once (WP_PLUGIN_DIR.'/wp-conditional-captcha/recaptchalib.php');
 class conditional_captcha {
-	private $captcha_vars;
 	private $key;
+	private $akismet_installed;
+	private $options;
 	
 	/* constructor for PHP <5 */
-	function conditional_captcha() { $this->__construct(); }
+	function conditional_captcha() { return $this->__construct(); }
 	
 	function __construct() {
-		if(!defined('AKISMET_VERSION')) return; /* akismet isn't installed, forget the rest */
-		add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
-		add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
-		$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
+		$this->akismet_installed = defined('AKISMET_VERSION');
+		add_action('admin_menu', array(&$this, 'settings_menu') );
+		
+		/* initiate options for backward compatibility */
+		if(!get_option('conditional_captcha_options')) {
+			update_option('conditional_captcha_options', array('captcha-type'=>'default') );
+		}
+		
+		if($this->akismet_installed) {
+			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
+			add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
+			$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
+		}
 	}
 	
+	function settings_menu() {
+		add_submenu_page('plugins.php', 'Conditional CAPTCHA Settings', 'Conditional CAPTCHA', 'manage_options', 'conditional_captcha_settings', array(&$this, 'settings_page') );
+	}
+	
+	function settings_page() {
+		$opts = get_option('conditional_captcha_options');
+		if (isset($_POST['submit']) ) {
+			$type = $_POST['captcha-type'];
+			if($opts['captcha-type'] != $type) {
+				/* user wants to change type */
+				if($type == 'default') $opts['captcha-type'] = $type;
+				elseif($type == 'recaptcha') {
+					/* check that keys have been supplied */
+					if(empty($_POST['recaptcha-private-key']) || empty($_POST['recaptcha-public-key']) ) {
+						?>
+						<div id="message" class="updated fade"><p style="color: red"><strong>You need to supply reCAPTCHA API keys if you want to use that option. Please enter a private and public key.</strong></p></div>
+						<?php
+					}
+					else {
+						$opts['captcha-type'] = $type;
+						$opts['recaptcha-private-key'] = $_POST['recaptcha-private-key'];
+						$opts['recaptcha-public-key'] = $_POST['recaptcha-public-key'];
+						?>
+						<div id="message" class="updated fade"><p><strong>Options updated.</strong></p></div>
+						<?php
+					}
+				}
+				update_option('conditional_captcha_options', $opts);
+			}
+		}
+	?>
+	<div class="wrap">
+	<h2>Conditional CAPTCHA Settings</h2>
+	<?php if(!$this->akismet_installed) echo '<div id="message" class="updated fade"><p class="color: red"><strong>Akismet does not appear to be active. This plugin requires Akismet to be active in order to work.</strong></p></div>';?>
+	<p>This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them.</p>
+	<p>The default captcha is a simple text-based test (<a href="http://wordpress.org/extend/plugins/wp-conditional-captcha/screenshots/" target="_blank">check out the screenshot here</a>), but if you prefer you can also use a <a href="http://recaptcha.net" target="_blank">reCAPTCHA</a>. You can select which CAPTCHA to use below. Note that you will need an API key to use reCAPTCHA.</p>
+	<form action="" method="post" id="conditional-captcha-settings" >
+	<ul style="list-style-type: none">
+	<li><input type="radio" name="captcha-type" class="captcha-type" id="type-default" value="default" <?php if($opts['captcha-type']=='default') echo 'checked="checked"'?> /> Use the default text-based CAPTCHA</li>
+	<li><input type="radio" name="captcha-type" class="captcha-type" id="type-recaptcha" value="recaptcha" <?php if($opts['captcha-type']=='recaptcha') echo 'checked="checked"'?> /> Use reCAPTCHA</li>
+	</ul>
+	<div id="recaptcha-settings" <?php if($opts['captcha-type']=='default') echo 'style="color: #999"';?>>
+		<p>If you wish to use reCAPTCHA, please enter your keys here:</p>
+		<ul>
+		<li><label for="recaptcha-private-key">Private key:</label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
+		<li><label for="recaptcha-public-key">Public key:</label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
+		</ul>
+		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey">sign up for one here</a> (it's free)</small></p>
+	</div>
+	<p class="submit"><input type="submit" name="submit" value="Update settings" /></p>
+	</form>
+	</div>
+	<script type="text/javascript">
+	/* a little bit of user-friendliness */
+	jQuery('.captcha-type').change(function () {highlight_conditional() ;} );
+	function highlight_conditional() {
+			var rcc = jQuery('#type-recaptcha:checked').length;
+			if(rcc == 1) {jQuery('#recaptcha-settings').css('color', '#000');}
+			else {jQuery('#recaptcha-settings').css('color', '#999');}
+	}
+	</script>
+<?php
+	}
+
 	function check_captcha($comment) {
-		if (isset($_POST['captcha_hash']) ) {
+		$this->options = get_option('conditional_captcha_options');
+		if($this->options['captcha-type'] == 'recaptcha') $lookfor = 'recaptcha_challenge_field';
+		else $lookfor = 'captcha_hash'; // default
+		
+		if (isset($_POST[$lookfor]) ) {
 			/* then a captcha has been completed... verify, and kill if it fails */
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
@@ -61,17 +140,13 @@ class conditional_captcha {
 	}
 
 	function do_captcha() {
-		$this->create_captcha();
 		$html = '</p><form method="post">';
 		/* insert the original post contents as hidden values */
 		foreach ($_POST as $k => $v) $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
 		/* and then the captcha */
-		$html .= '
-			<p><label for="captcha_response">What are the <strong>'.$this->number_ordinal($this->captcha_vars['num1']).'</strong> and <strong>'.$this->number_ordinal($this->captcha_vars['num2']).'</strong> characters of the following sequence?</label></p>
-			<p><strong><span style="color: red">'.$this->captcha_vars['challenge'].'</span></strong>&nbsp;&nbsp;<input id="captcha_response" name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
-			<input type="hidden" id="captcha_hash" name="captcha_hash" value="'.$this->captcha_vars['hash'].'" />'.
-			wp_nonce_field('conditional_captcha', 'captcha_nonce', false, false).
-			'<input type="submit" value="I\'m human!" /></form><p>';
+		$html .= $this->create_captcha();
+		$html .= wp_nonce_field('conditional_captcha', 'captcha_nonce', false, false);
+		$html .= '<input type="submit" value="I\'m human!" /></form><p>';
 		
 		/* stats - this count will be reversed if they correctly complete the CAPTCHA */
 		update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
@@ -86,19 +161,24 @@ class conditional_captcha {
 	}
 
 	private function create_captcha() {
-		$chall = strtoupper(substr(sha1($this->key.rand()),0,6));	/* random string with 6 characters */
-		$num1 = rand(1,5);	/* random number between 1 and 5 */
-		$num2 = rand($num1 + 1,6);	/* random number between $num1 and 6 */
-		$ans1 = substr($chall,$num1-1,1);
-		$ans2 = substr($chall,$num2-1,1);
-		$hash = substr(sha1($ans1.$ans2.$this->key),0,5);
-		
-		/* load vars */
-		$this->captcha_vars = array('num1' => $num1, 
-																'num2' => $num2, 
-																'challenge' => $this->add_spaces($chall), 
-																'hash' => $hash
-																);
+		if($this->options['captcha-type'] == 'recaptcha') {
+			/* get recaptcha form */
+			$insert = recaptcha_get_html($this->options['recaptcha-public-key']);
+		}
+		else {
+			/* default */
+			$chall = strtoupper(substr(sha1($this->key.rand()),0,6));	/* random string with 6 characters */
+			$num1 = rand(1,5);	/* random number between 1 and 5 */
+			$num2 = rand($num1 + 1,6);	/* random number between $num1 and 6 */
+			$ans1 = substr($chall,$num1-1,1);
+			$ans2 = substr($chall,$num2-1,1);
+			$hash = substr(sha1($ans1.$ans2.$this->key),0,5);
+																	
+			$insert = '<p><label for="captcha_response">What are the <strong>'.$this->number_ordinal($num1).'</strong> and <strong>'.$this->number_ordinal($num2).'</strong> characters of the following sequence?</label></p>
+				<p><strong><span style="color: red">'.$chall.'</span></strong>&nbsp;&nbsp;<input id="captcha_response" name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
+				<input type="hidden" id="captcha_hash" name="captcha_hash" value="'.$hash.'" />';
+		}
+		return $insert;
 	}
 		
 	private function captcha_is_valid() {
@@ -106,9 +186,19 @@ class conditional_captcha {
 		if(!wp_verify_nonce($_POST['captcha_nonce'], 'conditional_captcha') ) 
 			return 'Trying something funny, are we?';
 		/* ...and then the captcha */
-		$resp = strtoupper($_POST['captcha_response']);
-		return ($_POST['captcha_hash'] == substr(sha1($resp.$this->key),0,5) ) ? 
-			true : 'Sorry, the CAPTCHA wasn\'t entered correctly.';
+		if($this->options['captcha-type'] == 'recaptcha') {
+			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'],
+                                        $_SERVER["REMOTE_ADDR"],
+                                        $_POST["recaptcha_challenge_field"],
+                                        $_POST["recaptcha_response_field"]);
+			return $resp->is_valid ? true : 'Sorry, the CAPTCHA wasn\'t entered correctly. (reCAPTCHA said: '.$resp->error.')';
+		}
+		else {
+			/* do default validation */
+			$resp = strtoupper($_POST['captcha_response']);
+			return ($_POST['captcha_hash'] == substr(sha1($resp.$this->key),0,5) ) ? 
+				true : 'Sorry, the CAPTCHA wasn\'t entered correctly.';
+		}
 	}
 		
 	private function add_spaces($str) {
