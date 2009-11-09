@@ -21,6 +21,10 @@ A little note on your dashboard will tell you how many spam comments have been a
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
+== Screenshots ==
+
+1. A sample of the CAPTCHA that will be displayed to potential spammers.
+
 == Installation ==
 
 1. Upload `conditional-captcha.php` to the `/wp-content/plugins/` directory
