@@ -129,7 +129,7 @@ class conditional_captcha {
 			/* then a captcha has been completed... verify, and kill if it fails */
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
-				conditional_captcha_page('Comment Rejected', '<p>'.$result.' Your comment will not be accepted.</p>');
+				$this->conditional_captcha_page('Comment Rejected', '<p>'.$result.' Your comment will not be accepted.</p>');
 			}
 			else {
 				/* rewind the stats */
@@ -164,7 +164,7 @@ class conditional_captcha {
 		}
 	}
 
-	function conditional_captcha_page($title, $message) {
+	private function conditional_captcha_page($title, $message) {
 		$style = empty($this->options['style']) ? file_get_contents($this->cssfile) : $this->options['style'];
 		/* generates a page where the captcha can be completed - style can be modified */
 		if (!did_action('admin_head')) :
