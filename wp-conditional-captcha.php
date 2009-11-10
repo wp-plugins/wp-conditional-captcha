@@ -167,7 +167,7 @@ class conditional_captcha {
 	}
 
 	private function conditional_captcha_page($title, $message) {
-		$style = empty($this->options['style']) && $this->cssfile ? file_get_contents($this->cssfile) : $this->options['style'];
+		$style = (empty($this->options['style']) && $this->cssfile) ? file_get_contents($this->cssfile) : $this->options['style'];
 		/* generates a page where the captcha can be completed - style can be modified */
 		if (!did_action('admin_head')) :
 			if(!headers_sent() ){
