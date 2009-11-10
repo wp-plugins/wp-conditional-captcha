@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
 Tested up to: 2.8.5
-Stable tag: trunk
+Stable tag: 1.2.1
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
