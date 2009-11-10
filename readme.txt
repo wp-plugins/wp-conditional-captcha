@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
 Tested up to: 2.8.5
-Stable tag: 1.2.1
+Stable tag: 1.3
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
@@ -13,13 +13,18 @@ Akismet is great at detecting spam, but if you get lots of it then it means traw
 
 This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
 
-The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can style the CAPTCHA page to fit with your theme using CSS.
+The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
 **Note: this plugin requires Akismet to be active in order to work.**
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
 == Changelog ==
+
+= 1.3 =
+* Added the option to approve comments after a CAPTCHA has been passed (rather than leave them in the spam queue).
+* Improved nonce security
+* Bugfix: CSS handler was adding slashes to CSS
 
 = 1.2.1 =
 * Bugfix: PHP warning when accessing the settings page while Akismet is disabled.

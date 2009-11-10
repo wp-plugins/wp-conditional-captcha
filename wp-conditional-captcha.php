@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.2.1
+Version: 1.3
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -38,7 +38,8 @@ class conditional_captcha {
 	function __construct() {
 		$this->akismet_installed = defined('AKISMET_VERSION');
 		$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
-		$this->key = defined('SECRET_KEY') ? SECRET_KEY : 'alskdjghaskldgbLHSAFVGldshlSDHGBsdg'.DB_USER;
+		if(!is_readable($this->cssfile)) $this->cssfile = false;
+		$this->key = defined('AUTH_KEY') ? AUTH_KEY : '8q057nvpuyEBWVTYP-895y4wvPWOE8U5Y)&(^)*&hog^ri^'.DB_USER;
 		
 		add_action('admin_menu', array(&$this, 'settings_menu') );
 		
@@ -59,36 +60,32 @@ class conditional_captcha {
 	
 	function settings_page() {
 		$opts = get_option('conditional_captcha_options');
+		$message = '';
 		if (isset($_POST['submit']) ) {
-			$type = $_POST['captcha-type'];
-			if($opts['captcha-type'] != $type) {
-				/* user wants to change type */
-				if($type == 'default') $opts['captcha-type'] = $type;
-				elseif($type == 'recaptcha') {
-					/* check that keys have been supplied */
-					if(empty($_POST['recaptcha-private-key']) || empty($_POST['recaptcha-public-key']) ) {
-						?>
-						<div id="message" class="updated fade"><p style="color: red"><strong>You need to supply reCAPTCHA API keys if you want to use that option. Please enter a private and public key.</strong></p></div>
-						<?php
-					}
-					else {
-						$opts['captcha-type'] = $type;
-						$opts['recaptcha-private-key'] = $_POST['recaptcha-private-key'];
-						$opts['recaptcha-public-key'] = $_POST['recaptcha-public-key'];
-						?>
-						<div id="message" class="updated fade"><p><strong>Options updated.</strong></p></div>
-						<?php
-					}
-				}
+			$opts['pass_action'] = (isset($_POST['pass_action']) && $_POST['pass_action'] == 'approve') ? 'approve' : 'spam';
+			$opts['style'] = stripslashes(strip_tags($_POST['style'])); /* css only please */
+			$opts['captcha-type'] = $_POST['captcha-type'];
+			$opts['recaptcha-private-key'] = $_POST['recaptcha-private-key'];
+			$opts['recaptcha-public-key'] = $_POST['recaptcha-public-key'];
+			$keys_set = !empty($opts['recaptcha-private-key']) && !empty($opts['recaptcha-public-key']);
+			
+			/* check that keys have been supplied for recaptcha */
+			if($opts['captcha-type'] == 'recaptcha' && !$keys_set) {
+				$message = '<p style="color: red"><strong>You need to supply reCAPTCHA API keys if you want to use reCAPTCHA. Please enter private and public key values.</strong></p>';
+				$opts['captcha-type'] = 'default'; /* revert to default */
 			}
-			$opts['style'] = strip_tags($_POST['style']); /* css only please */
+			
 			update_option('conditional_captcha_options', $opts);
+			if(empty($message)) $message = '<p><strong>Options updated.</strong></p>';
+			echo '<div id="message" class="updated fade">'.$message.'</div>';
 		}
 	?>
 	<div class="wrap">
 	<h2>Conditional CAPTCHA Settings</h2>
-	<?php if(!$this->akismet_installed) echo '<div id="message" class="updated fade"><p class="color: red"><strong>Akismet does not appear to be active. This plugin requires Akismet to be active in order to work.</strong></p></div>';?>
+	<?php if(!$this->akismet_installed) echo '<div id="message" class="updated fade"><p style="color: red"><strong>Akismet does not appear to be active. This plugin requires Akismet to be active in order to work. Please activate Akismet before changing the settings below.</strong></p></div>';?>
+	<div id="settings" <?php if(!$this->akismet_installed) echo 'style="color: #999"';?>>
 	<p>This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them.</p>
+	<h3>CAPTCHA Method</h3>
 	<p>The default captcha is a simple text-based test (<a href="http://wordpress.org/extend/plugins/wp-conditional-captcha/screenshots/" target="_blank">check out the screenshot here</a>), but if you prefer you can also use a <a href="http://recaptcha.net" target="_blank">reCAPTCHA</a>. You can select which CAPTCHA to use below. Note that you will need an API key to use reCAPTCHA.</p>
 	<form action="" method="post" id="conditional-captcha-settings" >
 	<ul style="list-style-type: none">
@@ -103,19 +100,24 @@ class conditional_captcha {
 		</ul>
 		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey">sign up for one here</a> (it's free)</small></p>
 	</div>
-	<p>If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:</p>
-	<textarea name="style" rows="10" cols='100'><?php if(!empty($opts['style'])) echo $opts['style']; else echo(file_get_contents($this->cssfile) );?></textarea>
+	<h3>Comment Handling</h3>
+	<p>If a CAPTCHA is successfully completed, the default action of the plugin is to leave it in the spam queue. If you would like the comment to be approved instead, check the box below.</p>
+	<input type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label for="pass_action">Automatically approve comments</label>
+	<h3>CAPTCHA Page Style</h3>
+	<p>If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below.</p>
+	<textarea name="style" rows="10" cols='80' style="font-family: Courier, sans-serif"><?php if(!empty($opts['style'])) echo $opts['style']; else echo(file_get_contents($this->cssfile) );?></textarea>
 	<p><small>Empty this box completely if you want to revert back to the default style.</small></p>
 	<p class="submit"><input type="submit" name="submit" value="Update settings" /></p>
 	</form>
+	</div>
 	</div>
 	<script type="text/javascript">
 	/* a little bit of user-friendliness */
 	jQuery('.captcha-type').change(function () {highlight_conditional() ;} );
 	function highlight_conditional() {
-			var rcc = jQuery('#type-recaptcha:checked').length;
-			if(rcc == 1) {jQuery('#recaptcha-settings').css('color', '#000');}
-			else {jQuery('#recaptcha-settings').css('color', '#999');}
+		var rcc = jQuery('#type-recaptcha:checked').length;
+		if(rcc == 1) {jQuery('#recaptcha-settings').css('color', '#000');}
+		else {jQuery('#recaptcha-settings').css('color', '#999');}
 	}
 	</script>
 <?php
@@ -124,22 +126,22 @@ class conditional_captcha {
 	function check_captcha($comment) {
 		$this->options = get_option('conditional_captcha_options');
 		if($this->options['captcha-type'] == 'recaptcha') $lookfor = 'recaptcha_challenge_field';
-		else $lookfor = 'captcha_hash'; // default
+		else $lookfor = 'captcha_hash';
 		
 		if (isset($_POST[$lookfor]) ) {
-			/* then a captcha has been completed... verify, and kill if it fails */
+			/* then a captcha has been completed... */
 			$result = $this->captcha_is_valid();
-			if($result !== true) {
-				$this->conditional_captcha_page('Comment Rejected', '<p>'.$result.' Your comment will not be accepted.</p>');
-			}
+			if($result !== true) $this->conditional_captcha_page('Comment Rejected', '<p>'.$result.' Your comment will not be accepted.</p>');
 			else {
 				/* rewind the stats */
-				update_option('conditional_captcha_count', get_option('conditional_captcha_count') - 1 ); 
+				update_option('conditional_captcha_count', get_option('conditional_captcha_count') - 1 );
+				/* if pass_action is 'approve', then remove akismet's hook */
+				if($this->options['pass_action'] == 'approve') remove_action('preprocess_comment', 'akismet_auto_check_comment', 1);
 			}
 		}
 		else {
 			/* set up to intercept akismet spam */
-			add_action('akismet_spam_caught', array(&$this, 'do_captcha')); 
+			add_action('akismet_spam_caught', array(&$this, 'do_captcha'));
 		}
 		return $comment;
 	}
@@ -150,8 +152,7 @@ class conditional_captcha {
 		foreach ($_POST as $k => $v) $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
 		/* and then the captcha */
 		$html .= $this->create_captcha();
-		$html .= wp_nonce_field('conditional_captcha', 'captcha_nonce', false, false);
-		$html .= '<input class="submit" type="submit" value="I\'m human!" /></form>';
+		$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'" /><input class="submit" type="submit" value="I\'m human!" /></form>';
 		
 		/* stats - this count will be reversed if they correctly complete the CAPTCHA */
 		update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
@@ -161,12 +162,12 @@ class conditional_captcha {
 	function conditional_captcha_rightnow() {
 		if ($count = get_option('conditional_captcha_count') ) {
 			$text = sprintf('%1$s spam comments have been automatically discarded by the <em>Conditional CAPTCHA</em> plugin.', number_format_i18n($count) );
-			echo "<p class='conditional-comments-stats'>$text</p>\n";
+			echo "<p class='conditional-captcha-stats'>$text</p>\n";
 		}
 	}
 
 	private function conditional_captcha_page($title, $message) {
-		$style = empty($this->options['style']) ? file_get_contents($this->cssfile) : $this->options['style'];
+		$style = empty($this->options['style']) && $this->cssfile ? file_get_contents($this->cssfile) : $this->options['style'];
 		/* generates a page where the captcha can be completed - style can be modified */
 		if (!did_action('admin_head')) :
 			if(!headers_sent() ){
@@ -176,18 +177,15 @@ class conditional_captcha {
 			}
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" <?php if(function_exists('language_attributes')) language_attributes();?>>
-		<head>
+		<html xmlns="http://www.w3.org/1999/xhtml"><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title><?php echo $title ?></title>
+		<title><?php echo $title;?></title>
 		<style type="text/css"><?php echo $style;?></style>
 		</head>
 		<body id="conditional_captcha">
 		<?php endif; ?>
 			<?php echo $message; ?>
-		</body>
-		<!-- Ticket #8942, IE bug fix: always pad the error page with enough characters such that it is greater than 512 bytes, even after gzip compression abcdefghijklmnopqrstuvwxyz1234567890aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz11223344556677889900abacbcbdcdcededfefegfgfhghgihihjijikjkjlklkmlmlnmnmononpopoqpqprqrqsrsrtstsubcbcdcdedefefgfabcadefbghicjkldmnoepqrfstugvwxhyz1i234j567k890laabmbccnddeoeffpgghqhiirjjksklltmmnunoovppqwqrrxsstytuuzvvw0wxx1yyz2z113223434455666777889890091abc2def3ghi4jkl5mno6pqr7stu8vwx9yz11aab2bcc3dd4ee5ff6gg7hh8ii9j0jk1kl2lmm3nnoo4p5pq6qrr7ss8tt9uuvv0wwx1x2yyzz13aba4cbcb5dcdc6dedfef8egf9gfh0ghg1ihi2hji3jik4jkj5lkl6kml7mln8mnm9ono -->
-		</html>
+		</body></html>
 		<?php
 		die();
 	}
@@ -201,13 +199,13 @@ private function create_captcha() {
 			/* default */
 			$chall = strtoupper(substr(sha1($this->key.rand()),0,6));	/* random string with 6 characters */
 			$num1 = rand(1,5);	/* random number between 1 and 5 */
-			$num2 = rand($num1 + 1,6);	/* random number between $num1 and 6 */
+			$num2 = rand($num1 + 1,6);	/* random number between $num1+1 and 6 */
 			$ans1 = substr($chall,$num1-1,1);
 			$ans2 = substr($chall,$num2-1,1);
 			$hash = substr(sha1($ans1.$ans2.$this->key),0,5);
 																	
-			$insert = '<p><label for="captcha_response">What are the <strong>'.$this->number_ordinal($num1).'</strong> and <strong>'.$this->number_ordinal($num2).'</strong> characters of the following sequence?</label></p>
-				<p><strong><span style="color: red">'.$chall.'</span></strong>&nbsp;&nbsp;<input id="captcha_response" name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
+			$insert = '<p class="intro"><label for="captcha_response">What are the <strong>'.$this->number_ordinal($num1).'</strong> and <strong>'.$this->number_ordinal($num2).'</strong> characters of the following sequence?</label></p>
+				<p class="challenge"><strong>'.$this->add_spaces($chall).'</strong>&nbsp;&nbsp;<input id="captcha_response" name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
 				<input type="hidden" id="captcha_hash" name="captcha_hash" value="'.$hash.'" />';
 		}
 		return $insert;
@@ -215,8 +213,7 @@ private function create_captcha() {
 		
 	private function captcha_is_valid() {
 		/* check that the nonce is valid */
-		if(!wp_verify_nonce($_POST['captcha_nonce'], 'conditional_captcha') ) 
-			return 'Trying something funny, are we?';
+		if(!$this->check_nonce() ) return 'Trying something funny, are we?';
 		/* ...and then the captcha */
 		if($this->options['captcha-type'] == 'recaptcha') {
 			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'],
@@ -232,6 +229,17 @@ private function create_captcha() {
 				true : 'Sorry, the CAPTCHA wasn\'t entered correctly.';
 		}
 	}
+	
+	private function get_nonce() {
+		/* generates a nonce valid for 10 minutes - use instead of wp_create_nonce which is valid for 24 hours */
+		$i = ceil(time()/600);
+		return substr(sha1($this->key.$i.'conditional_captcha'), 0, 10);
+	}
+	
+	private function check_nonce() {
+		if(isset($_POST['captcha_nonce'])) return ($this->get_nonce() == $_POST['captcha_nonce']);
+		return false;
+	}
 		
 	private function add_spaces($str) {
 		/* adds spaces between each character of a string */
@@ -246,7 +254,7 @@ private function create_captcha() {
 	}
 		
 	private function number_ordinal($n) {
-		$ordinals = array('zeroth','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth');
+		$ordinals = array('zeroth','first','second','third','fourth','fifth','sixth');
 		return $ordinals[$n];
 	}
 } /* class */
