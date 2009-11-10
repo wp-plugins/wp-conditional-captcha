@@ -105,7 +105,7 @@ class conditional_captcha {
 	<input type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label for="pass_action">Automatically approve comments</label>
 	<h3>CAPTCHA Page Style</h3>
 	<p>If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below.</p>
-	<textarea name="style" rows="10" cols='80' style="font-family: Courier, sans-serif"><?php if(!empty($opts['style'])) echo $opts['style']; else echo(file_get_contents($this->cssfile) );?></textarea>
+	<textarea name="style" rows="10" cols='80' style="font-family: Courier, sans-serif"><?php if(!empty($opts['style'])) echo $opts['style']; elseif($this->cssfile) echo(file_get_contents($this->cssfile) );?></textarea>
 	<p><small>Empty this box completely if you want to revert back to the default style.</small></p>
 	<p class="submit"><input type="submit" name="submit" value="Update settings" /></p>
 	</form>
