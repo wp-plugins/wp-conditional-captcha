@@ -19,6 +19,12 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
+== Frequently Asked Questions ==
+
+= I've installed it, now how do I check that it works? =
+
+You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with something like `[url]somethingsilly[/url]` in the body will usually get it flagged by Akismet.
+
 == Changelog ==
 
 = 1.3 =
