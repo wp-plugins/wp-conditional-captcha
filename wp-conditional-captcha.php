@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.3
+Version: 1.3.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -20,9 +20,6 @@ Author URI: http://rayofsolaris.co.uk/
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 require_once (WP_PLUGIN_DIR.'/wp-conditional-captcha/recaptchalib.php');
@@ -197,16 +194,16 @@ private function create_captcha() {
 		}
 		else {
 			/* default */
-			$chall = strtoupper(substr(sha1($this->key.rand()),0,6));	/* random string with 6 characters */
+			$chall = strtoupper($this->hash(rand() ) );	/* random string with 6 characters */
 			$num1 = rand(1,5);	/* random number between 1 and 5 */
 			$num2 = rand($num1 + 1,6);	/* random number between $num1+1 and 6 */
 			$ans1 = substr($chall,$num1-1,1);
 			$ans2 = substr($chall,$num2-1,1);
-			$hash = substr(sha1($ans1.$ans2.$this->key),0,5);
+			$hash = $this->hash($ans1.$ans2);
 																	
 			$insert = '<p class="intro"><label for="captcha_response">What are the <strong>'.$this->number_ordinal($num1).'</strong> and <strong>'.$this->number_ordinal($num2).'</strong> characters of the following sequence?</label></p>
-				<p class="challenge"><strong>'.$this->add_spaces($chall).'</strong>&nbsp;&nbsp;<input id="captcha_response" name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
-				<input type="hidden" id="captcha_hash" name="captcha_hash" value="'.$hash.'" />';
+				<p class="challenge"><strong>'.$this->add_spaces($chall).'</strong>&nbsp;&nbsp;<input name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p>
+				<input type="hidden" name="captcha_hash" value="'.$hash.'" />';
 		}
 		return $insert;
 	}
@@ -216,29 +213,32 @@ private function create_captcha() {
 		if(!$this->check_nonce() ) return 'Trying something funny, are we?';
 		/* ...and then the captcha */
 		if($this->options['captcha-type'] == 'recaptcha') {
-			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'],
-                                        $_SERVER["REMOTE_ADDR"],
-                                        $_POST["recaptcha_challenge_field"],
-                                        $_POST["recaptcha_response_field"]);
+			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'], $_SERVER["REMOTE_ADDR"],
+                                        $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
 			return $resp->is_valid ? true : 'Sorry, the CAPTCHA wasn\'t entered correctly. (reCAPTCHA said: '.$resp->error.')';
 		}
 		else {
 			/* do default validation */
 			$resp = strtoupper($_POST['captcha_response']);
-			return ($_POST['captcha_hash'] == substr(sha1($resp.$this->key),0,5) ) ? 
-				true : 'Sorry, the CAPTCHA wasn\'t entered correctly.';
+			return ($_POST['captcha_hash'] == $this->hash($resp) ) ? true : 'Sorry, the CAPTCHA wasn\'t entered correctly.';
 		}
 	}
 	
 	private function get_nonce() {
-		/* generates a nonce valid for 10 minutes - use instead of wp_create_nonce which is valid for 24 hours */
+		/* generates a nonce valid for 10-20 minutes; use instead of wp_create_nonce which is valid for 12-24 hours */
 		$i = ceil(time()/600);
-		return substr(sha1($this->key.$i.'conditional_captcha'), 0, 10);
+		return $this->hash($i);
 	}
 	
 	private function check_nonce() {
-		if(isset($_POST['captcha_nonce'])) return ($this->get_nonce() == $_POST['captcha_nonce']);
+		$i = ceil(time()/600);
+		$posted = isset($_POST['captcha_nonce']) ? $_POST['captcha_nonce'] : false;
+		if($posted) return ($this->hash($i) == $posted || $this->hash($i-1) == $posted);
 		return false;
+	}
+	
+	private function hash($val) {
+		return substr(sha1($val.$this->key),0,6);
 	}
 		
 	private function add_spaces($str) {
