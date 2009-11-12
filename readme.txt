@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
 Tested up to: 2.8.5
-Stable tag: 1.4
+Stable tag: 1.5
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
@@ -26,6 +26,9 @@ If you have any problems or suggestions, please [post a note here](http://rayofs
 You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with something like `[url]somethingsilly[/url]` in the body will usually get it flagged by Akismet.
 
 == Changelog ==
+
+= 1.5 =
+* Bugfix: on some Wordpress installations, Akismet was not detected even if it was active.
 
 = 1.4 =
 * Bugfix: some correctly solved CAPTCHAs could be rejected based on the time taken to solve them.

@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.4
+Version: 1.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -33,22 +33,26 @@ class conditional_captcha {
 	function conditional_captcha() { return $this->__construct(); }
 	
 	function __construct() {
-		$this->akismet_installed = defined('AKISMET_VERSION');
 		$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
 		if(!is_readable($this->cssfile)) $this->cssfile = false;
 		$this->key = defined('AUTH_KEY') ? AUTH_KEY : '8q057nvpuyEBWVTYP-895y4wvPWOE8U5Y)&(^)*&hog^ri^'.DB_USER;
 		
+		add_action('plugins_loaded', array(&$this, 'load') );
 		add_action('admin_menu', array(&$this, 'settings_menu') );
 		
 		/* initiate options for backward compatibility */
-		if(!get_option('conditional_captcha_options')) {
+		if(!get_option('conditional_captcha_options')) 
 			update_option('conditional_captcha_options', array('captcha-type'=>'default') );
-		}
-		
-		if($this->akismet_installed) {
+	}
+	
+	function load() {
+		/* check for akismet */
+		if(function_exists('akismet_auto_check_comment') ) {
+			$this->akismet_installed = true;
 			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
 			add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
 		}
+		else $this->akismet_installed = false;
 	}
 	
 	function settings_menu() {
@@ -136,10 +140,7 @@ class conditional_captcha {
 				if($this->options['pass_action'] == 'approve') remove_action('preprocess_comment', 'akismet_auto_check_comment', 1);
 			}
 		}
-		else {
-			/* set up to intercept akismet spam */
-			add_action('akismet_spam_caught', array(&$this, 'do_captcha'));
-		}
+		else add_action('akismet_spam_caught', array(&$this, 'do_captcha')); /* set up to intercept akismet spam */
 		return $comment;
 	}
 
