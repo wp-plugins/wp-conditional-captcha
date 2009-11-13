@@ -243,15 +243,7 @@ private function create_captcha() {
 	}
 		
 	private function add_spaces($str) {
-		/* adds spaces between each character of a string */
-		$strarray = str_split($str);
-		$n = sizeof($strarray);
-		$output = '';
-		for($i=0; $i < $n-1; $i++) {
-			$output .= $strarray[$i].' ';
-		}
-		$output .= $strarray[$n-1];	// last char doesn't get a space
-		return $output;
+		return implode(' ', str_split($str));
 	}
 		
 	private function number_ordinal($n) {
