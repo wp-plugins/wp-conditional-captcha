@@ -96,14 +96,14 @@ class conditional_captcha {
 	<div id="recaptcha-settings" <?php if($opts['captcha-type']=='default') echo 'style="color: #999"';?>>
 		<p>If you wish to use reCAPTCHA, please enter your keys here:</p>
 		<ul>
-		<li><label for="recaptcha-private-key">Private key:</label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
-		<li><label for="recaptcha-public-key">Public key:</label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
+		<li><label>Private key:</label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
+		<li><label>Public key:</label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
 		</ul>
 		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey">sign up for one here</a> (it's free)</small></p>
 	</div>
 	<h3>Comment Handling</h3>
 	<p>If a CAPTCHA is successfully completed, the default action of the plugin is to leave it in the spam queue. If you would like the comment to be approved instead, check the box below.</p>
-	<input type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label for="pass_action">Automatically approve comments</label>
+	<input type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label>Automatically approve comments</label>
 	<h3>CAPTCHA Page Style</h3>
 	<p>If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below.</p>
 	<textarea name="style" rows="10" cols='80' style="font-family: Courier, sans-serif"><?php if(!empty($opts['style'])) echo $opts['style']; elseif($this->cssfile) echo(file_get_contents($this->cssfile) );?></textarea>
