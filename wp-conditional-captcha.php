@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.5
+Version: 1.6
 Author: Samir Shah
 Author URI: http://rayofsolaris.co.uk/
 */
@@ -22,7 +22,7 @@ Author URI: http://rayofsolaris.co.uk/
 
 */
 
-require_once (WP_PLUGIN_DIR.'/wp-conditional-captcha/recaptchalib.php');
+require_once(dirname( __FILE__ ).'/recaptchalib.php');
 class conditional_captcha {
 	private $key;
 	private $akismet_installed;
@@ -33,26 +33,25 @@ class conditional_captcha {
 	function conditional_captcha() { return $this->__construct(); }
 	
 	function __construct() {
-		$this->cssfile = WP_PLUGIN_DIR.'/wp-conditional-captcha/captcha-style.css';
+		$this->cssfile = dirname( __FILE__ ).'/captcha-style.css';
 		if(!is_readable($this->cssfile)) $this->cssfile = false;
 		$this->key = defined('AUTH_KEY') ? AUTH_KEY : '8q057nvpuyEBWVTYP-895y4wvPWOE8U5Y)&(^)*&hog^ri^'.DB_USER;
 		
 		add_action('plugins_loaded', array(&$this, 'load') );
 		add_action('admin_menu', array(&$this, 'settings_menu') );
-		
-		/* initiate options for backward compatibility */
-		if(!get_option('conditional_captcha_options')) 
-			update_option('conditional_captcha_options', array('captcha-type'=>'default') );
 	}
 	
 	function load() {
+		/* initiate options for backward compatibility */
+		if(!get_option('conditional_captcha_options')) 
+			update_option('conditional_captcha_options', array('captcha-type'=>'default') );
+		
 		/* check for akismet */
-		if(function_exists('akismet_auto_check_comment') ) {
-			$this->akismet_installed = true;
+		$this->akismet_installed = function_exists('akismet_auto_check_comment');
+		if($this->akismet_installed) {
 			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); /* BEFORE akismet */
 			add_action('rightnow_end', array(&$this, 'conditional_captcha_rightnow'), 11); /* show stats after Akismet */
 		}
-		else $this->akismet_installed = false;
 	}
 	
 	function settings_menu() {
@@ -99,7 +98,7 @@ class conditional_captcha {
 		<li><label>Private key:</label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		<li><label>Public key:</label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
 		</ul>
-		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey">sign up for one here</a> (it's free)</small></p>
+		<p><small>If you don't have reCAPTCHA key, you can <a href="http://recaptcha.net/api/getkey" target="_blank">sign up for one here</a> (it's free)</small></p>
 	</div>
 	<h3>Comment Handling</h3>
 	<p>If a CAPTCHA is successfully completed, the default action of the plugin is to leave it in the spam queue. If you would like the comment to be approved instead, check the box below.</p>
@@ -167,12 +166,11 @@ class conditional_captcha {
 	private function conditional_captcha_page($title, $message) {
 		$style = (empty($this->options['style']) && $this->cssfile) ? file_get_contents($this->cssfile) : $this->options['style'];
 		/* generates a page where the captcha can be completed - style can be modified */
-		if (!did_action('admin_head')) :
-			if(!headers_sent() ){
-				status_header(403);
-				nocache_headers();
-				header('Content-Type: text/html; charset=utf-8');
-			}
+		if(!headers_sent() ){
+			status_header(403);
+			nocache_headers();
+			header('Content-Type: text/html; charset=utf-8');
+		}
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml"><head>
@@ -181,8 +179,7 @@ class conditional_captcha {
 		<style type="text/css"><?php echo $style;?></style>
 		</head>
 		<body id="conditional_captcha">
-		<?php endif; ?>
-			<?php echo $message; ?>
+		<?php echo $message; ?>
 		</body></html>
 		<?php
 		die();
@@ -211,7 +208,7 @@ private function create_captcha() {
 		
 	private function captcha_is_valid() {
 		/* check that the nonce is valid */
-		if(!$this->check_nonce() ) return 'Trying something funny, are we?';
+		if(!$this->check_nonce($_POST['captcha_nonce']) ) return 'Trying something funny, are we?';
 		/* ...and then the captcha */
 		if($this->options['captcha-type'] == 'recaptcha') {
 			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'], $_SERVER["REMOTE_ADDR"],
@@ -231,20 +228,14 @@ private function create_captcha() {
 		return $this->hash($i);
 	}
 	
-	private function check_nonce() {
+	private function check_nonce($nonce) {
 		$i = ceil(time()/600);
-		$posted = isset($_POST['captcha_nonce']) ? $_POST['captcha_nonce'] : false;
-		if($posted) return ($this->hash($i) == $posted || $this->hash($i-1) == $posted);
-		return false;
+		return ($this->hash($i) == $nonce || $this->hash($i-1) == $nonce);
 	}
 	
-	private function hash($val) {
-		return substr(sha1($val.$this->key),0,6);
-	}
-		
-	private function add_spaces($str) {
-		return implode(' ', str_split($str));
-	}
+	private function hash($val) {return substr(sha1($val.$this->key),0,6);}
+	
+	private function add_spaces($str) {return implode(' ', str_split($str));}
 		
 	private function number_ordinal($n) {
 		$ordinals = array('zeroth','first','second','third','fourth','fifth','sixth');
@@ -252,5 +243,6 @@ private function create_captcha() {
 	}
 } /* class */
 
+/* load */
 $conditional_captcha = new conditional_captcha();
 ?>

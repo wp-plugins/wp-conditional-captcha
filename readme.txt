@@ -27,6 +27,9 @@ You can try posting a spammy comment on your blog (make sure you're logged out) 
 
 == Changelog ==
 
+= 1.6 =
+* Minor performance improvements and code optimisation. Saved a few milliseconds of runtime :).
+
 = 1.5 =
 * Bugfix: on some Wordpress installations, Akismet was not detected even if it was active.
 
