@@ -17,7 +17,9 @@ Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able 
 
 The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
-**Note: this plugin requires Akismet to be active in order to work.**
+**Requirements:**
+* The Akismet plugin must be installed and activated
+* PHP 5 is required (the plugin will not work with PHP 4)
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
@@ -26,6 +28,10 @@ If you have any problems or suggestions, please [post a note here](http://rayofs
 = I've installed it, now how do I check that it works? =
 
 You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with something like `[url]somethingsilly[/url]` in the body will usually get it flagged by Akismet.
+
+= Does this plugin work with PHP 4? =
+
+Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 
 == Changelog ==
 
@@ -62,6 +68,6 @@ You can try posting a spammy comment on your blog (make sure you're logged out) 
 
 == Installation ==
 
-1. Upload `conditional-captcha.php` to the `/wp-content/plugins/` directory
+1. Upload the wp-conditional-captcha folder to the `/wp-content/plugins/` directory (or use the Wordpress auto-install feature)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. The settings for the plugin can be accessed from the Plugins administration menu.

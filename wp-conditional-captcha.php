@@ -29,9 +29,6 @@ class conditional_captcha {
 	private $options;
 	private $cssfile;
 	
-	/* constructor for PHP <5 */
-	function conditional_captcha() { return $this->__construct(); }
-	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ).'/captcha-style.css';
 		if(!is_readable($this->cssfile)) $this->cssfile = false;
