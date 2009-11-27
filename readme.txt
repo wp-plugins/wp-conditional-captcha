@@ -18,6 +18,7 @@ Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able 
 The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
 **Requirements:**
+
 * The Akismet plugin must be installed and activated
 * PHP 5 is required (the plugin will not work with PHP 4)
 
