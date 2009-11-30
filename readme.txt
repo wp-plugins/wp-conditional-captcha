@@ -34,6 +34,10 @@ You can try posting a spammy comment on your blog (make sure you're logged out) 
 
 Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 
+= Does this plugin work with other comment form modification plugins? =
+
+*Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
+
 == Changelog ==
 
 = 1.6 =
