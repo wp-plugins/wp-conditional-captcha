@@ -40,6 +40,10 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 
 == Changelog ==
 
+= 1.7 =
+* Added noscript handling for reCAPTCHA - the plugin will now revert to the default CAPTCHA if the client has Javascript disabled. This behaviour can be controlled in the options page.
+* Minor performance optimisation.
+
 = 1.6 =
 * Minor performance improvements and code optimisation. Saved a few milliseconds of runtime :).
 

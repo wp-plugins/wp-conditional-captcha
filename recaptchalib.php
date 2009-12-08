@@ -32,11 +32,14 @@
  * THE SOFTWARE.
  */
 
+ 
+ /* Mailhide related code and unused functions removed from the library attached 
+  * to the wp-conditional-captcha plugin 
+	*/
+ 
 /**
  * The reCAPTCHA server URL's
  */
-define("RECAPTCHA_API_SERVER", "http://api.recaptcha.net");
-define("RECAPTCHA_API_SECURE_SERVER", "https://api-secure.recaptcha.net");
 define("RECAPTCHA_VERIFY_SERVER", "api-verify.recaptcha.net");
 
 /**
@@ -90,45 +93,6 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
         return $response;
 }
-
-
-
-/**
- * Gets the challenge HTML (javascript and non-javascript version).
- * This is called from the browser, and the resulting reCAPTCHA HTML widget
- * is embedded within the HTML form it was called from.
- * @param string $pubkey A public key for reCAPTCHA
- * @param string $error The error given by reCAPTCHA (optional, default is null)
- * @param boolean $use_ssl Should the request be made over ssl? (optional, default is false)
-
- * @return string - The HTML to be embedded in the user's form.
- */
-function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
-{
-	if ($pubkey == null || $pubkey == '') {
-		die ("To use reCAPTCHA you must get an API key from <a href='http://recaptcha.net/api/getkey'>http://recaptcha.net/api/getkey</a>");
-	}
-	
-	if ($use_ssl) {
-                $server = RECAPTCHA_API_SECURE_SERVER;
-        } else {
-                $server = RECAPTCHA_API_SERVER;
-        }
-
-        $errorpart = "";
-        if ($error) {
-           $errorpart = "&amp;error=" . $error;
-        }
-        return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
-
-	<noscript>
-  		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
-  		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
-	</noscript>';
-}
-
-
 
 
 /**
@@ -192,22 +156,9 @@ function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $ex
 
 }
 
-/**
- * gets a URL where the user can sign up for reCAPTCHA. If your application
- * has a configuration page where you enter a key, you should provide a link
- * using this function.
- * @param string $domain The domain where the page is hosted
- * @param string $appname The name of your application
- */
-function recaptcha_get_signup_url ($domain = null, $appname = null) {
-	return "http://recaptcha.net/api/getkey?" .  _recaptcha_qsencode (array ('domain' => $domain, 'app' => $appname));
-}
-
 function _recaptcha_aes_pad($val) {
 	$block_size = 16;
 	$numpad = $block_size - (strlen ($val) % $block_size);
 	return str_pad($val, strlen ($val) + $numpad, chr($numpad));
 }
-
-/* Mailhide related code: removed from the library attached to the wp-conditional-captcha plugin */
 ?>
