@@ -11,7 +11,7 @@ Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is 
 
 Akismet is great at detecting spam, but if you get lots of it then it means trawling through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
+This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
 
 Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
 
@@ -39,6 +39,9 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
 == Changelog ==
+
+= 1.8 =
+* Added the option to trash comments rather than delete them completely if the CAPTCHA is not passed. This feature requires Wordpress 2.9 or greater.
 
 = 1.7 =
 * Added noscript handling for reCAPTCHA - the plugin will now revert to the default CAPTCHA if the client has Javascript disabled. This behaviour can be controlled in the options page.
