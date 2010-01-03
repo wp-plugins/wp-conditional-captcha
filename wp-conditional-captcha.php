@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: Conditional CAPTCHA for Wordpress
-Plugin URI: http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/
+Plugin URI: http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
 Version: 1.8
 Author: Samir Shah
-Author URI: http://rayofsolaris.co.uk/
+Author URI: http://rayofsolaris.net/
 */
 
-/*  Copyright 2009  Samir Shah  (email : samir[at]rayofsolaris.co.uk)
+/*  Copyright 2009  Samir Shah  (email : samir[at]rayofsolaris.net)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

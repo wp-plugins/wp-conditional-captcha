@@ -2,7 +2,7 @@
 Contributors: solarissmoke
 Tags: akismet, captcha, spam
 Requires at least: 2.7
-Tested up to: 2.9
+Tested up to: 2.9.1
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
@@ -22,7 +22,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * The Akismet plugin must be installed and activated
 * PHP 5 is required (the plugin will not work with PHP 4)
 
-If you have any problems or suggestions, please [post a note here](http://rayofsolaris.co.uk/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
+If you have any problems or suggestions, please [post a note here](http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
 == Frequently Asked Questions ==
 
