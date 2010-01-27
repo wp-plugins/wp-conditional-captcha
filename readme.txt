@@ -1,6 +1,6 @@
 === Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
-Tags: akismet, captcha, spam
+Tags: captcha, spam, reCAPTCHA, akismet
 Requires at least: 2.7
 Tested up to: 2.9.1
 Stable tag: trunk
