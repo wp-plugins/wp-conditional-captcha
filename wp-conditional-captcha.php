@@ -44,7 +44,7 @@ class conditional_captcha {
 		add_action('plugins_loaded', array(&$this, 'load') );
 		add_action('admin_menu', array(&$this, 'settings_menu') );
 		
-	  load_plugin_textdomain($this->dom, false, dirname(plugin_basename(__FILE__)). '/languages/');
+	  load_plugin_textdomain($this->dom, false, dirname(plugin_basename(__FILE__)). '/languages');
 	}
 	
 	function activate() {
