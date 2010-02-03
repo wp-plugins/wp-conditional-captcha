@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Tags: captcha, spam, reCAPTCHA, akismet
 Requires at least: 2.7
 Tested up to: 2.9.1
-Stable tag: trunk
+Stable tag: 1.8
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
@@ -39,6 +39,9 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
 == Changelog ==
+
+= 1.9 =
+* Added support for internationalisation and a Finnish translation. Thanks to Jani.
 
 = 1.8 =
 * Added the option to trash comments rather than delete them completely if the CAPTCHA is not passed. This feature requires Wordpress 2.9 or greater.
