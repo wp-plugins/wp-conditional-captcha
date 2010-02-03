@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.9b1
+Version: 1.9
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 */
@@ -119,7 +119,7 @@ class conditional_captcha {
 	</div>
 	<h3><?php _e('Comment Handling', $this->dom);?></h3>
 	<p><?php _e('If a CAPTCHA is successfully completed, the default action of the plugin is to leave it in the spam queue. If you would like the comment to be approved instead, check the box below:', $this->dom);?></p>
-	<input style="padding-left: 1em" type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label><?php 'Automatically approve comments if CAPTCHA is completed correctly.', $this->dom);?></label>
+	<input style="padding-left: 1em" type="checkbox" name="pass_action" value="approve" <?php if($opts['pass_action'] == 'approve') echo 'checked="checked"';?>/> <label><?php _e('Automatically approve comments if CAPTCHA is completed correctly.', $this->dom);?></label>
 	<?php if($this->trash_exists) { ?>
 	<p><?php _e('When a CAPTCHA is <strong>not</strong> completed correctly:', $this->dom);?></p>
 	<ul style="padding-left: 1em">
