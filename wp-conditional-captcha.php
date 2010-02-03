@@ -6,6 +6,7 @@ Description: A plugin that asks the commenter to complete a simple CAPTCHA if Ak
 Version: 1.9
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
+Text Domain: wp-conditional-captcha
 */
 
 /*  Copyright 2009  Samir Shah  (email : samir[at]rayofsolaris.net)
@@ -21,8 +22,6 @@ Author URI: http://rayofsolaris.net/
     GNU General Public License for more details.
 
 */
-
-load_plugin_textdomain('wp-conditional-captcha', false, dirname(plugin_basename(__FILE__)). '/languages/');
 
 require_once(dirname(__FILE__).'/recaptchalib.php');
 class conditional_captcha {
@@ -44,6 +43,8 @@ class conditional_captcha {
 		add_action('activate_wp-conditional-captcha/wp-conditional-captcha.php', array(&$this, 'activate') );
 		add_action('plugins_loaded', array(&$this, 'load') );
 		add_action('admin_menu', array(&$this, 'settings_menu') );
+		
+	  load_plugin_textdomain($this->dom, false, dirname(plugin_basename(__FILE__)). '/languages/');
 	}
 	
 	function activate() {
@@ -110,7 +111,7 @@ class conditional_captcha {
 		<li><label><?php _e('Public key:', $this->dom);?></label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
 		<li><label><?php _e('Private key:', $this->dom);?></label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		</ul>
-		<p><small><?php printf(__("You can %s sign up for a key here</a> (it's free)", $this->dom), '<a href="http://recaptcha.net/api/getkey" target="_blank">'); ?></small></p>
+		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', $this->dom), 'http://recaptcha.net/api/getkey');?></small></p>
 		<p><?php _e('The client will have to have Javascript enabled in order for reCAPTCHA to work. In cases where Javascript is disabled, the plugin can:', $this->dom);?></p>
 		<ul style="padding-left: 1em">
 		<li><input type="radio" name="noscript" value="default" <?php if($opts['noscript']=='default') echo 'checked="checked"'?> /> <label><?php _e('Revert to the default CAPTCHA method (recommended)', $this->dom);?></label></li>
@@ -148,7 +149,7 @@ class conditional_captcha {
 	
 	function rightnow() {
 		if ($count = get_option('conditional_captcha_count') ) {
-			$text = sprintf(__('%1$s spam comments have been automatically discarded by the <em>Conditional CAPTCHA</em> plugin.', $this->dom), number_format_i18n($count) );
+			$text = sprintf(__('%s spam comments have been automatically discarded by the <em>Conditional CAPTCHA</em> plugin.', $this->dom), number_format_i18n($count) );
 			echo "<p class='conditional-captcha-stats'>$text</p>\n";
 		}
 	}
@@ -172,7 +173,7 @@ class conditional_captcha {
 						wp_redirect($location);
 						exit;
 					}
-					else $this->page(__('Comment rejected', $this->dom), '<p>'.__('Trying something funny, are we? Your comment will not be accepted.', $this->dom).'</p>');
+					else $this->page(__('Comment rejected', $this->dom), '<p>'.__('Trying something funny, are we? Your comment will not be accepted.', $this->dom).'</p>'); # the original comment content has changed!
 				}
 				/* else, if pass_action is 'approve', then remove akismet's hook 
 				 otherwise let akismet take the comment into spam as usual */
