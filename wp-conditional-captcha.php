@@ -110,7 +110,7 @@ class conditional_captcha {
 		<li><label><?php _e('Public key:', $this->dom);?></label> <input type="text" name="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
 		<li><label><?php _e('Private key:', $this->dom);?></label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		</ul>
-		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', $this->dom), 'http://recaptcha.net/api/getkey'); ?></small></p>
+		<p><small><?php printf(__("You can %s sign up for a key here</a> (it's free)", $this->dom), '<a href="http://recaptcha.net/api/getkey" target="_blank">'); ?></small></p>
 		<p><?php _e('The client will have to have Javascript enabled in order for reCAPTCHA to work. In cases where Javascript is disabled, the plugin can:', $this->dom);?></p>
 		<ul style="padding-left: 1em">
 		<li><input type="radio" name="noscript" value="default" <?php if($opts['noscript']=='default') echo 'checked="checked"'?> /> <label><?php _e('Revert to the default CAPTCHA method (recommended)', $this->dom);?></label></li>
