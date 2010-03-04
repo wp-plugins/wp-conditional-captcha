@@ -11,16 +11,24 @@ Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is 
 
 Akismet is great at detecting spam, but if you get lots of it then it means trawling through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
+This plugin provides a CAPTCHA complement to Akismet:
 
-Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
+* If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
+* If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
+* If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
+* Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
 
 The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
 **Requirements:**
 
 * The Akismet plugin must be installed and activated
-* PHP 5 is required (the plugin will not work with PHP 4)
+* PHP 5 is required (will not work with PHP 4)
+
+**Available translations:**
+
+* Finnish (thanks to Jani)
+* Danish (thanks to Jesper)
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
