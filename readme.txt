@@ -29,6 +29,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 * Finnish (thanks to Jani)
 * Danish (thanks to Jesper)
+* Russian (thanks to [Serge](http://verevkin.info)).
 
 If you have any problems or suggestions, please [post a note here](http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
 
