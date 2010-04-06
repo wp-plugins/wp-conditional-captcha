@@ -25,7 +25,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * The Akismet plugin must be installed and activated
 * PHP 5 is required (the plugin will not work with PHP 4)
 
-If you have any problems or suggestions, please [post a note here](http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/ "Plugin home page").
+If you have any problems, please [post a ticket here](http://wordpress.org/tags/wp-conditional-captcha).
 
 == Frequently Asked Questions ==
 
