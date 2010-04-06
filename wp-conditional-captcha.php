@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through.
-Version: 1.9
+Version: 2.0
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 Text Domain: wp-conditional-captcha
@@ -25,7 +25,6 @@ Text Domain: wp-conditional-captcha
 
 require_once(dirname(__FILE__).'/recaptchalib.php');
 class conditional_captcha {
-	private $key;
 	private $akismet_installed;
 	private $options;
 	private $cssfile;
@@ -37,7 +36,6 @@ class conditional_captcha {
 		$css = dirname(__FILE__).'/captcha-style.css';
 		
 		$this->cssfile = is_readable($css) ? $css : false;
-		$this->key = defined('AUTH_KEY') ? AUTH_KEY : '8q057nvpuyEBWVTYPHJljhGHKKLJJK:JJHKFKL:KLUJGHF'.DB_USER;
 		$this->trash_exists = version_compare($wp_version, '2.9', '>=');
 		
 		add_action('activate_wp-conditional-captcha/wp-conditional-captcha.php', array(&$this, 'activate') );
@@ -214,7 +212,6 @@ class conditional_captcha {
 		/* generates a page where the captcha can be completed - style can be modified */
 		if(!headers_sent() ){
 			status_header(403);
-			nocache_headers();
 			header('Content-Type: text/html; charset=utf-8');
 		}
 		?>
@@ -262,29 +259,32 @@ class conditional_captcha {
 	private function captcha_is_valid() {
 		/* check that the nonce is valid */
 		if(!$this->check_nonce($_POST['captcha_nonce']) ) return __('Trying something funny, are we?', $this->dom);
-		/* ...and then the captcha */
+		/* if a reCAPTCHA is submitted and there is no noscript */
 		if($this->options['captcha-type'] == 'recaptcha' && !isset($_POST['captcha_noscript'])) {
-			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'], $_SERVER["REMOTE_ADDR"],
-                                        $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+			$resp = recaptcha_check_answer ($this->options['recaptcha-private-key'], $_SERVER['REMOTE_ADDR'],
+                                        $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
 			return $resp->is_valid ? true : sprintf(__("Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)", $this->dom), $resp->error);
 		}
+		/* if default captcha is used either as default or noscript fallback */
 		elseif($this->options['captcha-type'] == 'default' || 
 						($this->options['noscript'] == 'default' && isset($_POST['captcha_noscript']) ) ) {
 			/* do default validation */
 			$resp = strtoupper($_POST['captcha_response']);
 			return ($_POST['captcha_hash'] == $this->hash($resp) ) ? true : __("Sorry, the CAPTCHA wasn't entered correctly.", $this->dom);
 		}
+		/* else: captcha without javascript was denied, nothing to check */
+		return __("Sorry, you cannot submit a CAPTCHA with Javascript disabled in your browser.", $this->dom);
 	}
 	
 	private function get_nonce() {
 		/* nonce valid for 10-20 minutes */
 		$i = ceil(time()/600);
-		return $this->hash($i);
+		return $this->hash($i, 'nonce');
 	}
 	
 	private function check_nonce($nonce) {
 		$i = ceil(time()/600);
-		return ($this->hash($i) == $nonce || $this->hash($i-1) == $nonce);
+		return ($this->hash($i, 'nonce') == $nonce || $this->hash($i-1, 'nonce') == $nonce);
 	}
 	
 	private function untrash_comment($id) {
@@ -292,7 +292,7 @@ class conditional_captcha {
 		wp_set_comment_status($id, $status);
 	}
 	
-	private function hash($val) {return substr(sha1($val.$this->key),0,6);}
+	private function hash($val, $type = 'auth') {return substr(sha1( $val.wp_salt($type) ),0,6);}
 	private function add_spaces($str) {return implode(' ', str_split($str));}
 } /* class */
 

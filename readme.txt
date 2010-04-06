@@ -2,8 +2,8 @@
 Contributors: solarissmoke
 Tags: captcha, spam, reCAPTCHA, akismet
 Requires at least: 2.7
-Tested up to: 2.9.2
-Stable tag: 1.9
+Tested up to: 3.0
+Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
 
@@ -11,9 +11,12 @@ Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is 
 
 Akismet is great at detecting spam, but if you get lots of it then it means trawling through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
+This plugin provides a CAPTCHA complement to Akismet:
 
-Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
+* If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
+* If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
+* If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
+* Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
 
 The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
@@ -39,6 +42,11 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
 == Changelog ==
+
+= 2.0 =
+* Changed CAPTCHA hash methods to use Wordpress' native salt function (more secure).
+* Inserted missing noscript failure message for reCAPTCHA.
+* Minor performance optimisations.
 
 = 1.9 =
 * Added support for internationalisation (thanks to Jani for the suggestion and for a Finnish translation). Translations welcome!
