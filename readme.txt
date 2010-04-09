@@ -25,9 +25,20 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * The Akismet plugin must be installed and activated
 * PHP 5 is required (the plugin will not work with PHP 4)
 
+**Available translations:**
+
+* Finnish (thanks to Jani)
+* Danish (thanks to Jesper)
+* Russian (thanks to [Serge](http://verevkin.info))
+* Belorussian (thanks to [Marcis G](http://pc.de))
+
 If you have any problems, please [post a ticket here](http://wordpress.org/tags/wp-conditional-captcha).
 
 == Frequently Asked Questions ==
+
+= I have Akismet installed but I still get a message saying that it isn't =
+
+Check that your Akismet API key is valid. You can do this by accessing "Akismet configuration" from the plugins submenu.
 
 = I've installed it, now how do I check that it works? =
 
