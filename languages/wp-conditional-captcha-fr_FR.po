@@ -1,0 +1,229 @@
+# Translation of the WordPress plugin Conditional CAPTCHA for Wordpress 2.0 by Samir Shah.
+# Copyright (C) 2010 Samir Shah
+# This file is distributed under the same license as the Conditional CAPTCHA for Wordpress package.
+# Samir Shah <samir@rayofsolaris.net>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Conditional CAPTCHA for Wordpress 2.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
+"POT-Creation-Date: 2010-04-06 08:17+0000\n"
+"PO-Revision-Date: 2010-04-10 17:42+0100\n"
+"Last-Translator: Grieta <grieta@mailoo.org>\n"
+"Language-Team: FRENCH <grieta@mailoo.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wp-conditional-captcha.php:67
+#: wp-conditional-captcha.php:95
+msgid "Conditional CAPTCHA Settings"
+msgstr "Paramètres de Conditional CAPTCHA"
+
+#: wp-conditional-captcha.php:67
+msgid "Conditional CAPTCHA"
+msgstr "Conditional CAPTCHA"
+
+#: wp-conditional-captcha.php:85
+msgid "You need to supply reCAPTCHA API keys if you want to use reCAPTCHA. Please enter private and public key values."
+msgstr "Vous devez fournir les clés API de reCAPTCHA si vous voulez l'utiliser. Svp entrez les valeurs des clés privé et publique."
+
+#: wp-conditional-captcha.php:90
+msgid "Options updated."
+msgstr "Options mises à jour."
+
+#: wp-conditional-captcha.php:96
+msgid "Akismet does not appear to be active. This plugin requires Akismet to be active in order to work. Please activate Akismet before changing the settings below."
+msgstr "Askimet n'a pas l'air d'être actif. Le plugin requiert que Askimet sois actif pour fonctionner correctement. Svp activez Askimet avant de changer les paramètres ci-dessous."
+
+#: wp-conditional-captcha.php:98
+msgid "This plugin provides a CAPTCHA complement to Akismet. If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA. If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them."
+msgstr "Le plugin fournit un complément CAPTCHA pour Askimet. Si Askimet identifie un commentaire comme un spam alors il va demander à l'auteur du commentaire de compléter un simple CAPTCHA. Si il échoue le commentaire sera automatiquement désapprouvé ou supprimé (et n'encombrera pas votre file de commentaires indésirables). Si il réussi le commentaire sera transféré dans la liste indésirable. De cette façon la liste de commentaires indésirables contiendra le plus possible de faux positifs, rendant plus facile leur recherche."
+
+#: wp-conditional-captcha.php:100
+msgid "CAPTCHA Method"
+msgstr "Méthode CAPTCHA"
+
+#: wp-conditional-captcha.php:101
+#, php-format
+msgid "The default captcha is a simple text-based test (<a href=\"%1$s\" target=\"_blank\">check out the screenshot here</a>), but if you prefer you can also use a <a href=\"%2$s\" target=\"_blank\">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA."
+msgstr "Le captcha par défaut est un test basé sur du texte (<a href=\"%1$s\" target=\"_blank\">voir la capture d'écran</a>), mais si vous le souhaitez vous pouvez aussi utiliser <a href=\"%2$s\" target=\"_blank\">reCAPTCHA</a>. Notez que vous aurez besoin d'un clé API pour utiliser reCAPTCHA."
+
+#: wp-conditional-captcha.php:103
+msgid "Use the default text-based CAPTCHA"
+msgstr "Utiliser le CAPTCHA par défaut basé sur du texte."
+
+#: wp-conditional-captcha.php:104
+msgid "Use reCAPTCHA"
+msgstr "Utiliser reCAPTCHA"
+
+#: wp-conditional-captcha.php:107
+msgid "If you wish to use reCAPTCHA, please enter your keys here:"
+msgstr "Si vous souhaitez utiliser reCAPTCHA, entrez vos clef ici :"
+
+#: wp-conditional-captcha.php:109
+msgid "Public key:"
+msgstr "Clé publique : "
+
+#: wp-conditional-captcha.php:110
+msgid "Private key:"
+msgstr "Clé privé : "
+
+#: wp-conditional-captcha.php:112
+#, php-format
+msgid "You can <a href=\"%s\" target=\"_blank\">sign up for a key here</a> (it's free)"
+msgstr "Vous pouvez <a href=\"%s\" target=\"_blank\">vous enregistrez pour obtenir une clé ici</a> (c'est gratuit)"
+
+#: wp-conditional-captcha.php:113
+msgid "The client will have to have Javascript enabled in order for reCAPTCHA to work. In cases where Javascript is disabled, the plugin can:"
+msgstr "L'utilisateur devra avoir Javascript activé pour que reCAPTCHA fonctionne. Dans le cas où Javascript est désactivé, le plugin peut :"
+
+#: wp-conditional-captcha.php:115
+msgid "Revert to the default CAPTCHA method (recommended)"
+msgstr "Revenir à la méthode de CAPTCHA par défaut (recommandé)"
+
+#: wp-conditional-captcha.php:116
+msgid "Deny the user the opportunity to complete a CAPTCHA"
+msgstr "Priver l'utilisateur de l'opportunité de compléter un CAPTCHA"
+
+#: wp-conditional-captcha.php:119
+msgid "Comment Handling"
+msgstr "Traitement des commentaires"
+
+#: wp-conditional-captcha.php:120
+msgid "If a CAPTCHA is successfully completed, the default action of the plugin is to leave it in the spam queue. If you would like the comment to be approved instead, check the box below:"
+msgstr "Si un CAPTCHA est complété avec succès, l'action par défaut du plugin est de le laisser dans liste de commentaires indésirables. Si vous aimeriez que le commentaire soit approuvé à la place, cochez la case ci-dessous :"
+
+#: wp-conditional-captcha.php:121
+msgid "Automatically approve comments if CAPTCHA is completed correctly."
+msgstr "Approuver automatiquement les commentaires dont le CAPTCHA est complété avec succès."
+
+#: wp-conditional-captcha.php:123
+msgid "When a CAPTCHA is <strong>not</strong> completed correctly:"
+msgstr "Quand un CAPTCHA n'est <strong>pas</strong> complété correctement:"
+
+#: wp-conditional-captcha.php:125
+msgid "Delete the comment permanently"
+msgstr "Supprimer définitivement le commentaire"
+
+#: wp-conditional-captcha.php:126
+msgid "Trash the comment"
+msgstr "Mettre le commentaire à la poubelle"
+
+#: wp-conditional-captcha.php:129
+msgid "CAPTCHA Page Style"
+msgstr "Style de la page du CAPTCHA"
+
+#: wp-conditional-captcha.php:130
+msgid "If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:"
+msgstr "Si vous voulez que votre page CAPTCHA aille avec votre propre thème, vous pouvez modifier le CSS par défaut ci-dessous :"
+
+#: wp-conditional-captcha.php:132
+msgid "Empty this box completely to revert back to the default style."
+msgstr "Laissez totalement vide pour revenir au style par défaut."
+
+#: wp-conditional-captcha.php:150
+#, php-format
+msgid "%s spam comments have been automatically discarded by the <em>Conditional CAPTCHA</em> plugin."
+msgstr "%s commentaires indésirables ont été automatiquement désaprouvés par le plugin <em>Conditional CAPTCHA</em>."
+
+#: wp-conditional-captcha.php:160
+msgid "Comment Rejected"
+msgstr "Commentaire Rejeté"
+
+#: wp-conditional-captcha.php:160
+msgid "Your comment will not be accepted."
+msgstr "Votre commentaire ne sera pas accepté."
+
+#: wp-conditional-captcha.php:174
+msgid "Comment rejected"
+msgstr "Commentaire rejeté"
+
+#: wp-conditional-captcha.php:174
+msgid "Trying something funny, are we? Your comment will not be accepted."
+msgstr "Vous essayez quelque chose de drôle ? Votre commentaire ne sera pas accepté."
+
+#: wp-conditional-captcha.php:197
+msgid "Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human."
+msgstr "Désolé, mais je pense que êtes un robot. Svp complétez le CAPTCHA ci-dessous pour prouver que vous êtes humain."
+
+#: wp-conditional-captcha.php:203
+msgid "I'm human!"
+msgstr "Je suis humain !"
+
+#: wp-conditional-captcha.php:207
+msgid "Verification required"
+msgstr "Vérification requise"
+
+#: wp-conditional-captcha.php:236
+msgid "Sorry, Javascript must be enabled in order to complete the CAPTCHA."
+msgstr "Désolé, Javascript doit être activé pour compléter le CAPTCHA."
+
+#: wp-conditional-captcha.php:250
+msgid "first"
+msgstr "premier"
+
+#: wp-conditional-captcha.php:250
+msgid "second"
+msgstr "deuxième"
+
+#: wp-conditional-captcha.php:250
+msgid "third"
+msgstr "troisième"
+
+#: wp-conditional-captcha.php:250
+msgid "fourth"
+msgstr "quatrième"
+
+#: wp-conditional-captcha.php:250
+msgid "fifth"
+msgstr "cinquième"
+
+#: wp-conditional-captcha.php:250
+msgid "sixth"
+msgstr "sixième"
+
+#: wp-conditional-captcha.php:252
+#, php-format
+msgid "What are the %1$s and %2$s characters of the following sequence?"
+msgstr "Quels sont les %1$s et %2$s caractères de la séquence suivante ?"
+
+#: wp-conditional-captcha.php:261
+msgid "Trying something funny, are we?"
+msgstr "Vous essayez quelque chose de drôle ?"
+
+#: wp-conditional-captcha.php:266
+#, php-format
+msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
+msgstr "Désolé, le CAPTCHA n'a pas été correctement complété. (reCAPTCHA a di : %s)"
+
+#: wp-conditional-captcha.php:273
+msgid "Sorry, the CAPTCHA wasn't entered correctly."
+msgstr "Désolé, le CAPTCHA n'a pas été correctement complété."
+
+#: wp-conditional-captcha.php:276
+msgid "Sorry, you cannot submit a CAPTCHA with Javascript disabled in your browser."
+msgstr "Désolé, vous ne pouvez pas envoyer un CAPTCHA si Javascript est désactivé dans votre navigateur."
+
+#. Plugin Name of the plugin/theme
+msgid "Conditional CAPTCHA for Wordpress"
+msgstr "Conditional CAPTCHA pour WordPress"
+
+#. Plugin URI of the plugin/theme
+msgid "http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/"
+msgstr "http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/"
+
+#. Description of the plugin/theme
+msgid "A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted, thereby leaving you with only the (possible) false positives to sift through."
+msgstr "Un plugin qui demande au commentateur de compléter un simple CAPTCHA si Akismet pense que le commentaire est indésirable. Si il échoue, le commentaire est automatiquement détruit, vous laissant ainsi avec uniquement les (possibles) faux positifs à examiner."
+
+#. Author of the plugin/theme
+msgid "Samir Shah"
+msgstr "Samir Shah"
+
+#. Author URI of the plugin/theme
+msgid "http://rayofsolaris.net/"
+msgstr "http://rayofsolaris.net/"
+
+
+

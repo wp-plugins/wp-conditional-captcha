@@ -27,6 +27,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 **Available translations:**
 
+* French (thanks to Grieta)
 * Finnish (thanks to Jani)
 * Danish (thanks to Jesper)
 * Russian (thanks to [Serge](http://verevkin.info))
