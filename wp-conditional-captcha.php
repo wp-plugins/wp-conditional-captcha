@@ -23,7 +23,8 @@ Text Domain: wp-conditional-captcha
 
 */
 
-require_once(dirname(__FILE__).'/recaptchalib.php');
+/* avoid redeclaration errors when someone has another reCAPTCHA plugin installed */
+if(!function_exists('_recaptcha_qsencode')) require_once(dirname(__FILE__).'/recaptchalib.php');
 class conditional_captcha {
 	private $akismet_installed;
 	private $options;
