@@ -37,6 +37,10 @@ If you have any problems, please [post a ticket here](http://wordpress.org/tags/
 
 == Frequently Asked Questions ==
 
+= I get a fatal error warning when I try to activate the plugin =
+
+The most likely cause of this is that you have another plugin installed which also uses reCAPTCHA (e.g., wp-reCAPTCHA). You must deactivate that plugin before attempting to activate this one. After all, you can only have one CAPTCHA system on your comments.
+
 = I have Akismet installed but I still get a message saying that it isn't =
 
 Check that your Akismet API key is valid. You can do this by accessing "Akismet configuration" from the plugins submenu.
