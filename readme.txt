@@ -27,11 +27,12 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 **Available translations:**
 
-* French (thanks to Grieta)
-* Finnish (thanks to Jani)
-* Danish (thanks to Jesper)
-* Russian (thanks to [Serge](http://verevkin.info))
 * Belorussian (thanks to [Marcis G](http://pc.de))
+* Danish (thanks to Jesper)
+* Finnish (thanks to Jani)
+* French (thanks to Grieta)
+* Polish (thanks to [Pawel] (http://www.spin.siedlce.pl/))
+* Russian (thanks to [Serge](http://verevkin.info))
 
 If you have any problems, please [post a ticket here](http://wordpress.org/tags/wp-conditional-captcha).
 
