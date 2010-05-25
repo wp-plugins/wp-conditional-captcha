@@ -164,7 +164,7 @@ class conditional_captcha {
 
 	function check_captcha($comment) {
 		$this->options = get_option('conditional_captcha_options');
-		if( isset($_POST['captcha_hash']) ) {	// then a captcha has been completed...
+		if( isset($_POST['captcha_nonce']) ) {	// then a captcha has been completed...
 			$result = $this->captcha_is_valid();
 			if($result !== true) $this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted.', self::dom).'</p>');
 			else {
@@ -201,11 +201,19 @@ class conditional_captcha {
 	function do_captcha($comment_id = false) {
 		// comment_id will be supplied by the comment_post action if this function is called from there
 		$html = '<p>'.__('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', self::dom).'</p><form method="post">';
+		
+		// nonce
+		$nonce = $this->hash( rand() );
+		$this->store_nonce($nonce);
+		$html .= '<input type="hidden" name="captcha_nonce" value="'.$nonce.'">';
+		
 		// the captcha
 		$html .= $this->create_captcha();
 		// insert the original post contents as hidden values, except the submit
 		foreach ($_POST as $k => $v) if($k != 'submit') $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
-		if($this->options['trash'] == 'trash') $html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
+		if($this->options['trash'] == 'trash') 
+			$html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
+		
 		$html .= '<input class="submit" type="submit" value="'.__("I'm human!", self::dom).'" /></form>';
 		
 		// stats - this count will be reversed if they correctly complete the CAPTCHA
@@ -232,13 +240,6 @@ class conditional_captcha {
 			if($this->options['noscript'] == 'default') $insert .= $this->get_default_captcha();
 			else $insert .= '<p><strong>'.__('Sorry, Javascript must be enabled in order to complete the CAPTCHA.', self::dom).'</strong></p>';
 			$insert .= '<input type="hidden" name="captcha_noscript" value="true" /></noscript>';
-			
-			// create a hash for nonce purposes
-			$hash = $this->hash(rand());
-			// store the hash to prevent reuse of the same captcha
-			$this->store_hash($hash);
-			
-			$insert .= '<input type="hidden" name="captcha_hash" value="'.$hash.'" />';
 		}
 		else $insert = $this->get_default_captcha();
 		return $insert;
@@ -253,17 +254,14 @@ class conditional_captcha {
 		$ords = array('',__('first', self::dom),__('second',self::dom),__('third', self::dom),__('fourth', self::dom),__('fifth', self::dom),__('sixth', self::dom));
 																
 		$insert = '<p class="intro"><label for="captcha_response">'.sprintf(__('What are the %1$s and %2$s characters of the following sequence?', self::dom), '<strong>'.$ords[$num1].'</strong>', '<strong>'.$ords[$num2].'</strong>').'</label></p><p class="challenge"><strong>'.implode(' ', $chall).'</strong>&nbsp;&nbsp;<input name="captcha_response" type="text" size="5" maxlength="2" value="" tabindex="1" /></p><input type="hidden" name="captcha_hash" value="'.$hash.'" />';
-			
-		// store the hash to prevent reuse of the same captcha
-		$this->store_hash($hash);
 		
 		return $insert;
 	}
 	
 	private function captcha_is_valid() {
-		$h = $_POST['captcha_hash'];
-		// check that the hash is valid and hasn't already be completed successfully
-		if( !get_transient("conditional_captcha_$h") ) return __('Trying something funny, are we?', self::dom);
+		$nonce = $_POST['captcha_nonce'];
+		// check that the nonce is valid and hasn't already be completed successfully
+		if( !get_transient("conditional_captcha_$nonce") ) return __('Trying something funny, are we?', self::dom);
 		
 		$status = true;
 		// if a reCAPTCHA is submitted and there is no noscript
@@ -276,20 +274,20 @@ class conditional_captcha {
 		elseif($this->options['captcha-type'] == 'default' || 
 						($this->options['noscript'] == 'default' && isset($_POST['captcha_noscript']) ) ) {
 			// do default validation
-			if($h != $this->hash( strtoupper($_POST['captcha_response']) ) ) $status = __("Sorry, the CAPTCHA wasn't entered correctly.", self::dom);
+			if($_POST['captcha_hash'] != $this->hash( strtoupper($_POST['captcha_response']) ) ) $status = __("Sorry, the CAPTCHA wasn't entered correctly.", self::dom);
 		}
 		else $status = __("Sorry, you cannot submit a CAPTCHA with Javascript disabled in your browser.", self::dom);
 		
-		if(true === $status) $this->clear_hash($h);	// prevent reuse
+		if(true === $status) $this->clear_nonce($nonce);	// prevent reuse
 		return $status;
 	}
 	
-	private function store_hash($hash) {
-		set_transient("conditional_captcha_$hash", 1, 600);
+	private function store_nonce($nonce) {
+		set_transient("conditional_captcha_$nonce", 1, 600);
 	}
 	
-	private function clear_hash($hash) {
-		delete_transient("conditional_captcha_$hash");
+	private function clear_nonce($nonce) {
+		delete_transient("conditional_captcha_$nonce");
 	}
 	
 	private function hash($val, $type = 'auth') {
