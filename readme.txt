@@ -38,10 +38,6 @@ If you have any problems, please [post a ticket here](http://wordpress.org/tags/
 
 == Frequently Asked Questions ==
 
-= I get a fatal error warning when I try to activate the plugin =
-
-The most likely cause of this is that you have another plugin installed which also uses reCAPTCHA (e.g., wp-reCAPTCHA). You must deactivate that plugin before attempting to activate this one. After all, you can only have one CAPTCHA system on your comments.
-
 = I have Akismet installed but I still get a message saying that it isn't =
 
 Check that your Akismet API key is valid. You can do this by accessing "Akismet configuration" from the plugins submenu.
@@ -59,6 +55,13 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
 == Changelog ==
+
+= 2.1 =
+* Removed external reCAPTCHA library that causes conflicts when another plugin that also uses reCAPTCHA is installed.
+* Prevent fatal error when Wordpress is unable to contact reCAPTCHA servers to validate a CAPTCHA.
+* Prevent successful completion of the same CAPTCHA twice.
+* Enforce strict 10 minute window for CAPTCHAs to be completed.
+* Properly set default options for new installation to avoid PHP warnings.
 
 = 2.0 =
 * Changed CAPTCHA hash methods to use Wordpress' native salt function (more secure).
@@ -97,9 +100,6 @@ Sorry, it doesn't. Please use it only with PHP 5.0 and above.
 
 = 1.1 =
 * Added the option to use reCAPTCHA instead of the default text-based CAPTCHA. The settings can be accessed from the Plugins administration menu.
-
-= 1.0 =
-* First public release
 
 == Screenshots ==
 
