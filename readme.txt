@@ -1,29 +1,29 @@
 === Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
-Tags: captcha, spam, reCAPTCHA, akismet
+Tags: captcha, spam, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 2.7
 Tested up to: 3.0
 Stable tag: trunk
 
-Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. If they fail, the comment is automatically deleted.
+Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. If they fail, the comment is automatically deleted. Currently supports Akismet and TypePad AntiSpam.
 
 == Description ==
 
-Akismet is great at detecting spam, but if you get lots of it then it means trawling through the spam queue in case there are any false positives.
+Services like Akismet and TypePad AntiSpam are great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to Akismet:
+This plugin provides a CAPTCHA complement to spam detection plugins:
 
-* If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
+* If a spam detection plugin identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
 * If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
-* If they pass, it will be allowed into the spam queue. That way the spam queue will contain only the most likely false positives, making it much easier to find them. 
-* Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your blog hassle-free.
+* If they pass, it will be allowed into the spam queue (or approved, if you so choose).
+* Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your site hassle-free.
 
 The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
 **Requirements:**
 
-* The Akismet plugin must be installed and activated
-* PHP 5 is required (the plugin will not work with PHP 4)
+* *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
+* PHP 5 is required.
 
 **Available translations:**
 
@@ -38,23 +38,22 @@ If you have any problems, please [post a ticket here](http://wordpress.org/tags/
 
 == Frequently Asked Questions ==
 
-= I have Akismet installed but I still get a message saying that it isn't =
-
-Check that your Akismet API key is valid. You can do this by accessing "Akismet configuration" from the plugins submenu.
-
 = I've installed it, now how do I check that it works? =
 
 You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with something like `[url]somethingsilly[/url]` in the body will usually get it flagged by Akismet.
 
 = Does this plugin work with PHP 4? =
 
-Sorry, it doesn't. Please use it only with PHP 5.0 and above.
+No. Please use it only with PHP 5.0 and above. Please don't email me about PHP errors when you try to install the plugin on a PHP 4 platform.
 
 = Does this plugin work with other comment form modification plugins? =
 
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
 == Changelog ==
+
+= 2.2 =
+* Added support for TypePad AntiSpam. Thanks to eetu for the suggestion.
 
 = 2.1 =
 * Removed external reCAPTCHA library that causes conflicts when another plugin that also uses reCAPTCHA is installed.
