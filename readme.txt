@@ -11,7 +11,7 @@ Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks t
 
 Services like Akismet and TypePad AntiSpam are great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to spam detection plugins:
+This plugin provides a CAPTCHA complement to these spam detection plugins:
 
 * If a spam detection plugin identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
 * If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
