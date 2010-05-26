@@ -5,7 +5,7 @@ Requires at least: 2.7
 Tested up to: 3.0
 Stable tag: trunk
 
-Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. If they fail, the comment is automatically deleted. Currently supports Akismet and TypePad AntiSpam.
+Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
 
 == Description ==
 
@@ -50,10 +50,15 @@ No. Please use it only with PHP 5.0 and above. Please don't email me about PHP e
 
 *Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
 
+== Upgrade Notice ==
+
+= 2.3 =
+* Bugfix: I realised that my use of transients in the last version was flawed. It could result in the Wordpress options table being filled with rows that are never deleted. If you have such rows in your options table (containing `_transient_conditional_captcha_` in the name), please remove them manually. If you need help removing them, please [contact me](http://rayofsolaris.net/contact/). Apologies!
+
 == Changelog ==
 
 = 2.3 =
-* Bugfix: I realised that my use of transients was flawed, and could result in the Wordpress options table being filled with rows that are never deleted. If you have such rows (containing `_transient_conditional_captcha_` in the name) and need help removing them, please [contact me](http://rayofsolaris.net/contact/). If you know how to you can safely delete them yourself. Apologies!
+* Bugfix: use of transients was flawed and would result in accumulation of redundant rows in the options table.
 
 = 2.2 =
 * Added support for TypePad AntiSpam. Thanks to eetu for the suggestion.
