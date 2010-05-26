@@ -53,12 +53,12 @@ No. Please use it only with PHP 5.0 and above. Please don't email me about PHP e
 == Upgrade Notice ==
 
 = 2.3 =
-* Bugfix: I realised that my use of transients in the last version was flawed. It could result in the Wordpress options table being filled with rows that are never deleted. If you have such rows in your options table (containing `_transient_conditional_captcha_` in the name), please remove them manually. If you need help removing them, please [contact me](http://rayofsolaris.net/contact/). Apologies!
+Bugfix: If you were using version 2.1 or 2.2 of the plugin, please upgrade immediately. The use of transients in those versions could result in the Wordpress options table being filled with rows that are never deleted. Details are in the changelog.
 
 == Changelog ==
 
 = 2.3 =
-* Bugfix: use of transients was flawed and would result in accumulation of redundant rows in the options table.
+* Bugfix: use of transients was flawed and would result in accumulation of redundant rows in the options table. If you used version 2.1 or 2.2 and have such rows in your options table (containing `_transient_conditional_captcha_` in the name), please remove them manually. If you need help removing them, please [contact me](http://rayofsolaris.net/contact/). Apologies!
 
 = 2.2 =
 * Added support for TypePad AntiSpam. Thanks to eetu for the suggestion.
