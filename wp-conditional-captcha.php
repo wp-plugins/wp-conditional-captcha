@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/blog/plugins/conditional-captcha-for-wordpress/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 2.2
+Version: 2.3
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 Text Domain: wp-conditional-captcha
@@ -217,9 +217,7 @@ class conditional_captcha {
 		$html = '<p>'.__('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', self::dom).'</p><form method="post">';
 		
 		// nonce
-		$nonce = $this->hash( rand() );
-		$this->store_nonce($nonce);
-		$html .= '<input type="hidden" name="captcha_nonce" value="'.$nonce.'">';
+		$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'">';
 		
 		// the captcha
 		$html .= $this->create_captcha();
@@ -289,20 +287,18 @@ class conditional_captcha {
 		else
 			$status = __("Sorry, you cannot submit a CAPTCHA with Javascript disabled in your browser.", self::dom);
 		
-		if(true === $status) $this->clear_nonce($_POST['captcha_nonce']);	// prevent reuse
 		return $status;
 	}
 	
 	private function check_nonce($nonce) {
-		return get_transient("conditional_captcha_$nonce");
+		$i = ceil( time() / 600 );
+		return ($this->hash($i, 'nonce') == $nonce || $this->hash($i-1, 'nonce') == $nonce);
 	}
 	
-	private function store_nonce($nonce) {
-		set_transient("conditional_captcha_$nonce", 1, 600);
-	}
-	
-	private function clear_nonce($nonce) {
-		delete_transient("conditional_captcha_$nonce");
+	private function get_nonce() {
+		// nonce valid for 10-20 minutes
+		$i = ceil( time() / 600);
+		return $this->hash($i, 'nonce');
 	}
 	
 	private function hash($val, $type = 'auth') {

@@ -52,6 +52,9 @@ No. Please use it only with PHP 5.0 and above. Please don't email me about PHP e
 
 == Changelog ==
 
+= 2.3 =
+* Bugfix: I realised that my use of transients was flawed, and could result in the Wordpress options table being filled with rows that are never deleted. If you have such rows (containing _transient_conditiona_captcha_ in the name) and need help removing them, please [contact me](http://rayofsolaris.net/contact/). Apologies!
+
 = 2.2 =
 * Added support for TypePad AntiSpam. Thanks to eetu for the suggestion.
 
