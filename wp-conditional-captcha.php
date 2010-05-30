@@ -23,6 +23,8 @@ Text Domain: wp-conditional-captcha
 
 */
 
+if(!defined('ABSPATH')) exit;
+
 class conditional_captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
