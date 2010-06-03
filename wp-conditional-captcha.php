@@ -241,9 +241,7 @@ class conditional_captcha {
 			status_header(403);
 			header('Content-Type: text/html; charset=utf-8');
 		}
-		$style = $this->options['style'];
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>'.$title.'</title><style type="text/css">'."\n$style\n".'</style></head><body id="conditional_captcha">'.$message.'</body></html>';
+		echo "<!doctype html><html><head><title>$title</title><style>\n".$this->options['style']."\n</style></head><body id='conditional_captcha'>$message</body></html>";
 		exit;
 	}
 
