@@ -38,22 +38,7 @@ If you have any problems, please [post a ticket here](http://wordpress.org/tags/
 
 == Frequently Asked Questions ==
 
-= I've installed it, now how do I check that it works? =
-
-You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with something like `[url]somethingsilly[/url]` in the body will usually get it flagged by Akismet.
-
-= Does this plugin work with PHP 4? =
-
-No. Please use it only with PHP 5.0 and above. Please don't email me about PHP errors when you try to install the plugin on a PHP 4 platform.
-
-= Does this plugin work with other comment form modification plugins? =
-
-*Conditional CAPTCHA* relies on Wordpress' native form handling procedures. This means it will not work with plugins that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms and Contact Form 7.
-
-== Upgrade Notice ==
-
-= 2.3 =
-Bugfix for versions 2.1 and 2.2: If you were using these versions of the plugin, please upgrade immediately. The use of transients in those versions could result in the Wordpress options table being filled with rows that are never deleted. Details are in the changelog.
+You can find a list of FAQs [here](http://rayofsolaris.net/code/?p=conditional-captcha-for-wordpress#faq)
 
 == Changelog ==
 
