@@ -29,6 +29,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 * Belorussian (thanks to [Marcis G](http://pc.de))
 * Danish (thanks to Jesper)
+* Dutch (thanks to [Rene](http://wpwebshop.com/books/))
 * Finnish (thanks to Jani)
 * French (thanks to Grieta)
 * German (thanks to [Rian](http://diensten.kiwa.nl/mvo))
@@ -96,8 +97,8 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/?p=conditional-c
 
 == Screenshots ==
 
-1. A sample of the CAPTCHA that will be displayed to potential spammers when using the default text-based CAPTCHA option.
-2. A sample of the CAPTCHA that will be displayed to potential spammers when using reCAPTCHA.
+1. A sample of the CAPTCHA that will be displayed when using the default text-based CAPTCHA option.
+2. A sample of the CAPTCHA that will be displayed when using reCAPTCHA.
 
 == Installation ==
 
