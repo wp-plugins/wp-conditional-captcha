@@ -2,7 +2,7 @@
 Contributors: solarissmoke
 Tags: captcha, spam, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 2.7
-Tested up to: 3.0
+Tested up to: 3.1
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
