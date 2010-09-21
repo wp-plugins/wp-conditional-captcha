@@ -44,6 +44,9 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/?p=conditional-c
 
 == Changelog ==
 
+= 2.4 =
+* Bugfix: don't intercept spammy pingbacks and trackbacks
+
 = 2.3 =
 * Bug introduced in version 2.1 (if you are upgrading from version 2.0 then it will not affect you). The use of transients was flawed and would result in accumulation of redundant rows in the options table. Apologies! If you have such rows in your options table (containing `_transient_conditional_captcha_` in the name), please remove them manually. The [Clean Options](http://wordpress.org/extend/plugins/clean-options/) plugin will also identify these rows and can be used to remove them. 
 
