@@ -1,7 +1,7 @@
 === Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
 Tags: captcha, spam, reCAPTCHA, Akismet, TypePad AntiSpam
-Requires at least: 2.7
+Requires at least: 2.8
 Tested up to: 3.1
 Stable tag: trunk
 
@@ -43,6 +43,11 @@ If you have any problems or suggestions, you can [email me](http://rayofsolaris.
 You can find a list of FAQs [here](http://rayofsolaris.net/code/?p=conditional-captcha-for-wordpress#faq)
 
 == Changelog ==
+
+= 2.5 =
+* Added the ability to preview the CAPTCHA page from within the administration interface
+* Minor performance optimisations
+* Raised minimum Wordpress version to 2.8
 
 = 2.4 =
 * Bugfix: don't intercept spammy pingbacks and trackbacks

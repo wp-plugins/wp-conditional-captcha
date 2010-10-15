@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/?p=conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 2.4
+Version: 2.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 Text Domain: wp-conditional-captcha
@@ -32,10 +32,15 @@ class conditional_captcha {
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
-		add_action('activate_wp-conditional-captcha/wp-conditional-captcha.php', array(&$this, 'activate') );
-		add_action('plugins_loaded', array(&$this, 'load') );
-		add_action('admin_menu', array(&$this, 'settings_menu') );
 		load_plugin_textdomain(self::dom, false, dirname( plugin_basename( __FILE__ ) ). '/languages');
+		add_action('plugins_loaded', array(&$this, 'load') );
+		
+		if( is_admin() ) {
+			add_action('activate_wp-conditional-captcha/wp-conditional-captcha.php', array(&$this, 'activate') );
+			add_action('admin_menu', array(&$this, 'settings_menu') );
+			add_action('wp_ajax_conditional_captcha_css_preview', array(&$this, 'ajax_output') );	// for captcha preview
+			add_action('rightnow_end', array(&$this, 'rightnow'), 11); // after akismet/typepad
+		}
 	}
 	
 	function activate() {
@@ -51,8 +56,6 @@ class conditional_captcha {
 	}
 	
 	function load() {
-		add_action('rightnow_end', array(&$this, 'rightnow'), 11); // after akismet/typepad
-		
 		$antispam = array(
 			// key => (name, check_function, caught_action)
 			'akismet' => array('Akismet', 'akismet_auto_check_comment', 'akismet_spam_caught'),
@@ -67,7 +70,7 @@ class conditional_captcha {
 			break;
 		}
 				
-		if( !$this->ready ) add_action('admin_notices', array(&$this, 'plugin_inactive') );
+		if( !$this->ready && is_admin() ) add_action('admin_notices', array(&$this, 'plugin_inactive') );
 	}
 	
 	function plugin_inactive() {
@@ -156,20 +159,36 @@ class conditional_captcha {
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:', self::dom);?></p>
 	<textarea name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo $opts['style'];?></textarea>
 	<p><small><?php _e('Empty this box completely to revert back to the default style.', self::dom);?></small></p>
+	<h3><?php _e('CAPTCHA Preview', self::dom);?></h3>
+	<div id="captcha_preview">
+		<p><?php _e('Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first.', self::dom);?></p>
+		<p><input class="button-secondary" type="button" value="<?php _e('Show preview of CAPTCHA page', self::dom);?>" /></p>
+	</div>
 	<p class="submit"><input class="button-primary" type="submit" name="submit" value="Update settings" /></p>
 	</form>
 	</div>
 	</div>
 	<script type="text/javascript">
-	jQuery('input[name="captcha-type"]').change(function(){
+	jQuery('input[name=captcha-type]').change(function(){
 		if(jQuery('#type-recaptcha:checked').length == 1) jQuery('#recaptcha-settings').slideDown('slow');
 		else jQuery('#recaptcha-settings').slideUp('slow');
 	});
 	jQuery(document).ready(function(){
 		if(jQuery('#type-recaptcha:checked').length == 0) jQuery('#recaptcha-settings').hide();
+		jQuery('#captcha_preview input').click( function(){
+			jQuery('#captcha_preview').html('<iframe width="860" height="250" style="border: 3px solid #AAA" src="' + ajaxurl + '?action=conditional_captcha_css_preview"></iframe>')}
+		);
+		jQuery('input[name=captcha-type], textarea[name=style]').change( function(){
+			jQuery('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', self::dom);?></p>')}
+		);
 	});
 	</script>
 <?php
+	}
+	
+	function ajax_output() {
+		$this->options = get_option('conditional_captcha_options');	// load options - they won't have been loaded because check_captcha() didn't run
+		$this->do_captcha(false, false);
 	}
 	
 	function rightnow() {
@@ -216,30 +235,34 @@ class conditional_captcha {
 		else $this->do_captcha(); // otherwise do captcha now
 	}
 	
-	function do_captcha($comment_id = false) {
+	function do_captcha($comment_id = false, $real = true) {
 		// comment_id will be supplied by the comment_post action if this function is called from there
-		$html = '<p>'.__('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', self::dom).'</p><form method="post">';
+		// if $real is false, we are just showing a preview
 		
-		// nonce
-		$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'">';
+		$nosubmit = $real ? '' : 'onsubmit=\'alert("'.__('This CAPTCHA is a visual preview only; you cannot submit it.', self::dom).'"); return false;\'';
+		$html = '<p>'.__('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', self::dom).'</p><form method="post" '.$nosubmit.'>';
+		
+		if($real){
+			// original post contents as hidden values, except the submit
+			foreach ($_POST as $k => $v) 
+				if($k != 'submit') $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
+			if('trash' == $this->options['trash']) $html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
+			// nonce
+			$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'">';
+		}
 		
 		// the captcha
 		$html .= $this->create_captcha();
-		
-		// original post contents as hidden values, except the submit
-		foreach ($_POST as $k => $v) if($k != 'submit') $html .= '<input type="hidden" name="'.htmlentities($k).'" value="'.htmlentities(stripslashes($v) ).'" />';
-		if('trash' == $this->options['trash']) $html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
-		
 		$html .= '<input class="submit" type="submit" value="'.__("I'm human!", self::dom).'" /></form>';
 		
 		// stats - this count will be reversed if they correctly complete the CAPTCHA
-		update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
+		if($real) update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
 		$this->page(__('Verification required', self::dom), $html);
 	}
 
 	private function page($title, $message) {
 		// generates a page where the captcha can be completed - style can be modified
-		if(!headers_sent() ){
+		if( !headers_sent() && !defined('DOING_AJAX') ){
 			status_header(403);
 			header('Content-Type: text/html; charset=utf-8');
 		}
