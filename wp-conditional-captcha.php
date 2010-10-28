@@ -6,26 +6,13 @@ Description: A plugin that asks the commenter to complete a simple CAPTCHA if a 
 Version: 2.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
+License: GPL2
 Text Domain: wp-conditional-captcha
-*/
-
-/*  Copyright 2010 Samir Shah  (email : samir[at]rayofsolaris.net)
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
 */
 
 if(!defined('ABSPATH')) exit;
 
-class conditional_captcha {
+class Conditional_Captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
 	const dom = 'wp-conditional-captcha'; # i18n domain
@@ -36,7 +23,7 @@ class conditional_captcha {
 		add_action('plugins_loaded', array(&$this, 'load') );
 		
 		if( is_admin() ) {
-			add_action('activate_wp-conditional-captcha/wp-conditional-captcha.php', array(&$this, 'activate') );
+			register_activation_hook( __FILE__, array(&$this, 'activate') );
 			add_action('admin_menu', array(&$this, 'settings_menu') );
 			add_action('wp_ajax_conditional_captcha_css_preview', array(&$this, 'ajax_output') );	// for captcha preview
 			add_action('rightnow_end', array(&$this, 'rightnow'), 11); // after akismet/typepad
@@ -56,8 +43,7 @@ class conditional_captcha {
 	}
 	
 	function load() {
-		$antispam = array(
-			// key => (name, check_function, caught_action)
+		$antispam = array(		// key => (name, check_function, caught_action)
 			'akismet' => array('Akismet', 'akismet_auto_check_comment', 'akismet_spam_caught'),
 			'typepad' => array('TypePad AntiSpam', 'typepadantispam_auto_check_comment', 'typepadantispam_spam_caught')
 		);
@@ -368,5 +354,5 @@ class conditional_captcha {
 } // class
 
 // load
-$conditional_captcha = new conditional_captcha();
+$conditional_captcha = new Conditional_Captcha();
 ?>
