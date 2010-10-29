@@ -31,7 +31,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * Danish (thanks to Jesper)
 * Dutch (thanks to [Rene](http://wpwebshop.com/books/))
 * Finnish (thanks to Jani)
-* French (thanks to Grieta)
+* French (thanks to [Laurent](http://android-software.fr))
 * German (thanks to [Rian](http://diensten.kiwa.nl/mvo))
 * Polish (thanks to [Pawel](http://www.spin.siedlce.pl))
 * Russian (thanks to [Serge](http://verevkin.info))
