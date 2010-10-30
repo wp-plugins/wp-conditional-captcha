@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Conditional CAPTCHA for Wordpress
-Plugin URI: http://rayofsolaris.net/code/?p=conditional-captcha-for-wordpress
+Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
 Version: 2.5
 Author: Samir Shah
