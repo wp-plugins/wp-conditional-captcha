@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 2.5
+Version: 2.6
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -15,35 +15,47 @@ if(!defined('ABSPATH')) exit;
 class Conditional_Captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
-	const dom = 'wp-conditional-captcha'; # i18n domain
+	const dom = 'wp-conditional-captcha'; 	// i18n domain
+	const db_version = 1;					// options version, introduced in v2.6
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
-		load_plugin_textdomain(self::dom, false, dirname( plugin_basename( __FILE__ ) ). '/languages');
+		load_plugin_textdomain(self::dom, false, dirname( plugin_basename( __FILE__ ) ) . '/languages');
 		add_action('plugins_loaded', array(&$this, 'load') );
 		
 		if( is_admin() ) {
-			register_activation_hook( __FILE__, array(&$this, 'activate') );
-			add_action('admin_menu', array(&$this, 'settings_menu') );
-			add_action('wp_ajax_conditional_captcha_css_preview', array(&$this, 'ajax_output') );	// for captcha preview
-			add_action('rightnow_end', array(&$this, 'rightnow'), 11); // after akismet/typepad
+			add_action('admin_menu', 								array(&$this, 'settings_menu')	 );
+			add_action('wp_ajax_conditional_captcha_css_preview', 	array(&$this, 'ajax_output')	 );		// for captcha preview
+			add_action('rightnow_end', 								array(&$this, 'rightnow'),		 11); 	// after akismet/typepad
 		}
 	}
 	
-	function activate() {
-		$opts = get_option('conditional_captcha_options', array() );
-		$defaults = array(
-			'captcha-type' => 'default', 'noscript' => 'default', 'pass_action' => 'spam',
-			'recaptcha-private-key' => '', 'recaptcha-public-key' => '',
-			'trash' => 'delete', 'style' => file_get_contents($this->cssfile)
-		);
-		// set defaults of they don't exist
-		foreach($defaults as $k => $v) if( !isset($opts[$k]) ) $opts[$k] = $v;
-		update_option('conditional_captcha_options', $opts);
+	private function load_options() {
+		// load options into $this->options, checking for version changes
+		$this->options = get_option( 'conditional_captcha_options', array() );
+		
+		// if db_version has changed...
+		if( !isset( $this->options['db_version'] ) || $this->options['db_version'] != self::db_version ) {
+			$defaults = array(
+				'captcha-type' => 'default', 'pass_action' => 'spam',
+				'recaptcha-private-key' => '', 'recaptcha-public-key' => '',
+				'trash' => 'delete', 'style' => file_get_contents($this->cssfile),
+				'db_version' => self::db_version
+			);
+			
+			// set defaults if they don't exist
+			foreach( $defaults as $k => $v ) if( !isset( $this->options[$k] ) ) $this->options[$k] = $v;
+			
+			// remove old options
+			unset( $this->options['noscript'] );
+			
+			update_option('conditional_captcha_options', $this->options);
+		}
 	}
 	
 	function load() {
-		$antispam = array(		// key => (name, check_function, caught_action)
+		$antispam = array(
+			// key => (name, check_function, caught_action)
 			'akismet' => array('Akismet', 'akismet_auto_check_comment', 'akismet_spam_caught'),
 			'typepad' => array('TypePad AntiSpam', 'typepadantispam_auto_check_comment', 'typepadantispam_spam_caught')
 		);
@@ -60,7 +72,7 @@ class Conditional_Captcha {
 	}
 	
 	function plugin_inactive() {
-		if(!strpos($_SERVER['REQUEST_URI'], 'wp-admin/plugins.php?page=conditional_captcha_settings'))
+		if( !strpos($_SERVER['REQUEST_URI'], 'wp-admin/plugins.php?page=conditional_captcha_settings') )
 			printf('<div class="updated fade"><p><strong>'.__('Conditional CAPTCHA is currently inactive. Please visit the plugin <a href="%s">configuration page</a> for information on how to fix this.', self::dom).'</strong></div>', 'plugins.php?page=conditional_captcha_settings');
 	}
 	
@@ -71,7 +83,8 @@ class Conditional_Captcha {
 	function settings_page() {
 		global $wp_version;
 		
-		$opts = get_option('conditional_captcha_options');
+		$this->load_options();
+		$opts = $this->options;
 		$trash_exists = version_compare($wp_version, '2.9', '>=');
 		
 		if ( isset($_POST['submit']) ) {
@@ -81,7 +94,6 @@ class Conditional_Captcha {
 			$opts['captcha-type'] = $_POST['captcha-type'];
 			$opts['recaptcha-private-key'] = $_POST['recaptcha-private-key'];
 			$opts['recaptcha-public-key'] = $_POST['recaptcha-public-key'];
-			$opts['noscript'] = $_POST['noscript'];
 			$opts['trash'] = $trash_exists ? $_POST['trash'] : 'delete';
 			
 			// check that keys have been supplied for recaptcha
@@ -122,11 +134,6 @@ class Conditional_Captcha {
 		<li><label><?php _e('Private key:', self::dom);?></label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		</ul>
 		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', self::dom), 'http://recaptcha.net/api/getkey');?></small></p>
-		<p><?php _e('reCAPTCHA requires Javascript to be enabled by the client in order to work. In cases where Javascript is disabled:', self::dom);?></p>
-		<ul class="indent">
-		<li><input type="radio" name="noscript" value="default" <?php if($opts['noscript']=='default') echo 'checked="checked"'?> /> <label><?php _e('Revert to the default CAPTCHA method (recommended)', self::dom);?></label></li>
-		<li><input type="radio" name="noscript" value="die" <?php if($opts['noscript']=='die') echo 'checked="checked"'?> /> <label><?php _e('Deny the user the opportunity to complete a CAPTCHA', self::dom);?></label></li>
-		</ul>
 	</div>
 	<h3><?php _e('Comment Handling', self::dom);?></h3>
 	<p><?php _e('When a CAPTCHA is completed correctly:', self::dom);?></p>
@@ -145,8 +152,8 @@ class Conditional_Captcha {
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:', self::dom);?></p>
 	<textarea name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo $opts['style'];?></textarea>
 	<p><small><?php _e('Empty this box completely to revert back to the default style.', self::dom);?></small></p>
-	<h3><?php _e('CAPTCHA Preview', self::dom);?></h3>
-	<div id="captcha_preview">
+	<h3 id="captcha_preview_title" style="display:none"><?php _e('CAPTCHA Preview', self::dom);?></h3>
+	<div id="captcha_preview" style="display:none">
 		<p><?php _e('Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first.', self::dom);?></p>
 		<p><input class="button-secondary" type="button" value="<?php _e('Show preview of CAPTCHA page', self::dom);?>" /></p>
 	</div>
@@ -161,6 +168,7 @@ class Conditional_Captcha {
 	});
 	jQuery(document).ready(function(){
 		if(jQuery('#type-recaptcha:checked').length == 0) jQuery('#recaptcha-settings').hide();
+		jQuery('#captcha_preview, #captcha_preview_title').show();	// show them only if JS is enabled
 		jQuery('#captcha_preview input').click( function(){
 			jQuery('#captcha_preview').html('<iframe width="860" height="250" style="border: 3px solid #AAA" src="' + ajaxurl + '?action=conditional_captcha_css_preview"></iframe>')}
 		);
@@ -173,7 +181,7 @@ class Conditional_Captcha {
 	}
 	
 	function ajax_output() {
-		$this->options = get_option('conditional_captcha_options');	// load options - they won't have been loaded because check_captcha() didn't run
+		$this->load_options();	// they won't have been loaded yet because check_captcha() didn't run
 		$this->do_captcha(false, false);
 	}
 	
@@ -182,14 +190,14 @@ class Conditional_Captcha {
 	}
 
 	function check_captcha($comment) {
-		$this->options = get_option('conditional_captcha_options');	// load options
+		$this->load_options();
 		if( isset($_POST['captcha_nonce']) ) {	// then a captcha has been completed...
 			$result = $this->captcha_is_valid();
 			if($result !== true) $this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted.', self::dom).'</p>');
 			else {
 				update_option('conditional_captcha_count', get_option('conditional_captcha_count') - 1 ); // rewind
 				// if trash is enabled, check for the trashed comment
-				if($this->options['trash'] == 'trash') {
+				if( 'trash' == $this->options['trash'] ) {
 					if( $trashed = get_comment($_POST['trashed_id']) ) {
 						// change status from "trash" to one of "approve" or "spam"
 						wp_set_comment_status( $trashed->comment_ID, $this->options['pass_action'] );
@@ -239,7 +247,7 @@ class Conditional_Captcha {
 		
 		// the captcha
 		$html .= $this->create_captcha();
-		$html .= '<input class="submit" type="submit" value="'.__("I'm human!", self::dom).'" /></form>';
+		$html .= '<p><input class="submit" type="submit" value="'.__("I'm human!", self::dom).'" /></p></form>';
 		
 		// stats - this count will be reversed if they correctly complete the CAPTCHA
 		if($real) update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1); 
@@ -257,16 +265,11 @@ class Conditional_Captcha {
 	}
 
 	private function create_captcha() {
-		if('recaptcha' == $this->options['captcha-type']) {
-			$noscript = ('default' == $this->options['noscript']) ? $this->get_default_captcha() : '<p><strong>'.__('Sorry, Javascript must be enabled in order to complete the CAPTCHA.', self::dom).'</strong></p>';
-			
-			return '<script type="text/javascript" src="http://api.recaptcha.net/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript>'.$noscript.'<input type="hidden" name="captcha_noscript" value="true" /></noscript>';
-		}
+		if('recaptcha' == $this->options['captcha-type'])			
+			return '<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+       <input type="hidden" name="recaptcha_response_field" value="manual_challenge"></noscript>';
+		
 		// otherwise do default
-		return $this->get_default_captcha();
-	}
-	
-	private function get_default_captcha() {
 		$chall = str_split( $this->hash( rand() ) );	// random string with 6 characters, split into array
 		$num1 = rand(1,5);									// random number between 1 and 5
 		$num2 = rand($num1 + 1,6);							// random number between $num1+1 and 6
@@ -278,25 +281,22 @@ class Conditional_Captcha {
 	}
 	
 	private function captcha_is_valid() {
-		// check that the nonce is valid and hasn't already be completed successfully
-		if( !$this->check_nonce($_POST['captcha_nonce']) ) 
+		// check that the nonce is valid
+		if( !$this->check_nonce( $_POST['captcha_nonce'] ) ) 
 			return __('Trying something funny, are we?', self::dom);
 		
 		$status = true;
-		$noscript = isset($_POST['captcha_noscript']) && 'default' == $this->options['noscript'];
-		// if a reCAPTCHA is submitted and there is no noscript
-		if('recaptcha' == $this->options['captcha-type'] && !$noscript) {
+
+		// if reCAPTCHA
+		if( 'recaptcha' == $this->options['captcha-type'] ) {
 			$resp = $this->recaptcha_check($_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
 
 			if(true !== $resp) $status = sprintf(__("Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)", self::dom), $resp);
 		}
-		// if default captcha is used either as default or noscript fallback
-		elseif('default' == $this->options['captcha-type'] || $noscript) {
+		else {
 			// do default validation
 			if($_POST['captcha_hash'] != $this->hash( strtoupper($_POST['captcha_response']) ) ) $status = __("Sorry, the CAPTCHA wasn't entered correctly.", self::dom);
 		}
-		else
-			$status = __("Sorry, you cannot submit a CAPTCHA with Javascript disabled in your browser.", self::dom);
 		
 		return $status;
 	}
@@ -318,10 +318,10 @@ class Conditional_Captcha {
 
 	private function recaptcha_post($data) {
 		$req = http_build_query($data);
-		$host = 'api-verify.recaptcha.net';
+		$host = 'www.google.com';
 		
 		$headers = array(
-			'POST /verify HTTP/1.0',
+			'POST /recaptcha/api/verify HTTP/1.0',
 			'Host: ' . $host,
 			'Content-Type: application/x-www-form-urlencoded;',
 			'Content-Length: ' . strlen($req),
@@ -338,7 +338,7 @@ class Conditional_Captcha {
 		fwrite($fs, $http_request);
 		while ( !feof($fs) ) $response .= fgets($fs, 1160); // One TCP-IP packet
 		fclose($fs);
-		$parts = explode("\r\n\r\n", $response, 2);	// [0] = response header, [1] = body
+		$parts = explode("\r\n\r\n", $response, 2);			// [0] = response header, [1] = body
 		return explode("\n", $parts[1]);					// [0] 'true' or 'false', [1] = error message
 	}
 
@@ -354,5 +354,5 @@ class Conditional_Captcha {
 } // class
 
 // load
-$conditional_captcha = new Conditional_Captcha();
+$GLOBALS['conditional_captcha_instance'] = new Conditional_Captcha();
 ?>

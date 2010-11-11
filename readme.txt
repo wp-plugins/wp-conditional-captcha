@@ -44,6 +44,11 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-capt
 
 == Changelog ==
 
+= 2.6 =
+* Added support for non-js reCAPTCHA
+* Updated reCAPTCHA API interface
+* Modified upgrade routine because of changes to plugin update handling in Wordpress 3.1
+
 = 2.5 =
 * Added the ability to preview the CAPTCHA page from within the administration interface
 * Minor performance optimisations
