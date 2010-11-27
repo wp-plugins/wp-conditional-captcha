@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 2.6
+Version: 2.7
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -37,7 +37,7 @@ class Conditional_Captcha {
 		// if db_version has changed...
 		if( !isset( $this->options['db_version'] ) || $this->options['db_version'] != self::db_version ) {
 			$defaults = array(
-				'captcha-type' => 'default', 'pass_action' => 'spam',
+				'captcha-type' => 'default', 'pass_action' => 'hold',
 				'recaptcha-private-key' => '', 'recaptcha-public-key' => '',
 				'trash' => 'delete', 'style' => file_get_contents($this->cssfile),
 				'db_version' => self::db_version
@@ -62,7 +62,7 @@ class Conditional_Captcha {
 		
 		// figure out which antispam solution to hook into - first match wins
 		foreach($antispam as $k => $v) if( function_exists($v[1]) ) {
-			$this->antispam = array('name' => $v[0], 'check_function' => $v[1], 'caught_action' => $v[2]);
+			$this->antispam = array( 'name' => $v[0], 'check_function' => $v[1], 'caught_action' => $v[2] );
 			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); // BEFORE akismet/typepad
 			$this->ready = true;
 			break;
@@ -139,6 +139,7 @@ class Conditional_Captcha {
 	<p><?php _e('When a CAPTCHA is completed correctly:', self::dom);?></p>
 	<ul class="indent">
 	<li><input type="radio" name="pass_action" value="spam" <?php if('spam' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Leave the comment in the spam queue', self::dom);?></li>
+	<li><input type="radio" name="pass_action" value="hold" <?php if('hold' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Queue the comment for moderation', self::dom);?></li>
 	<li><input type="radio" name="pass_action" value="approve" <?php if('approve' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Approve the comment', self::dom);?></li>
 	</ul>
 	<?php if($trash_exists) { ?>
@@ -193,38 +194,76 @@ class Conditional_Captcha {
 		$this->load_options();
 		if( isset($_POST['captcha_nonce']) ) {	// then a captcha has been completed...
 			$result = $this->captcha_is_valid();
-			if($result !== true) $this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted.', self::dom).'</p>');
-			else {
-				update_option('conditional_captcha_count', get_option('conditional_captcha_count') - 1 ); // rewind
+			if($result !== true) {
+				// they failed the captcha!
+				$this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted.', self::dom).'</p>');
+			}
+			else {	
+				// the captcha was passed, so rewind the stats
+				update_option('conditional_captcha_count', get_option('conditional_captcha_count') - 1 );
+				
 				// if trash is enabled, check for the trashed comment
 				if( 'trash' == $this->options['trash'] ) {
 					if( $trashed = get_comment($_POST['trashed_id']) ) {
-						// change status from "trash" to one of "approve" or "spam"
+						// change status. this will call wp_notify_postauthor if set to approve
 						wp_set_comment_status( $trashed->comment_ID, $this->options['pass_action'] );
+						
+						// if set to approve or hold the comment, fake a spam status transition to ensure that Akismet is notified of the false positive
+						if( 'spam' != $this->options['pass_action'] ) 
+							wp_transition_comment_status( $this->options['pass_action'], 'spam', $trashed );
+
+						// if set to hold, then trigger moderation notice
+						if( 'hold' == $this->options['pass_action'] )
+							wp_notify_moderator($trashed->comment_ID);
+						
 						// redirect like wp-comments-post does
 						$location = empty($_POST['redirect_to']) ? get_comment_link($trashed->comment_ID) : $_POST['redirect_to'] . '#comment-' . $trashed->comment_ID;
-						$location = apply_filters('comment_post_redirect', $location, $trashed);
-						wp_redirect( $location );
+						$location = apply_filters( 'comment_post_redirect', $location, $trashed );
+						wp_redirect($location);
 						exit;
 					}
-					else $this->page(__('Comment rejected', self::dom), '<p>'.__('Trying something funny, are we?', self::dom).'</p>'); // the trashed comment doesn't exist!
+					else {
+						// the trashed comment doesn't exist!
+						$this->page(__('Comment rejected', self::dom), '<p>'.__('Trying something funny, are we?', self::dom).'</p>');
+					}
 				}
-				// if pass_action is 'approve', then remove antispam hook
-				elseif('approve' == $this->options['pass_action'])
-					remove_action('preprocess_comment', $this->antispam['check_function'], 1);
+				else {
+					// remove the spam plugin's hook - there is no point in checking again
+					remove_action( 'preprocess_comment', $this->antispam['check_function'], 1 );
+					// hook to set the comment status ourselves
+					add_filter( 'pre_comment_approved', array(&$this, 'set_passed_comment_status') );
+				}
 			}
 		}
-		elseif( empty($comment['comment_type']) ) {	// don't mess with pingbacks and trackbacks
+		elseif( empty( $comment['comment_type'] ) ) {	// don't mess with pingbacks and trackbacks
 			add_action($this->antispam['caught_action'], array(&$this, 'spam_handler'));	// set up spam intercept 
 		}
 		
 		return $comment;
 	}
+	
+	function set_passed_comment_status() {
+		// comment status needs to be either 0, 1 or 'spam' at this stage, so translate pass_action accordingly
+		$status = $this->options['pass_action'];
+		if( 'approve' == $status ) $status = '1';
+		if( 'hold' == $status ) $status = '0';
+		
+		if( 'spam' != $status )
+			add_action( 'comment_post', array(&$this, 'spam_to_ham'), 10, 1 );
+			
+		return $status;
+	}
+	
+	function spam_to_ham($comment_id) {
+		// fake a comment transition from spam, so that Akismet picks up a false positive
+		if( $comment = get_comment($comment_id) )
+			wp_transition_comment_status( $this->options['pass_action'], 'spam', $comment );
+	}
 
 	function spam_handler() {
-		if('trash' == $this->options['trash']) {
-			add_filter('pre_comment_approved', create_function('', 'return "trash";'), 11); // after akismet/typepad
-			add_action('comment_post', array(&$this, 'do_captcha')); // do captcha after comment is stored
+		if( 'trash' == $this->options['trash'] ) {
+			add_filter( 'pre_comment_approved', create_function('', 'return "trash";'), 11 ); // after akismet/typepad
+			add_action( 'comment_post', array(&$this, 'do_captcha') ); // do captcha after comment is stored
 		}
 		else $this->do_captcha(); // otherwise do captcha now
 	}
@@ -265,12 +304,12 @@ class Conditional_Captcha {
 	}
 
 	private function create_captcha() {
-		if('recaptcha' == $this->options['captcha-type'])			
+		if( 'recaptcha' == $this->options['captcha-type'] )			
 			return '<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
        <input type="hidden" name="recaptcha_response_field" value="manual_challenge"></noscript>';
 		
 		// otherwise do default
-		$chall = str_split( $this->hash( rand() ) );	// random string with 6 characters, split into array
+		$chall = str_split( $this->hash( rand() ) );		// random string with 6 characters, split into array
 		$num1 = rand(1,5);									// random number between 1 and 5
 		$num2 = rand($num1 + 1,6);							// random number between $num1+1 and 6
 		$hash = $this->hash( $chall[$num1-1] . $chall[$num2-1] );
@@ -289,9 +328,9 @@ class Conditional_Captcha {
 
 		// if reCAPTCHA
 		if( 'recaptcha' == $this->options['captcha-type'] ) {
-			$resp = $this->recaptcha_check($_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
+			$resp = $this->recaptcha_check( $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field'] );
 
-			if(true !== $resp) $status = sprintf(__("Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)", self::dom), $resp);
+			if(true !== $resp) $status = sprintf( __("Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)", self::dom), $resp );
 		}
 		else {
 			// do default validation
