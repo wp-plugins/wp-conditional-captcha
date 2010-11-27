@@ -1,14 +1,14 @@
-# Translation of the WordPress plugin Conditional CAPTCHA for Wordpress 2.6 by Samir Shah.
+# Translation of the WordPress plugin Conditional CAPTCHA for Wordpress 2.7 by Samir Shah.
 # Copyright (C) 2010 Samir Shah
 # This file is distributed under the same license as the Conditional CAPTCHA for Wordpress package.
-# Samir Shah < samir [at] rayofsolaris.net >, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Conditional CAPTCHA for Wordpress 2.6\n"
+"Project-Id-Version: Conditional CAPTCHA for Wordpress 2.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
-"POT-Creation-Date: 2010-11-11 11:27+0000\n"
+"POT-Creation-Date: 2010-11-27 04:26+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,131 +126,135 @@ msgid "Leave the comment in the spam queue"
 msgstr ""
 
 #: wp-conditional-captcha.php:142
+msgid "Queue the comment for moderation"
+msgstr ""
+
+#: wp-conditional-captcha.php:143
 msgid "Approve the comment"
 msgstr ""
 
-#: wp-conditional-captcha.php:145
+#: wp-conditional-captcha.php:146
 msgid "When a CAPTCHA is <strong>not</strong> completed correctly:"
 msgstr ""
 
-#: wp-conditional-captcha.php:147
+#: wp-conditional-captcha.php:148
 msgid "Delete the comment permanently"
 msgstr ""
 
-#: wp-conditional-captcha.php:148
+#: wp-conditional-captcha.php:149
 msgid "Trash the comment"
 msgstr ""
 
-#: wp-conditional-captcha.php:151
+#: wp-conditional-captcha.php:152
 msgid "CAPTCHA Page Style"
 msgstr ""
 
-#: wp-conditional-captcha.php:152
+#: wp-conditional-captcha.php:153
 msgid ""
 "If you want to style your CAPTCHA page to fit with your own theme, you can "
 "modify the default CSS below:"
 msgstr ""
 
-#: wp-conditional-captcha.php:154
+#: wp-conditional-captcha.php:155
 msgid "Empty this box completely to revert back to the default style."
 msgstr ""
 
-#: wp-conditional-captcha.php:155
+#: wp-conditional-captcha.php:156
 msgid "CAPTCHA Preview"
 msgstr ""
 
-#: wp-conditional-captcha.php:157
+#: wp-conditional-captcha.php:158
 msgid ""
 "Click the button below to view a preview of what the CAPTCHA page will look "
 "like. If you have made changes above, please submit them first."
 msgstr ""
 
-#: wp-conditional-captcha.php:158
+#: wp-conditional-captcha.php:159
 msgid "Show preview of CAPTCHA page"
 msgstr ""
 
-#: wp-conditional-captcha.php:176
+#: wp-conditional-captcha.php:177
 msgid ""
 "You have changed some settings above that affect how the CAPTCHA is "
 "displayed. Please submit the changes to be able to see a preview."
 msgstr ""
 
-#: wp-conditional-captcha.php:189
+#: wp-conditional-captcha.php:190
 #, php-format
 msgid ""
 "%s spam comments have been automatically discarded by <em>Conditional "
 "CAPTCHA</em>."
 msgstr ""
 
-#: wp-conditional-captcha.php:196
+#: wp-conditional-captcha.php:199
 msgid "Comment Rejected"
 msgstr ""
 
-#: wp-conditional-captcha.php:196
+#: wp-conditional-captcha.php:199
 msgid "Your comment will not be accepted."
 msgstr ""
 
-#: wp-conditional-captcha.php:210
+#: wp-conditional-captcha.php:227
 msgid "Comment rejected"
 msgstr ""
 
-#: wp-conditional-captcha.php:210 wp-conditional-captcha.php:286
+#: wp-conditional-captcha.php:227 wp-conditional-captcha.php:325
 msgid "Trying something funny, are we?"
 msgstr ""
 
-#: wp-conditional-captcha.php:236
+#: wp-conditional-captcha.php:275
 msgid "This CAPTCHA is a visual preview only; you cannot submit it."
 msgstr ""
 
-#: wp-conditional-captcha.php:237
+#: wp-conditional-captcha.php:276
 msgid ""
 "Sorry, but I think you might be a spambot. Please complete the CAPTCHA below "
 "to prove that you are human."
 msgstr ""
 
-#: wp-conditional-captcha.php:250
+#: wp-conditional-captcha.php:289
 msgid "I'm human!"
 msgstr ""
 
-#: wp-conditional-captcha.php:254
+#: wp-conditional-captcha.php:293
 msgid "Verification required"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "first"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "second"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "third"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "fourth"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "fifth"
 msgstr ""
 
-#: wp-conditional-captcha.php:278
+#: wp-conditional-captcha.php:317
 msgid "sixth"
 msgstr ""
 
-#: wp-conditional-captcha.php:280
+#: wp-conditional-captcha.php:319
 #, php-format
 msgid "What are the %1$s and %2$s characters of the following sequence?"
 msgstr ""
 
-#: wp-conditional-captcha.php:294
+#: wp-conditional-captcha.php:333
 #, php-format
 msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
 msgstr ""
 
-#: wp-conditional-captcha.php:298
+#: wp-conditional-captcha.php:337
 msgid "Sorry, the CAPTCHA wasn't entered correctly."
 msgstr ""
 
