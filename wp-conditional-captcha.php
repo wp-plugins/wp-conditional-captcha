@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 2.7
+Version: 2.8
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -16,7 +16,7 @@ class Conditional_Captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
 	const dom = 'wp-conditional-captcha'; 	// i18n domain
-	const db_version = 1;					// options version, introduced in v2.6
+	const db_version = 2;					// options version, introduced in v2.6
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
@@ -38,7 +38,7 @@ class Conditional_Captcha {
 		if( !isset( $this->options['db_version'] ) || $this->options['db_version'] != self::db_version ) {
 			$defaults = array(
 				'captcha-type' => 'default', 'pass_action' => 'hold',
-				'recaptcha-private-key' => '', 'recaptcha-public-key' => '',
+				'recaptcha-private-key' => '', 'recaptcha-public-key' => '', 'recaptcha_theme' => 'red', 'recaptcha_lang' => 'en',
 				'trash' => 'delete', 'style' => file_get_contents($this->cssfile),
 				'db_version' => self::db_version
 			);
@@ -94,6 +94,8 @@ class Conditional_Captcha {
 			$opts['captcha-type'] = $_POST['captcha-type'];
 			$opts['recaptcha-private-key'] = $_POST['recaptcha-private-key'];
 			$opts['recaptcha-public-key'] = $_POST['recaptcha-public-key'];
+			$opts['recaptcha_theme'] = $_POST['recaptcha_theme'];
+			$opts['recaptcha_lang'] = $_POST['recaptcha_lang'];
 			$opts['trash'] = $trash_exists ? $_POST['trash'] : 'delete';
 			
 			// check that keys have been supplied for recaptcha
@@ -134,6 +136,29 @@ class Conditional_Captcha {
 		<li><label><?php _e('Private key:', self::dom);?></label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		</ul>
 		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', self::dom), 'http://recaptcha.net/api/getkey');?></small></p>
+		<p><?php _e('reCAPTCHA offers a some customisations that affect how it is displayed. You can modify these below.', self::dom) ?></p>
+		<ul class="indent">
+		<li><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', self::dom), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
+		<select name="recaptcha_theme">
+			<?php
+			$rc_themes = array('red' => 'Red (default)', 'white' => 'White', 'blackglass' => 'Blackglass', 'clean' => 'Clean');
+			foreach( $rc_themes as $k => $v ) {
+				$selected = ( $k == $opts['recaptcha_theme'] ) ? 'selected="selected"' : '';
+				echo "<option value='$k' $selected>$v</option>";
+			}
+			?>
+		</select></li>
+		</ul>
+		<li><?php _e('reCAPTCHA language:', self::dom) ?>
+		<select name="recaptcha_lang">
+			<?php
+			$rc_langs = array('en' => 'English (default)', 'nl' => 'Dutch', 'fr' => 'French', 'de' => 'German', 'pt' => 'Portuguese', 'ru' => 'Russian', 'es' => 'Spanish', 'tr' => 'Turkish');
+			foreach( $rc_langs as $k => $v ) {
+				$selected = ( $k == $opts['recaptcha_lang'] ) ? 'selected="selected"' : '';
+				echo "<option value='$k' $selected>$v</option>";
+			}
+			?>
+		</select></li>
 	</div>
 	<h3><?php _e('Comment Handling', self::dom);?></h3>
 	<p><?php _e('When a CAPTCHA is completed correctly:', self::dom);?></p>
@@ -173,7 +198,7 @@ class Conditional_Captcha {
 		jQuery('#captcha_preview input').click( function(){
 			jQuery('#captcha_preview').html('<iframe width="860" height="250" style="border: 3px solid #AAA" src="' + ajaxurl + '?action=conditional_captcha_css_preview"></iframe>')}
 		);
-		jQuery('input[name=captcha-type], textarea[name=style]').change( function(){
+		jQuery('input[name=captcha-type], textarea[name=style], select[name=recaptcha_theme], select[name=recaptcha_lang]').change( function(){
 			jQuery('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', self::dom);?></p>')}
 		);
 	});
@@ -196,7 +221,7 @@ class Conditional_Captcha {
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
 				// they failed the captcha!
-				$this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted.', self::dom).'</p>');
+				$this->page(__('Comment Rejected', self::dom), '<p>'.$result.' '.__('Your comment will not be accepted. If you want to try again, please use the back button in your browser.', self::dom).'</p>');
 			}
 			else {	
 				// the captcha was passed, so rewind the stats
@@ -304,9 +329,12 @@ class Conditional_Captcha {
 	}
 
 	private function create_captcha() {
-		if( 'recaptcha' == $this->options['captcha-type'] )			
-			return '<script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+		if( 'recaptcha' == $this->options['captcha-type'] ) {			
+			$html = '<script> var RecaptchaOptions = {theme: "' . $this->options['recaptcha_theme'] . '", lang: "' . $this->options['recaptcha_lang'] . '"}; </script>';
+			$html .= '<script src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
        <input type="hidden" name="recaptcha_response_field" value="manual_challenge"></noscript>';
+			return $html;
+		}
 		
 		// otherwise do default
 		$chall = str_split( $this->hash( rand() ) );		// random string with 6 characters, split into array

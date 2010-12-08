@@ -44,6 +44,9 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-capt
 
 == Changelog ==
 
+= 2.8 =
+* Added the ability to customise the appearance and language of reCAPTCHA
+
 = 2.7 =
 * Ensure that passed CAPTCHAs are reported as false positives to Akismet/TypePad Antispam. Thanks to [Kevin](http://www.investitwisely.com) for the suggestion.
 * Added the option to place passed comments in the moderation queue
