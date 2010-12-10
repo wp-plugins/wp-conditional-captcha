@@ -40,7 +40,7 @@ If you have any problems or suggestions, you can [email me](http://rayofsolaris.
 
 == Frequently Asked Questions ==
 
-You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq)
+You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-captcha-for-wordpress)
 
 == Changelog ==
 
