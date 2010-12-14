@@ -1,6 +1,6 @@
 === Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
-Tags: anti-spam, captcha, comments, spam, bot, reCAPTCHA, Akismet, TypePad AntiSpam
+Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 2.8
 Tested up to: 3.1
 Stable tag: trunk
