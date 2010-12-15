@@ -44,6 +44,9 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-capt
 
 == Changelog ==
 
+= 2.9 =
+* Updated to fix issue with Akismet version 2.5.0 and Wordpress 3.0.3 when set to trash failed comments
+
 = 2.8 =
 * Added the ability to customise the appearance and language of reCAPTCHA
 
