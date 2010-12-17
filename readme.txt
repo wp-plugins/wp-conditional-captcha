@@ -33,7 +33,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * Finnish (thanks to Jani)
 * French (thanks to [Laurent](http://android-software.fr))
 * German (thanks to [Rian](http://diensten.kiwa.nl/mvo))
-* Italian (thanks to[Gianni](http://gidibao.net/))
+* Italian (thanks to [Gianni](http://gidibao.net/))
 * Polish (thanks to [Pawel](http://www.spin.siedlce.pl))
 * Russian (thanks to [Serge](http://verevkin.info))
 
