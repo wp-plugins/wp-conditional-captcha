@@ -1,23 +1,18 @@
-# Translation of the WordPress plugin Conditional CAPTCHA for Wordpress 2.8 by Samir Shah.
-# Copyright (C) 2010 Samir Shah
+# Copyright (C) 2010 Conditional CAPTCHA for Wordpress
 # This file is distributed under the same license as the Conditional CAPTCHA for Wordpress package.
-# Samir Shah <samir [at] rayofsolaris.net>, 2010.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Conditional CAPTCHA for Wordpress 2.8\n"
+"Project-Id-Version: Conditional CAPTCHA for Wordpress 2.9\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
-"POT-Creation-Date: 2010-12-08 05:13+0000\n"
+"POT-Creation-Date: 2010-12-24 04:01:44+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 
 #: wp-conditional-captcha.php:76
-#, php-format
 msgid ""
 "Conditional CAPTCHA is currently inactive. Please visit the plugin <a href="
 "\"%s\">configuration page</a> for information on how to fix this."
@@ -66,7 +61,6 @@ msgid "Anti-spam Plugin"
 msgstr ""
 
 #: wp-conditional-captcha.php:125
-#, php-format
 msgid ""
 "Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and "
 "active on your site. It will serve a CAPTCHA when %1$s identifies a comment "
@@ -78,7 +72,6 @@ msgid "CAPTCHA Method"
 msgstr ""
 
 #: wp-conditional-captcha.php:127
-#, php-format
 msgid ""
 "The default captcha is a simple text-based test (<a href=\"%1$s\" target="
 "\"_blank\">check out the screenshot here</a>), but if you prefer you can "
@@ -107,7 +100,6 @@ msgid "Private key:"
 msgstr ""
 
 #: wp-conditional-captcha.php:138
-#, php-format
 msgid ""
 "You can <a href=\"%s\" target=\"_blank\">sign up for a key here</a> (it's "
 "free)"
@@ -120,7 +112,6 @@ msgid ""
 msgstr ""
 
 #: wp-conditional-captcha.php:141
-#, php-format
 msgid ""
 "reCAPTCHA theme (see <a href=\"%s\" target=\"_blank\">here</a> for examples):"
 msgstr ""
@@ -196,7 +187,6 @@ msgid ""
 msgstr ""
 
 #: wp-conditional-captcha.php:215
-#, php-format
 msgid ""
 "%s spam comments have been automatically discarded by <em>Conditional "
 "CAPTCHA</em>."
@@ -263,12 +253,10 @@ msgid "sixth"
 msgstr ""
 
 #: wp-conditional-captcha.php:347
-#, php-format
 msgid "What are the %1$s and %2$s characters of the following sequence?"
 msgstr ""
 
 #: wp-conditional-captcha.php:361
-#, php-format
 msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
 msgstr ""
 
