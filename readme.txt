@@ -23,7 +23,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 **Requirements:**
 
 * *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
-* PHP 5 is required.
+* PHP version 5 or greater
 
 **Available translations:**
 
