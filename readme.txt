@@ -37,7 +37,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * Polish (thanks to [Pawel](http://www.spin.siedlce.pl))
 * Russian (thanks to [Serge](http://verevkin.info))
 
-If you have any problems or suggestions, you can [email me](http://rayofsolaris.net/contact/).
+If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net).
 
 == Frequently Asked Questions ==
 
