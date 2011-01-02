@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Conditional CAPTCHA for Wordpress 2.9\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
-"POT-Creation-Date: 2010-12-24 04:01:44+00:00\n"
+"POT-Creation-Date: 2011-01-02 10:52:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -180,6 +180,10 @@ msgstr ""
 msgid "Show preview of CAPTCHA page"
 msgstr ""
 
+#: wp-conditional-captcha.php:186
+msgid "Update settings"
+msgstr ""
+
 #: wp-conditional-captcha.php:202
 msgid ""
 "You have changed some settings above that affect how the CAPTCHA is "
@@ -188,9 +192,13 @@ msgstr ""
 
 #: wp-conditional-captcha.php:215
 msgid ""
+"%s spam comment has been automatically discarded by <em>Conditional CAPTCHA</"
+"em>."
+msgid_plural ""
 "%s spam comments have been automatically discarded by <em>Conditional "
 "CAPTCHA</em>."
-msgstr ""
+msgstr[0] ""
+msgstr[1] ""
 
 #: wp-conditional-captcha.php:224
 msgid "Comment Rejected"
