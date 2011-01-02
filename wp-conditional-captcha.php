@@ -183,7 +183,7 @@ class Conditional_Captcha {
 		<p><?php _e('Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first.', self::dom);?></p>
 		<p><input class="button-secondary" type="button" value="<?php _e('Show preview of CAPTCHA page', self::dom);?>" /></p>
 	</div>
-	<p class="submit"><input class="button-primary" type="submit" name="submit" value="Update settings" /></p>
+	<p class="submit"><input class="button-primary" type="submit" name="submit" value="<?php _e('Update settings', self::dom);?>" /></p>
 	</form>
 	</div>
 	</div>
