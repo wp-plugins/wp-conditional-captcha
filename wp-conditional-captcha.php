@@ -212,7 +212,7 @@ class Conditional_Captcha {
 	}
 	
 	function rightnow() {
-		if ($n = get_option('conditional_captcha_count') ) printf('<p class="conditional-captcha-stats">'.__('%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>.', self::dom).'</p>', number_format_i18n($n) );
+		if ($n = get_option('conditional_captcha_count') ) printf('<p class="conditional-captcha-stats">'._n('%s spam comment has been automatically discarded by <em>Conditional CAPTCHA</em>.', '%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>.', $n, self::dom).'</p>', number_format_i18n($n) );
 	}
 
 	function check_captcha($comment) {
