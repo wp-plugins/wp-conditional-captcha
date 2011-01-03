@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Blogr.lt sulietuvinimas\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-29 13:13+0300\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
+"POT-Creation-Date: 2011-01-02 10:52:55+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Mantas Malcius <kaipgis@gmail.com>\n"
 "Language-Team: Mantas Malcius <kaipgis@gmail.com>\n"
@@ -161,13 +161,20 @@ msgstr "Paspaudę žemiau esantį mygtuką, pamatysite, kaip „CAPTCHA“ atrod
 msgid "Show preview of CAPTCHA page"
 msgstr "Rodyti „CAPTCHA“ puslapį"
 
+#: wp-conditional-captcha.php:186
+msgid "Update settings"
+msgstr "Atnaujinti nuostatas"
+
 #: wp-conditional-captcha.php:202
 msgid "You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview."
 msgstr "Jūs atlikote tam tikrus nuostatų pakeitimus, kurie daro įtaką „CAPTCHA“ puslapio išvaizdai. Atnaujinkite nuostatas, jei norite pamatyti pavyzdį."
 
 #: wp-conditional-captcha.php:215
-msgid "%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>."
-msgstr "<em>Conditional CAPTCHA</em> įskiepio automatiškai pašalintų komentarų skaičius: %s "
+msgid "%s spam comment has been automatically discarded by <em>Conditional CAPTCHA</em>."
+msgid_plural "%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>."
+msgstr[0] "Įskiepis „<em>Conditional CAPTCHA</em>“ jau užblokavo %s brukalą."
+msgstr[1] "Įskiepis „<em>Conditional CAPTCHA</em>“ jau užblokavo %s brukalus."
+msgstr[2] "Įskiepis „<em>Conditional CAPTCHA</em>“ jau užblokavo %s brukalų."
 
 #: wp-conditional-captcha.php:224
 msgid "Comment Rejected"
