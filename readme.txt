@@ -46,6 +46,9 @@ You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-capt
 
 == Changelog ==
 
+= 3.0 =
+* Bugfix: don't mangle Unicode characters when submitting a CAPTCHA. Thanks to Mantas for pointing this out.
+
 = 2.9 =
 * Updated to fix issue with Akismet version 2.5.0 and Wordpress 3.0.3 when set to trash failed comments
 
