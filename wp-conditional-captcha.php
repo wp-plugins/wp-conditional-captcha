@@ -148,7 +148,6 @@ class Conditional_Captcha {
 			}
 			?>
 		</select></li>
-		</ul>
 		<li><?php _e('reCAPTCHA language:', self::dom) ?>
 		<select name="recaptcha_lang">
 			<?php
@@ -159,6 +158,7 @@ class Conditional_Captcha {
 			}
 			?>
 		</select></li>
+		</ul>
 	</div>
 	<h3><?php _e('Comment Handling', self::dom);?></h3>
 	<p><?php _e('When a CAPTCHA is completed correctly:', self::dom);?></p>
