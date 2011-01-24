@@ -25,19 +25,6 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
 * PHP version 5 or greater
 
-**Available translations:**
-
-* Belorussian (thanks to [Marcis G](http://pc.de))
-* Danish (thanks to Jesper)
-* Dutch (thanks to [Rene](http://wpwebshop.com/books/))
-* Finnish (thanks to Jani)
-* French (thanks to [Laurent](http://android-software.fr))
-* German (thanks to [Jochen](http://jochenpreusche.com))
-* Italian (thanks to [Gianni](http://gidibao.net/))
-* Lithuanian (thanks to Mantas)
-* Polish (thanks to [Pawel](http://www.spin.siedlce.pl))
-* Russian (thanks to [Serge](http://verevkin.info))
-
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net).
 
 == Frequently Asked Questions ==
