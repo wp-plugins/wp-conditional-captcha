@@ -325,7 +325,9 @@ class Conditional_Captcha {
 			status_header(403);
 			header('Content-Type: text/html; charset=utf-8');
 		}
-		echo "<!doctype html><html><head><title>$title</title><style>\n".$this->options['style']."\n</style></head><body id='conditional_captcha'>$message</body></html>";
+		echo "<!doctype html><html><head><title>$title</title>\n";
+		echo "<style>\n".$this->options['style']."\n</style>\n";
+		echo "</head><body id='conditional_captcha'><div id='conditional_captcha_message'>$message</div></body></html>";
 		exit;
 	}
 
