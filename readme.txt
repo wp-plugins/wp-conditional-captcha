@@ -25,11 +25,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
 * PHP version 5 or greater
 
-If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net).
-
-== Frequently Asked Questions ==
-
-You can find a list of FAQs [here](http://rayofsolaris.net/code/conditional-captcha-for-wordpress)
+If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues.
 
 == Changelog ==
 
