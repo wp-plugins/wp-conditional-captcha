@@ -21,12 +21,12 @@ class Conditional_Captcha {
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
 		load_plugin_textdomain(self::dom, false, dirname( plugin_basename( __FILE__ ) ) . '/languages');
-		add_action('plugins_loaded', array(&$this, 'load') );
+		add_action('plugins_loaded', array($this, 'load') );
 		
 		if( is_admin() ) {
-			add_action('admin_menu', 								array(&$this, 'settings_menu')	 );
-			add_action('wp_ajax_conditional_captcha_css_preview', 	array(&$this, 'ajax_output')	 );		// for captcha preview
-			add_action('rightnow_end', 								array(&$this, 'rightnow'),		 11); 	// after akismet/typepad
+			add_action('admin_menu', 								array($this, 'settings_menu')	 );
+			add_action('wp_ajax_conditional_captcha_css_preview', 	array($this, 'ajax_output')	 );		// for captcha preview
+			add_action('rightnow_end', 								array($this, 'rightnow'),		 11); 	// after akismet/typepad
 		}
 	}
 	
@@ -63,12 +63,12 @@ class Conditional_Captcha {
 		// figure out which antispam solution to hook into - first match wins
 		foreach($antispam as $k => $v) if( function_exists($v[1]) ) {
 			$this->antispam = array( 'name' => $v[0], 'check_function' => $v[1], 'caught_action' => $v[2] );
-			add_filter('preprocess_comment', array(&$this, 'check_captcha'), 0); // BEFORE akismet/typepad
+			add_filter('preprocess_comment', array($this, 'check_captcha'), 0); // BEFORE akismet/typepad
 			$this->ready = true;
 			break;
 		}
 				
-		if( !$this->ready && is_admin() ) add_action('admin_notices', array(&$this, 'plugin_inactive') );
+		if( !$this->ready && is_admin() ) add_action('admin_notices', array($this, 'plugin_inactive') );
 	}
 	
 	function plugin_inactive() {
@@ -77,7 +77,7 @@ class Conditional_Captcha {
 	}
 	
 	function settings_menu() {
-		add_submenu_page('plugins.php', __('Conditional CAPTCHA Settings', self::dom), __('Conditional CAPTCHA', self::dom), 'manage_options', 'conditional_captcha_settings', array(&$this, 'settings_page') );
+		add_submenu_page('plugins.php', __('Conditional CAPTCHA Settings', self::dom), __('Conditional CAPTCHA', self::dom), 'manage_options', 'conditional_captcha_settings', array($this, 'settings_page') );
 	}
 	
 	function settings_page() {
@@ -256,12 +256,12 @@ class Conditional_Captcha {
 					// remove the spam plugin's hook - there is no point in checking again
 					remove_action( 'preprocess_comment', $this->antispam['check_function'], 1 );
 					// hook to set the comment status ourselves
-					add_filter( 'pre_comment_approved', array(&$this, 'set_passed_comment_status') );
+					add_filter( 'pre_comment_approved', array($this, 'set_passed_comment_status') );
 				}
 			}
 		}
 		elseif( empty( $comment['comment_type'] ) ) {	// don't mess with pingbacks and trackbacks
-			add_action($this->antispam['caught_action'], array(&$this, 'spam_handler'));	// set up spam intercept 
+			add_action($this->antispam['caught_action'], array($this, 'spam_handler'));	// set up spam intercept 
 		}
 		
 		return $comment;
@@ -274,7 +274,7 @@ class Conditional_Captcha {
 		if( 'hold' == $status ) $status = '0';
 		
 		if( 'spam' != $status )
-			add_action( 'comment_post', array(&$this, 'spam_to_ham'), 10, 1 );
+			add_action( 'comment_post', array($this, 'spam_to_ham'), 10, 1 );
 			
 		return $status;
 	}
@@ -288,7 +288,7 @@ class Conditional_Captcha {
 	function spam_handler() {
 		if( 'trash' == $this->options['trash'] ) {
 			add_filter( 'pre_comment_approved', create_function('', 'return "trash";') ); // will happen after akismet/typepad
-			add_action( 'comment_post', array(&$this, 'do_captcha') ); // do captcha after comment is stored
+			add_action( 'comment_post', array($this, 'do_captcha') ); // do captcha after comment is stored
 		}
 		else $this->do_captcha(); // otherwise do captcha now
 	}
