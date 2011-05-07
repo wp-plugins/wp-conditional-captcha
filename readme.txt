@@ -9,7 +9,7 @@ Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks t
 
 == Description ==
 
-Services like Akismet and TypePad AntiSpam are great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
+Services like Akismet are great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
 
 This plugin provides a CAPTCHA complement to these spam detection plugins:
 
@@ -28,6 +28,12 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues.
 
 == Changelog ==
+
+= 3.1 =
+* Bugfix: Use blog character set instead of defaulting to UTF-8
+* Better preview of CAPTCHA page
+* Added basic validation of reCAPTCHA API keys
+* Minor usability improvements
 
 = 3.0 =
 * Bugfix: don't mangle Unicode characters when submitting a CAPTCHA. Thanks to Mantas for pointing this out.
