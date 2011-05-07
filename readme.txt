@@ -1,7 +1,7 @@
 === Conditional CAPTCHA for Wordpress ===
 Contributors: solarissmoke
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
-Requires at least: 2.8
+Requires at least: 3.0
 Tested up to: 3.1
 Stable tag: trunk
 
@@ -28,6 +28,9 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues.
 
 == Changelog ==
+
+= 3.1.1 =
+* Bugfix: Admin page Javascript was not compatible with jQuery >1.5.2
 
 = 3.1 =
 * Bugfix: Use blog character set instead of defaulting to UTF-8
