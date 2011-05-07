@@ -147,7 +147,7 @@ class Conditional_Captcha {
 		<li><label><?php _e('Private key:', self::dom);?></label> <input type="text" name="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
 		</ul>
 		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', self::dom), 'http://www.google.com/recaptcha/whyrecaptcha');?></small></p>
-		<p><?php _e('reCAPTCHA offers a some customisations that affect how it is displayed. You can modify these below.', self::dom) ?></p>
+		<p><?php _e('reCAPTCHA offers some customisations that affect how it is displayed. You can modify these below.', self::dom) ?></p>
 		<ul class="indent">
 		<li><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', self::dom), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
 		<select name="recaptcha_theme">
