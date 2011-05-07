@@ -339,10 +339,9 @@ class Conditional_Captcha {
 
 	private function page($title, $message) {
 		// generates a page where the captcha can be completed - style can be modified
-		if( !headers_sent() && !is_admin() ){
-			status_header(403);
-			header('Content-Type: text/html; charset=' . get_option('blog_charset') );
-		}
+		if( !is_admin() )
+			@status_header(403);
+		@header('Content-Type: text/html; charset=' . get_option('blog_charset') );
 		echo "<!doctype html><html><head><title>$title</title>\n";
 		echo "<style>\n".$this->options['style']."\n</style>\n";
 		echo "</head><body id='conditional_captcha'><div id='conditional_captcha_message'>$message</div></body></html>";
