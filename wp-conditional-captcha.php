@@ -123,18 +123,21 @@ class Conditional_Captcha {
 	<style>
 	.indent {padding-left: 2em}
 	#settings .input-error {border-color: red; background-color: #FFEBE8}
+	.akismet-not-ready {color: #999 !important }
 	</style>
 	<div class="wrap">
 	<h2><?php _e('Conditional CAPTCHA Settings', self::dom);?></h2>
 	<?php 
 	if(!$this->ready) echo '<div id="message" class="error fade" style="font-weight:bold; line-height:140%"><p>'.__('This plugin requires one of the following plugins to be active in order to work:', self::dom).'</p><ul class="indent" style="list-style:disc"><li>Akismet</li><li>TypePad AntiSpam</li></ul><p>'.__('Please install and activate one of these plugins before changing the settings below.', self::dom).'</p></div>';
 	?>
-	<div id="settings" <?php if(!$this->ready) echo 'style="color: #999"';?>>
+	<div id="settings" <?php if(!$this->ready) echo 'class="akismet-not-ready"';?>>
 	<p><?php _e("This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below.", self::dom);?></p>
 	<form action="" method="post" id="conditional-captcha-settings">
-	<h3><?php _e('Anti-spam Plugin', self::dom);?></h3>
+	<table class="form-table"><tbody>
+	<tr><th><?php _e('Anti-spam Plugin', self::dom);?></th><td>
 	<p><?php printf( __('Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam.', self::dom), $this->antispam['name']);?></p>
-	<h3><?php _e('CAPTCHA Method', self::dom);?></h3>
+	</td></tr>
+	<tr><th><?php _e('CAPTCHA Method', self::dom);?></th><td>
 	<p><?php printf( __('The default captcha is a simple text-based test (<a href="%1$s" target="_blank">check out the screenshot here</a>), but if you prefer you can also use a <a href="%2$s" target="_blank">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA.', self::dom), 'http://wordpress.org/extend/plugins/wp-conditional-captcha/screenshots/', 'http://www.google.com/recaptcha');?></p>
 	<ul class="indent">
 	<li><input type="radio" name="captcha-type" class="captcha-type" id="type-default" value="default" <?php if('default' == $opts['captcha-type']) echo 'checked="checked"'?> /> <?php _e('Use the default text-based CAPTCHA', self::dom);?></li>
@@ -171,7 +174,8 @@ class Conditional_Captcha {
 		</select></li>
 		</ul>
 	</div>
-	<h3><?php _e('Comment Handling', self::dom);?></h3>
+	</td></tr>
+	<tr><th><?php _e('Comment Handling', self::dom);?></th><td>
 	<p><?php _e('When a CAPTCHA is completed correctly:', self::dom);?></p>
 	<ul class="indent">
 	<li><input type="radio" name="pass_action" value="spam" <?php if('spam' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Leave the comment in the spam queue', self::dom);?></li>
@@ -185,15 +189,19 @@ class Conditional_Captcha {
 	<li><input type="radio" name="trash" value="trash" <?php if('trash' == $opts['trash']) echo 'checked="checked"'?> /> <?php _e('Trash the comment', self::dom);?></li>
 	</ul>
 	<?php } ?>
-	<h3><?php _e('CAPTCHA Page Style', self::dom);?></h3>
+	</td></tr>
+	<tr><th><?php _e('CAPTCHA Page Style', self::dom);?></th><td>
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:', self::dom);?></p>
 	<textarea name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo $opts['style'];?></textarea>
 	<p><small><?php _e('Empty this box completely to revert back to the default style.', self::dom);?></small></p>
-	<h3 id="captcha_preview_title" style="display:none"><?php _e('CAPTCHA Preview', self::dom);?></h3>
-	<div id="captcha_preview" style="display:none">
+	</td></tr>
+	<tr id="captcha_preview_row" style="display:none"><th><?php _e('CAPTCHA Preview', self::dom);?></th><td>
+	<div id="captcha_preview">
 		<p><?php _e('Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first.', self::dom);?></p>
 		<p><a class="button-secondary" target="_blank" href="<?php echo wp_nonce_url( menu_page_url('conditional_captcha_settings', false), 'conditional_captcha_preview' ) . '&amp;captcha_preview=1&amp;noheader=true'; ?>"><?php _e('Show preview of CAPTCHA page (opens in new window)', self::dom);?></a></p>
 	</div>
+	</td></tr>
+	</tbody></table>
 	<p class="submit"><input class="button-primary" type="submit" name="submit" value="<?php _e('Update settings', self::dom);?>" /></p>
 	</form>
 	</div>
@@ -205,10 +213,7 @@ class Conditional_Captcha {
 	});
 	jQuery(document).ready(function(){
 		if(jQuery('#type-recaptcha:checked').length == 0) jQuery('#recaptcha-settings').hide();
-		jQuery('#captcha_preview, #captcha_preview_title').show();	// show them only if JS is enabled
-		jQuery('#captcha_preview input').click( function(){
-			jQuery('#captcha_preview').html('<iframe width="860" height="250" style="border: 3px solid #AAA" src="' + ajaxurl + '?action=conditional_captcha_css_preview"></iframe>')}
-		);
+		jQuery('#captcha_preview_row').show();	// show only if JS is enabled
 		
 		if(jQuery('div.recaptcha_error').length) {
 			jQuery('#recaptcha-settings').show();
@@ -442,4 +447,3 @@ class Conditional_Captcha {
 
 // load
 new Conditional_Captcha();
-?>
