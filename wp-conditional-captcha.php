@@ -92,7 +92,7 @@ class Conditional_Captcha {
 		$opts = $this->options;
 		
 		if ( isset($_POST['submit']) ) {
-			foreach( array( 'pass_action', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang', 'trash' ) as $o )
+			foreach( array( 'pass_action', 'style', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang', 'trash' ) as $o )
 				$opts[$o] = trim( $_POST[$o] );
 			
 			$opts['style'] = strip_tags( stripslashes( $opts['style'] ) ); // css only please
