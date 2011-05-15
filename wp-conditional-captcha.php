@@ -90,18 +90,13 @@ class Conditional_Captcha {
 			$this->do_captcha( false, false );	// will exit
 
 		$opts = $this->options;
-		$trash_exists = version_compare($wp_version, '2.9', '>=');
 		
 		if ( isset($_POST['submit']) ) {
-			$opts['pass_action'] = $_POST['pass_action'];
-			$opts['style'] = trim( strip_tags( stripslashes( $_POST['style'] ) ) ); // css only please
+			foreach( array( 'pass_action', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang', 'trash' ) as $o )
+				$opts[$o] = trim( $_POST[$o] );
+			
+			$opts['style'] = strip_tags( stripslashes( $opts['style'] ) ); // css only please
 			if( empty($opts['style']) ) $opts['style'] = file_get_contents($this->cssfile);	// fall back to default
-			$opts['captcha-type'] = $_POST['captcha-type'];
-			$opts['recaptcha-private-key'] = trim( $_POST['recaptcha-private-key'] );
-			$opts['recaptcha-public-key'] = trim( $_POST['recaptcha-public-key'] );
-			$opts['recaptcha_theme'] = $_POST['recaptcha_theme'];
-			$opts['recaptcha_lang'] = $_POST['recaptcha_lang'];
-			$opts['trash'] = $trash_exists ? $_POST['trash'] : 'delete';
 			
 			// check that keys have been supplied for recaptcha
 			$recaptcha_error = '';
@@ -182,13 +177,11 @@ class Conditional_Captcha {
 	<li><input type="radio" name="pass_action" value="hold" <?php if('hold' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Queue the comment for moderation', self::dom);?></li>
 	<li><input type="radio" name="pass_action" value="approve" <?php if('approve' == $opts['pass_action']) echo 'checked="checked"'?> /> <?php _e('Approve the comment', self::dom);?></li>
 	</ul>
-	<?php if($trash_exists) { ?>
 	<p><?php _e('When a CAPTCHA is <strong>not</strong> completed correctly:', self::dom);?></p>
 	<ul class="indent">
 	<li><input type="radio" name="trash" value="delete" <?php if('delete' == $opts['trash']) echo 'checked="checked"'?> /> <?php _e('Delete the comment permanently', self::dom);?></li>
 	<li><input type="radio" name="trash" value="trash" <?php if('trash' == $opts['trash']) echo 'checked="checked"'?> /> <?php _e('Trash the comment', self::dom);?></li>
 	</ul>
-	<?php } ?>
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Page Style', self::dom);?></th><td>
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:', self::dom);?></p>
