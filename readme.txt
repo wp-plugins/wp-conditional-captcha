@@ -1,4 +1,4 @@
-=== Conditional CAPTCHA for Wordpress ===
+=== Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 3.0
@@ -27,7 +27,16 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues.
 
+== Upgrade Notice ==
+
+= 3.2 =
+Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plugin's upgrade routine.
+
 == Changelog ==
+
+= 3.2 =
+* Added the option to leave comments for unsuccessful CAPTCHAs in the spam queue (provided the pass action something different)
+* Bugfix: Options from previous versions of the plugin were not being properly upgraded
 
 = 3.1.1 =
 * Bugfix: Admin page Javascript was not compatible with jQuery >1.5.2
