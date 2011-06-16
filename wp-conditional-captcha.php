@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 3.2
+Version: 3.2.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -213,48 +213,48 @@ class Conditional_Captcha {
 	</div>
 	</div>
 	<script type="text/javascript">
-	jQuery(document).ready(function(){
-		if(!jQuery('#type-recaptcha').is(':checked')) jQuery('#recaptcha-settings').hide();
-		jQuery('#captcha_preview_row').show();	// show only if JS is enabled
+	jQuery(document).ready(function($){
+		if(!$('#type-recaptcha').is(':checked')) $('#recaptcha-settings').hide();
+		$('#captcha_preview_row').show();	// show only if JS is enabled
 		
-		jQuery('input[name="captcha-type"], textarea[name="style"], select[name="recaptcha_theme"], select[name="recaptcha_lang"]').change( function(){
-			jQuery('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', self::dom);?></p>')}
+		$('input[name="captcha-type"], textarea[name="style"], select[name="recaptcha_theme"], select[name="recaptcha_lang"]').change( function(){
+			$('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', self::dom);?></p>')}
 		);
 		
 		function resolve_conflicts(){
-			var p = jQuery('#pass_action_spam'), f = jQuery('#fail_action_spam');
-			p.prop('disabled', f.is(':checked'));
-			f.prop('disabled', p.is(':checked'));
+			var p = $('#pass_action_spam'), f = $('#fail_action_spam');
+			p.attr('disabled', f.is(':checked'));
+			f.attr('disabled', p.is(':checked'));
 			
 			p.parent().toggleClass('disabled-option',  p.is(':disabled'));
 			f.parent().toggleClass('disabled-option', f.is(':disabled'));
 				
-			jQuery('.plugin-actions li').unbind('click');
-			jQuery('li.disabled-option').click( function(){
+			$('.plugin-actions li').unbind('click');
+			$('li.disabled-option').click( function(){
 				alert('<?php _e('You cannot select the same action for both successful and unsuccessful CAPTCHA responses.', self::dom);?>');
 			});
 		}
 		
-		jQuery('.plugin-actions input').click(resolve_conflicts);
+		$('.plugin-actions input').click(resolve_conflicts);
 		resolve_conflicts();
 		
-		jQuery('input[name="captcha-type"]').change(function() {
-			if(jQuery('#type-recaptcha').is(':checked')) jQuery('#recaptcha-settings').slideDown();
-			else jQuery('#recaptcha-settings').slideUp();
+		$('input[name="captcha-type"]').change(function() {
+			if($('#type-recaptcha').is(':checked')) $('#recaptcha-settings').slideDown();
+			else $('#recaptcha-settings').slideUp();
 		});
 		
-		jQuery('#conditional-captcha-settings').submit( function(){
+		$('#conditional-captcha-settings').submit( function(){
 			// check API keys
-			if( jQuery('#type-recaptcha').is(':checked') ) {
+			if( $('#type-recaptcha').is(':checked') ) {
 				var msg = '';
-				if( jQuery('#recaptcha-private-key').val() == '' || jQuery('#recaptcha-public-key').val() == '' ) 
+				if( $('#recaptcha-private-key').val() == '' || $('#recaptcha-public-key').val() == '' ) 
 					msg = '<?php echo $missing_keys;?>';
-				else if( jQuery('#recaptcha-private-key').val().length != 40 || jQuery('#recaptcha-public-key').val().length != 40 )
+				else if( $('#recaptcha-private-key').val().length != 40 || $('#recaptcha-public-key').val().length != 40 )
 					msg = '<?php echo $invalid_keys;?>';
 					
 				if( msg ) {
 					alert( msg );
-					jQuery('#recaptcha-settings input').addClass('input-error');
+					$('#recaptcha-settings input').addClass('input-error');
 					return false;
 				}
 			}

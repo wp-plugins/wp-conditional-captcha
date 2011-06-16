@@ -29,10 +29,16 @@ If you come across any bugs or have suggestions, please contact me at [rayofsola
 
 == Upgrade Notice ==
 
+= 3.2.1 =
+Fixes a bug on the settings page that prevented some users from using the reCAPTCHA option.
+
 = 3.2 =
 Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plugin's upgrade routine.
 
 == Changelog ==
+
+= 3.2.1 =
+* Bugfix: settings page Javascript caused errors when using jQuery < 1.6
 
 = 3.2 =
 * Added the option to leave comments for unsuccessful CAPTCHAs in the spam queue (provided the pass action something different)
