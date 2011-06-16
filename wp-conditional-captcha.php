@@ -223,7 +223,7 @@ class Conditional_Captcha {
 		
 		function resolve_conflicts(){
 			var p = $('#pass_action_spam'), f = $('#fail_action_spam');
-			p.attr('disabled', f.is(':checked'));
+			p.attr('disabled', f.is(':checked'));	// this should really use prop() but only works for jQuery > 1.6 (WP > 3.2)
 			f.attr('disabled', p.is(':checked'));
 			
 			p.parent().toggleClass('disabled-option',  p.is(':disabled'));
