@@ -25,7 +25,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 * *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
 * PHP version 5 or greater
 
-If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues.
+If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues and a demo of the CAPTCHA page.
 
 == Upgrade Notice ==
 
@@ -78,11 +78,6 @@ Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plug
 
 = 2.4 =
 * Bugfix: don't intercept spammy pingbacks and trackbacks. Thanks to [Kevin](http://www.investitwisely.com) for reporting this.
-
-== Screenshots ==
-
-1. A sample of the CAPTCHA that will be displayed when using the default text-based CAPTCHA option.
-2. A sample of the CAPTCHA that will be displayed when using reCAPTCHA.
 
 == Installation ==
 
