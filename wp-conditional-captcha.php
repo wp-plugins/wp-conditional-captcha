@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 3.2.1
+Version: 3.2.2
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -135,6 +135,7 @@ class Conditional_Captcha {
 	.akismet-not-ready, .disabled-option {color: #999 !important }
 	</style>
 	<div class="wrap">
+	<?php screen_icon() ;?>
 	<h2><?php _e('Conditional CAPTCHA Settings', self::dom);?></h2>
 	<?php echo $message; ?>
 	<div id="settings" <?php if(!$this->ready) echo 'class="akismet-not-ready"';?>>
@@ -145,7 +146,7 @@ class Conditional_Captcha {
 	<p><?php printf( __('Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam.', self::dom), $this->antispam['name']);?></p>
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Method', self::dom);?></th><td>
-	<p><?php printf( __('The default captcha is a simple text-based test (<a href="%1$s" target="_blank">check out the screenshot here</a>), but if you prefer you can also use a <a href="%2$s" target="_blank">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA.', self::dom), 'http://wordpress.org/extend/plugins/wp-conditional-captcha/screenshots/', 'http://www.google.com/recaptcha');?></p>
+	<p><?php printf( __('The default captcha is a simple text-based test, but if you prefer you can also use a <a href="%s" target="_blank">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA.', self::dom), 'http://www.google.com/recaptcha');?></p>
 	<ul class="indent">
 	<li><input type="radio" name="captcha-type" class="captcha-type" id="type-default" value="default" <?php checked( $opts['captcha-type'], 'default' );?> /> <?php _e('Use the default text-based CAPTCHA', self::dom);?></li>
 	<li><input type="radio" name="captcha-type" class="captcha-type" id="type-recaptcha" value="recaptcha" <?php checked( $opts['captcha-type'], 'recaptcha' );?> /> <?php _e('Use reCAPTCHA', self::dom);?></li>
@@ -281,17 +282,14 @@ class Conditional_Captcha {
 				
 				// if trash/spam is enabled, check for the comment
 				if( 'delete' != $this->options['fail_action'] ) {
-					if( $stored = get_comment($_POST['trashed_id']) ) {
+					if( $stored = get_comment( $_POST['trashed_id'] ) ) {
 						// change status. this will call wp_notify_postauthor if set to approve
+						// note, newer versions of Akismet will not register a false positive just from the status transition, because it explicitly checks to make sure the change was not made by a plugin
 						wp_set_comment_status( $stored->comment_ID, $this->options['pass_action'] );
-						
-						// if set to approve or hold the comment, fake a spam status transition to ensure that Akismet is notified of the false positive
-						if( 'spam' != $this->options['pass_action'] ) 
-							wp_transition_comment_status( $this->options['pass_action'], 'spam', $stored );
 
 						// if set to hold, then trigger moderation notice
 						if( 'hold' == $this->options['pass_action'] )
-							wp_notify_moderator($stored->comment_ID);
+							wp_notify_moderator( $stored->comment_ID );
 						
 						// redirect like wp-comments-post does
 						$location = empty($_POST['redirect_to']) ? get_comment_link($stored->comment_ID) : $_POST['redirect_to'] . '#comment-' . $stored->comment_ID;
@@ -324,17 +322,7 @@ class Conditional_Captcha {
 		$status = $this->options['pass_action'];
 		if( 'approve' == $status ) $status = '1';
 		if( 'hold' == $status ) $status = '0';
-		
-		if( 'spam' != $status )
-			add_action( 'comment_post', array($this, 'spam_to_ham'), 10, 1 );
-			
 		return $status;
-	}
-	
-	function spam_to_ham($comment_id) {
-		// fake a comment transition from spam, so that Akismet picks up a false positive
-		if( $comment = get_comment($comment_id) )
-			wp_transition_comment_status( $this->options['pass_action'], 'spam', $comment );
 	}
 
 	function spam_handler() {
@@ -392,7 +380,7 @@ class Conditional_Captcha {
 	}
 
 	private function create_captcha() {
-		if( 'recaptcha' == $this->options['captcha-type'] ) {			
+		if( 'recaptcha' == $this->options['captcha-type'] ) {	
 			$html = '<script> var RecaptchaOptions = {theme: "' . $this->options['recaptcha_theme'] . '", lang: "' . $this->options['recaptcha_lang'] . '"}; </script>';
 			$html .= '<script src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
        <input type="hidden" name="recaptcha_response_field" value="manual_challenge"></noscript>';
