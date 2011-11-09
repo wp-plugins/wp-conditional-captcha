@@ -29,6 +29,9 @@ If you come across any bugs or have suggestions, please contact me at [rayofsola
 
 == Upgrade Notice ==
 
+= 3.2.3 =
+Performance improvement to reduce the amount of data stored in the database.
+
 = 3.2.2 =
 Minor modifications in response to changes in the latest version of Akismet.
 
@@ -39,6 +42,10 @@ Fixes a bug on the settings page that prevented some users from using the reCAPT
 Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plugin's upgrade routine.
 
 == Changelog ==
+
+= 3.2.3 =
+* Performance improvement to reduce size of plugin options
+* Tweaked settings page to be more user friendly
 
 = 3.2.2 =
 * Minor changes to the behaviour of the plugin, as a result of changes in the latest version of Akismet.

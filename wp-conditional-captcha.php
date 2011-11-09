@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 3.2.2
+Version: 3.2.3
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -17,7 +17,7 @@ class Conditional_Captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
 	const dom = 'wp-conditional-captcha'; 	// i18n domain
-	const db_version = 3;					// options version, introduced in v2.6
+	const db_version = 4;					// options version, introduced in v2.6
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
@@ -39,20 +39,23 @@ class Conditional_Captcha {
 			$defaults = array(
 				'captcha-type' => 'default', 'pass_action' => 'hold',
 				'recaptcha-private-key' => '', 'recaptcha-public-key' => '', 'recaptcha_theme' => 'red', 'recaptcha_lang' => 'en',
-				'fail_action' => 'spam', 'style' => file_get_contents($this->cssfile)
+				'fail_action' => 'spam', 'style' => ''
 			);
 			
 			// set defaults if they don't exist
 			foreach( $defaults as $k => $v ) if( !isset( $this->options[$k] ) ) $this->options[$k] = $v;
 			
-			if( isset( $this->options['trash'] ) ) {
-				// this was renamed
+			// this was renamed
+			if( isset( $this->options['trash'] ) )
 				$this->options['fail_action'] = $this->options['trash'];
-			}
 			
 			// remove old options
 			unset( $this->options['noscript'] );
 			unset( $this->options['trash'] );
+			
+			// don't store CSS if it's the default
+			if( trim( str_replace( "\r\n", "\n", file_get_contents( $this->cssfile ) ) ) == trim( str_replace( "\r\n", "\n", $this->options['style'] ) ) )
+				$this->options['style'] = '';
 			
 			$this->options['db_version'] = self::db_version;
 			update_option('conditional_captcha_options', $this->options);
@@ -103,9 +106,10 @@ class Conditional_Captcha {
 			foreach( array( 'pass_action', 'fail_action', 'style', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang' ) as $o )
 				$opts[$o] = trim( $_POST[$o] );
 			
-			$opts['style'] = strip_tags( stripslashes( $opts['style'] ) ); // css only please
-			if( empty($opts['style']) ) $opts['style'] = file_get_contents($this->cssfile);	// fall back to default
-			
+			$opts['style'] = str_replace( "\r\n", "\n", strip_tags( stripslashes( $opts['style'] ) ) ); // css only please
+			if( $_POST['captcha_style'] == 'default' || $opts['style'] == trim( str_replace( "\r\n", "\n", file_get_contents( $this->cssfile ) ) ) )
+				$opts['style'] = '';
+
 			// check pass/fail action conflicts
 			if( $opts['pass_action'] == $opts['fail_action'] ) {
 				$errors['action_conflict'] = __( 'You cannot select the same action for both correctly and incorrectly completed CAPTCHAs. The action for incorrectly completed CAPTCHAs has been reset to "Trash the comment".' );
@@ -198,9 +202,12 @@ class Conditional_Captcha {
 	</ul>
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Page Style', self::dom);?></th><td>
-	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default CSS below:', self::dom);?></p>
-	<textarea name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo $opts['style'];?></textarea>
-	<p><small><?php _e('Empty this box completely to revert back to the default style.', self::dom);?></small></p>
+	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default style.', self::dom);?></p>
+	<ul class="indent">
+	<li><input type="radio" name="captcha_style" value="default" id="use_default_style" <?php checked( empty( $opts['style'] ) );?> /> <label for="use_default_style"><?php _e('Use default style', self::dom);?></label></li>
+	<li><input type="radio" name="captcha_style" value="custom" id="use_custom_style" <?php checked( !empty( $opts['style'] ) );?> /> <label for="use_custom_style"><?php _e('Use custom style', self::dom);?></label></li>
+	</ul>
+	<textarea id="captcha_css" name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo ( $opts['style'] ? $opts['style'] : file_get_contents( $this->cssfile ) );?></textarea>
 	</td></tr>
 	<tr id="captcha_preview_row" style="display:none"><th><?php _e('CAPTCHA Preview', self::dom);?></th><td>
 	<div id="captcha_preview">
@@ -218,9 +225,19 @@ class Conditional_Captcha {
 		if(!$('#type-recaptcha').is(':checked')) $('#recaptcha-settings').hide();
 		$('#captcha_preview_row').show();	// show only if JS is enabled
 		
-		$('input[name="captcha-type"], textarea[name="style"], select[name="recaptcha_theme"], select[name="recaptcha_lang"]').change( function(){
+		$('input[name="captcha-type"], textarea[name="style"], select[name="recaptcha_theme"], select[name="recaptcha_lang"], input[name="captcha_style"]').change( function(){
 			$('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', self::dom);?></p>')}
 		);
+		
+		function show_css(){
+			if( $('#use_default_style').is(":checked") )
+				$('#captcha_css').slideUp();
+			else
+				$('#captcha_css').slideDown();
+		}
+		
+		$('input[name="captcha_style"]').change( show_css );
+		show_css();
 		
 		function resolve_conflicts(){
 			var p = $('#pass_action_spam'), f = $('#fail_action_spam');
@@ -259,7 +276,11 @@ class Conditional_Captcha {
 					return false;
 				}
 			}
-		});	
+		});
+		
+		$("#conditional-captcha-settings :input").change( function(){
+			$("#message").slideUp();
+		});
 	});
 	</script>
 <?php
@@ -374,7 +395,7 @@ class Conditional_Captcha {
 			@status_header(403);
 		@header('Content-Type: text/html; charset=' . get_option('blog_charset') );
 		echo "<!doctype html><html><head><title>$title</title>\n";
-		echo "<style>\n".$this->options['style']."\n</style>\n";
+		echo "<style>\n".( $this->options['style'] ? $this->options['style'] : file_get_contents( $this->cssfile ) ) ."\n</style>\n";
 		echo "</head><body id='conditional_captcha'><div id='conditional_captcha_message'>$message</div></body></html>";
 		exit;
 	}
