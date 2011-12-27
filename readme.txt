@@ -1,7 +1,7 @@
 === Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
-Requires at least: 3.0
+Requires at least: 3.1
 Tested up to: 3.3
 Stable tag: trunk
 
@@ -23,7 +23,6 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 **Requirements:**
 
 * *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
-* PHP version 5 or greater
 
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues and a demo of the CAPTCHA page.
 
@@ -42,6 +41,10 @@ Fixes a bug on the settings page that prevented some users from using the reCAPT
 Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plugin's upgrade routine.
 
 == Changelog ==
+
+= 3.2.4 =
+* Added the option to customise the CAPTCHA prompt text.
+* Minor tweaks to the settings page.
 
 = 3.2.3 =
 * Performance improvement to reduce size of plugin options

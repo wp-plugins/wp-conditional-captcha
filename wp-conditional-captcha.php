@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 3.2.3
+Version: 3.2.4
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -16,7 +16,7 @@ if( !defined( 'ABSPATH' ) )
 class Conditional_Captcha {
 	private $ready = false;
 	private $options, $cssfile, $antispam;
-	const db_version = 4;					// options version, introduced in v2.6
+	const db_version = 5;					// options version, introduced in v2.6
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
@@ -38,7 +38,7 @@ class Conditional_Captcha {
 			$defaults = array(
 				'captcha-type' => 'default', 'pass_action' => 'hold',
 				'recaptcha-private-key' => '', 'recaptcha-public-key' => '', 'recaptcha_theme' => 'red', 'recaptcha_lang' => 'en',
-				'fail_action' => 'spam', 'style' => ''
+				'fail_action' => 'spam', 'style' => '', 'prompt_text' => ''
 			);
 			
 			// set defaults if they don't exist
@@ -102,12 +102,16 @@ class Conditional_Captcha {
 		
 		if ( isset($_POST['submit']) ) {
 			$errors = array();
-			foreach( array( 'pass_action', 'fail_action', 'style', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang' ) as $o )
+			foreach( array( 'pass_action', 'fail_action', 'style', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang', 'prompt_text' ) as $o )
 				$opts[$o] = trim( $_POST[$o] );
 			
 			$opts['style'] = str_replace( "\r\n", "\n", strip_tags( stripslashes( $opts['style'] ) ) ); // css only please
-			if( $_POST['captcha_style'] == 'default' || $opts['style'] == trim( str_replace( "\r\n", "\n", file_get_contents( $this->cssfile ) ) ) )
+			if( $opts['style'] == trim( str_replace( "\r\n", "\n", file_get_contents( $this->cssfile ) ) ) )
 				$opts['style'] = '';
+				
+			$opts['prompt_text'] = str_replace( "\r\n", "\n", strip_tags( stripslashes( $opts['prompt_text'] ) ) ); // text only please
+			if( $opts['prompt_text'] == $this->prompt_text( true ) )
+				$opts['prompt_text'] = '';
 
 			// check pass/fail action conflicts
 			if( $opts['pass_action'] == $opts['fail_action'] ) {
@@ -127,6 +131,7 @@ class Conditional_Captcha {
 				$opts['captcha-type'] = 'default';	// revert to default
 			
 			update_option('conditional_captcha_options', $opts);
+			$this->options = $opts;
 			$message = $errors ? '<div id="message" class="error fade"><p>' . implode( '</p><p>', $errors ) . '</p></div>' : '<div id="message" class="updated fade"><p>'.__('Options updated.', 'wp-conditional-captcha').'</p></div>';
 		}
 		if( !$this->ready )
@@ -136,6 +141,8 @@ class Conditional_Captcha {
 	.indent {padding-left: 2em}
 	#settings .input-error {border-color: red; background-color: #FFEBE8}
 	.akismet-not-ready, .disabled-option {color: #999 !important }
+	#conditional-captcha-settings a {cursor: pointer}
+	table textarea {font-family: Consolas,Monaco,monospace; background: #FAFAFA}
 	</style>
 	<div class="wrap">
 	<?php screen_icon() ;?>
@@ -144,6 +151,8 @@ class Conditional_Captcha {
 	<div id="settings" <?php if(!$this->ready) echo 'class="akismet-not-ready"';?>>
 	<p><?php _e("This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below.", 'wp-conditional-captcha');?></p>
 	<form action="" method="post" id="conditional-captcha-settings">
+	
+	<h3><?php _e( 'Basic setup' ) ?></h3>
 	<table class="form-table"><tbody>
 	<tr><th><?php _e('Anti-spam Plugin', 'wp-conditional-captcha');?></th><td>
 	<p><?php printf( __('Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam.', 'wp-conditional-captcha'), $this->antispam['name']);?></p>
@@ -157,14 +166,14 @@ class Conditional_Captcha {
 	<div id="recaptcha-settings" class="indent">
 		<p><?php _e('If you wish to use reCAPTCHA, please enter your keys here:', 'wp-conditional-captcha');?></p>
 		<ul class="indent">
-		<li><label for="recaptcha-public-key"><?php _e('Public key:', 'wp-conditional-captcha');?></label> <input type="text" name="recaptcha-public-key" id="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></li>
-		<li><label for="recaptcha-private-key"><?php _e('Private key:', 'wp-conditional-captcha');?></label> <input type="text" name="recaptcha-private-key" id="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></li>
+		<li><label for="recaptcha-public-key"><?php _e('Public key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-public-key" id="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></label></li>
+		<li><label for="recaptcha-private-key"><?php _e('Private key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-private-key" id="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></label></li>
 		</ul>
 		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', 'wp-conditional-captcha'), 'http://www.google.com/recaptcha/whyrecaptcha');?></small></p>
 		<p><?php _e('reCAPTCHA offers some customisations that affect how it is displayed. You can modify these below.', 'wp-conditional-captcha') ?></p>
 		<ul class="indent">
-		<li><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', 'wp-conditional-captcha'), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
-		<select name="recaptcha_theme">
+		<li><label for="recaptcha_theme"><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', 'wp-conditional-captcha'), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
+		<select name="recaptcha_theme" id="recaptcha_theme">
 			<?php
 			$rc_themes = array('red' => 'Red (default)', 'white' => 'White', 'blackglass' => 'Blackglass', 'clean' => 'Clean');
 			foreach( $rc_themes as $k => $v ) {
@@ -172,9 +181,9 @@ class Conditional_Captcha {
 				echo "<option value='$k' $selected>$v</option>";
 			}
 			?>
-		</select></li>
-		<li><?php _e('reCAPTCHA language:', 'wp-conditional-captcha') ?>
-		<select name="recaptcha_lang">
+		</select></label></li>
+		<li><label for="recaptcha_lang"><?php _e('reCAPTCHA language:', 'wp-conditional-captcha') ?>
+		<select name="recaptcha_lang" id="recaptcha_lang">
 			<?php
 			$rc_langs = array('en' => 'English (default)', 'nl' => 'Dutch', 'fr' => 'French', 'de' => 'German', 'pt' => 'Portuguese', 'ru' => 'Russian', 'es' => 'Spanish', 'tr' => 'Turkish');
 			foreach( $rc_langs as $k => $v ) {
@@ -182,7 +191,7 @@ class Conditional_Captcha {
 				echo "<option value='$k' $selected>$v</option>";
 			}
 			?>
-		</select></li>
+		</select></label></li>
 		</ul>
 	</div>
 	</td></tr>
@@ -200,15 +209,21 @@ class Conditional_Captcha {
 	<li><input type="radio" name="fail_action" id="fail_action_delete" value="delete" <?php checked( $opts['fail_action'], 'delete' );?> /> <label for="fail_action_delete"><?php _e('Delete the comment permanently', 'wp-conditional-captcha');?></label></li>
 	</ul>
 	</td></tr>
+	</table>
+	
+	<h3><?php _e( 'Tweaks' ) ?></h3>
+	<table class="form-table">
 	<tr><th><?php _e('CAPTCHA Page Style', 'wp-conditional-captcha');?></th><td>
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default style.', 'wp-conditional-captcha');?></p>
-	<ul class="indent">
-	<li><input type="radio" name="captcha_style" value="default" id="use_default_style" <?php checked( empty( $opts['style'] ) );?> /> <label for="use_default_style"><?php _e('Use default style', 'wp-conditional-captcha');?></label></li>
-	<li><input type="radio" name="captcha_style" value="custom" id="use_custom_style" <?php checked( !empty( $opts['style'] ) );?> /> <label for="use_custom_style"><?php _e('Use custom style', 'wp-conditional-captcha');?></label></li>
-	</ul>
-	<textarea id="captcha_css" name="style" rows="8" cols="80" style="font-family: Courier,sans-serif"><?php echo ( $opts['style'] ? $opts['style'] : file_get_contents( $this->cssfile ) );?></textarea>
+	<textarea id="captcha_css" name="style" rows="6" cols="80"><?php echo ( $opts['style'] ? $opts['style'] : file_get_contents( $this->cssfile ) );?></textarea>
+	<p><small><?php _e( 'Empty this box to revert to the default.' );?></small></p>
 	</td></tr>
-	<tr id="captcha_preview_row" style="display:none"><th><?php _e('CAPTCHA Preview', 'wp-conditional-captcha');?></th><td>
+	<tr><th><?php _e('CAPTCHA Prompt', 'wp-conditional-captcha');?></th><td>
+	<p><?php _e('Users will be presented with the following prompt text when a CAPTCHA is displayed. You can modify it if you want.', 'wp-conditional-captcha');?></p>
+	<textarea id="prompt_text" name="prompt_text" rows="2" cols="80"><?php echo esc_html( $this->prompt_text() );?></textarea>
+	<p><small><?php echo __( 'Empty this box to revert to the default.' ) . ' ' . __( 'HTML is not allowed.' );?></small></p>
+	</td></tr>
+	<tr id="captcha_preview_row" class="hide-if-no-js"><th><?php _e('CAPTCHA Preview', 'wp-conditional-captcha');?></th><td>
 	<div id="captcha_preview">
 		<p><?php _e('Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first.', 'wp-conditional-captcha');?></p>
 		<p><a class="button-secondary" target="_blank" href="<?php echo wp_nonce_url( menu_page_url('conditional_captcha_settings', false), 'conditional_captcha_preview' ) . '&amp;captcha_preview=1&amp;noheader=true'; ?>"><?php _e('Show preview of CAPTCHA page (opens in new window)', 'wp-conditional-captcha');?></a></p>
@@ -222,22 +237,10 @@ class Conditional_Captcha {
 	<script type="text/javascript">
 	jQuery(document).ready(function($){
 		if(!$('#type-recaptcha').is(':checked')) $('#recaptcha-settings').hide();
-		$('#captcha_preview_row').show();	// show only if JS is enabled
-		
-		$('input[name="captcha-type"], textarea[name="style"], select[name="recaptcha_theme"], select[name="recaptcha_lang"], input[name="captcha_style"]').change( function(){
-			$('#captcha_preview').html('<p><?php _e('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', 'wp-conditional-captcha');?></p>')}
+		$('input.captcha-type, #captcha_css, #recaptcha_theme, #recaptcha_lang, #prompt_text').change( function(){
+			$('#captcha_preview').html('<p><?php echo esc_html( __('You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview.', 'wp-conditional-captcha') );?></p>')}
 		);
-		
-		function show_css(){
-			if( $('#use_default_style').is(":checked") )
-				$('#captcha_css').slideUp();
-			else
-				$('#captcha_css').slideDown();
-		}
-		
-		$('input[name="captcha_style"]').change( show_css );
-		show_css();
-		
+			
 		function resolve_conflicts(){
 			var p = $('#pass_action_spam'), f = $('#fail_action_spam');
 			p.attr('disabled', f.is(':checked'));	// this should really use prop() but only works for jQuery > 1.6 (WP > 3.2)
@@ -248,7 +251,7 @@ class Conditional_Captcha {
 				
 			$('.plugin-actions li').unbind('click');
 			$('li.disabled-option').click( function(){
-				alert('<?php _e('You cannot select the same action for both successful and unsuccessful CAPTCHA responses.', 'wp-conditional-captcha');?>');
+				alert('<?php echo esc_html( __('You cannot select the same action for both successful and unsuccessful CAPTCHA responses.', 'wp-conditional-captcha') );?>');
 			});
 		}
 		
@@ -265,9 +268,9 @@ class Conditional_Captcha {
 			if( $('#type-recaptcha').is(':checked') ) {
 				var msg = '';
 				if( $('#recaptcha-private-key').val() == '' || $('#recaptcha-public-key').val() == '' ) 
-					msg = '<?php echo $missing_keys;?>';
+					msg = '<?php echo esc_html( $missing_keys );?>';
 				else if( $('#recaptcha-private-key').val().length != 40 || $('#recaptcha-public-key').val().length != 40 )
-					msg = '<?php echo $invalid_keys;?>';
+					msg = '<?php echo esc_html( $invalid_keys );?>';
 					
 				if( msg ) {
 					alert( msg );
@@ -362,7 +365,7 @@ class Conditional_Captcha {
 		// if $real is false, we are just showing a preview
 		
 		$nosubmit = $real ? '' : 'onsubmit=\'alert("'.__('This CAPTCHA is a visual preview only; you cannot submit it.', 'wp-conditional-captcha').'"); return false;\'';
-		$html = '<p>'.__('Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', 'wp-conditional-captcha').'</p><form method="post" '.$nosubmit.'>';
+		$html = '<p>' . esc_html( $this->prompt_text() ) . '</p><form method="post" '.$nosubmit.'>';
 		
 		if($real){
 			// original post contents as hidden values, except the submit
@@ -487,6 +490,10 @@ class Conditional_Captcha {
 
 		// if the first part isn't true then return the second part
 		return (trim($response[0]) == 'true') ? true : $response[1];
+	}
+	
+	private function prompt_text( $force_default = false ) {
+		return ( ! $force_default && $this->options['prompt_text'] ) ? $this->options['prompt_text'] : __( 'Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', 'wp-conditional-captcha' );
 	}
 
 } // class
