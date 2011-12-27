@@ -141,7 +141,6 @@ class Conditional_Captcha {
 	.indent {padding-left: 2em}
 	#settings .input-error {border-color: red; background-color: #FFEBE8}
 	.akismet-not-ready, .disabled-option {color: #999 !important }
-	#conditional-captcha-settings a {cursor: pointer}
 	table textarea {font-family: Consolas,Monaco,monospace; background: #FAFAFA}
 	</style>
 	<div class="wrap">
