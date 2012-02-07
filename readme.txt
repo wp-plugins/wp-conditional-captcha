@@ -5,15 +5,15 @@ Requires at least: 3.1
 Tested up to: 3.3
 Stable tag: trunk
 
-Asks commenters to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
+Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. Eliminates false positives.
 
 == Description ==
 
-Services like Akismet are great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
+Akismet is great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
 
-This plugin provides a CAPTCHA complement to these spam detection plugins:
+This plugin provides a CAPTCHA complement to Akismet:
 
-* If a spam detection plugin identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
+* If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
 * If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
 * If they pass, it will be allowed into the spam queue (or approved, if you so choose).
 * Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your site hassle-free.
@@ -22,7 +22,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 **Requirements:**
 
-* *Conditional CAPTCHA* currently supports [Akismet](http://akismet.com) and [TypePad AntiSpam](http://antispam.typepad.com). You must have one of these plugins installed and active in order for this plugin to work.
+* You must have [Akismet](http://akismet.com) installed and active in order for this plugin to work.
 
 If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues and a demo of the CAPTCHA page.
 
