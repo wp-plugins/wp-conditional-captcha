@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://rayofsolaris.net/code/conditional-captcha-for-wordpress
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
-Version: 3.2.4
+Version: 3.2.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -292,6 +292,9 @@ class Conditional_Captcha {
 	}
 
 	function check_captcha($comment) {
+		if( is_user_logged_in() )		// akismet can fire even for logged in users :S
+			return $comment;
+			
 		if( isset($_POST['captcha_nonce']) ) {	// then a captcha has been completed...
 			$result = $this->captcha_is_valid();
 			if($result !== true) {

@@ -42,6 +42,9 @@ Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plug
 
 == Changelog ==
 
+= 3.2.5 =
+* Add workaround for a bug in the latest version of Akismet, where comments from administrators can be flagged as spam.
+
 = 3.2.4 =
 * Added the option to customise the CAPTCHA prompt text.
 * Minor tweaks to the settings page.
