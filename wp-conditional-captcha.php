@@ -151,7 +151,7 @@ class Conditional_Captcha {
 	<p><?php _e("This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below.", 'wp-conditional-captcha');?></p>
 	<form action="" method="post" id="conditional-captcha-settings">
 	
-	<h3><?php _e( 'Basic setup' ) ?></h3>
+	<h3><?php _e( 'Basic setup', 'wp-conditional-captcha' ) ?></h3>
 	<table class="form-table"><tbody>
 	<tr><th><?php _e('Anti-spam Plugin', 'wp-conditional-captcha');?></th><td>
 	<p><?php printf( __('Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam.', 'wp-conditional-captcha'), $this->antispam['name']);?></p>
@@ -210,17 +210,17 @@ class Conditional_Captcha {
 	</td></tr>
 	</table>
 	
-	<h3><?php _e( 'Tweaks' ) ?></h3>
+	<h3><?php _e( 'Tweaks', 'wp-conditional-captcha' ) ?></h3>
 	<table class="form-table">
 	<tr><th><?php _e('CAPTCHA Page Style', 'wp-conditional-captcha');?></th><td>
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default style.', 'wp-conditional-captcha');?></p>
 	<textarea id="captcha_css" name="style" rows="6" cols="80"><?php echo ( $opts['style'] ? $opts['style'] : file_get_contents( $this->cssfile ) );?></textarea>
-	<p><small><?php _e( 'Empty this box to revert to the default.' );?></small></p>
+	<p><small><?php _e( 'Empty this box to revert to the default.', 'wp-conditional-captcha' );?></small></p>
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Prompt', 'wp-conditional-captcha');?></th><td>
 	<p><?php _e('Users will be presented with the following prompt text when a CAPTCHA is displayed. You can modify it if you want.', 'wp-conditional-captcha');?></p>
 	<textarea id="prompt_text" name="prompt_text" rows="2" cols="80"><?php echo esc_html( $this->prompt_text() );?></textarea>
-	<p><small><?php echo __( 'Empty this box to revert to the default.' ) . ' ' . __( 'HTML is not allowed.' );?></small></p>
+	<p><small><?php echo __( 'Empty this box to revert to the default.', 'wp-conditional-captcha' ) . ' ' . __( 'HTML is not allowed.', 'wp-conditional-captcha' );?></small></p>
 	</td></tr>
 	<tr id="captcha_preview_row" class="hide-if-no-js"><th><?php _e('CAPTCHA Preview', 'wp-conditional-captcha');?></th><td>
 	<div id="captcha_preview">
@@ -292,9 +292,6 @@ class Conditional_Captcha {
 	}
 
 	function check_captcha($comment) {
-		if( is_user_logged_in() )		// akismet can fire even for logged in users :S
-			return $comment;
-			
 		if( isset($_POST['captcha_nonce']) ) {	// then a captcha has been completed...
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
@@ -335,8 +332,8 @@ class Conditional_Captcha {
 				}
 			}
 		}
-		elseif( empty( $comment['comment_type'] ) ) {	// don't mess with pingbacks and trackbacks
-			add_action($this->antispam['caught_action'], array($this, 'spam_handler'));	// set up spam intercept 
+		elseif( ! is_user_logged_in() && empty( $comment['comment_type'] ) ) {	// don't mess with pingbacks and trackbacks and logged in users
+			add_action( $this->antispam['caught_action'], array( $this, 'spam_handler' ) );	// set up spam intercept 
 		}
 		
 		return $comment;
