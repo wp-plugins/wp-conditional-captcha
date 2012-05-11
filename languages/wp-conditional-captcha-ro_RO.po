@@ -271,7 +271,7 @@ msgstr "CAPTCHA condiţională pentru Wordpress"
 
 #. Plugin URI of the plugin/theme
 msgid "http://rayofsolaris.net/code/conditional-captcha-for-wordpress"
-msgstr "http://rayofsolaris.net/code/Conditional-captcha-for-WordPress"
+msgstr "http://rayofsolaris.net/code/conditional-captcha-for-wordpress"
 
 #. Description of the plugin/theme
 msgid "A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam."
