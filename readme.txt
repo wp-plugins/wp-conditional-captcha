@@ -1,5 +1,6 @@
 === Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
+Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 3.1
 Tested up to: 3.4
