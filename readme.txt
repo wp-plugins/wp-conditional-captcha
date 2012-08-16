@@ -43,6 +43,9 @@ Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plug
 
 == Changelog ==
 
+= 3.2.6 =
+* Don't intercept comments submitted via AJAX.
+
 = 3.2.5 =
 * Add workaround for a bug in the latest version of Akismet, where comments from administrators can be flagged as spam.
 
