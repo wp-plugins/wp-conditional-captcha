@@ -25,7 +25,41 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 * You must have [Akismet](http://akismet.com) installed and active in order for this plugin to work.
 
-If you come across any bugs or have suggestions, please contact me at [rayofsolaris.net](http://rayofsolaris.net). Please check the [FAQs](http://rayofsolaris.net/code/conditional-captcha-for-wordpress#faq) for common issues and a demo of the CAPTCHA page.
+If you come across any bugs or have suggestions, please use the plugin support forum or contact me at [rayofsolaris.net](http://rayofsolaris.net). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
+
+**Translations**
+
+Thanks to the following people for contributing translations of this plugin:
+
+Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Web Hosting Geeks](http://webhostinggeeks.com), Russian - [Serge](http://verevkin.info), Spanish - [Reinventia](http://www.reinventia.net), Ukranian - [Stas](http://velokosiv.if.ua).
+
+== Frequently Asked Questions ==
+
+= I've installed it, now how do I check that it works? =
+
+You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with `viagra-test-123` in the author/name field will always get it flagged by Akismet.
+
+= Does this plugin work with other comment form modification plugins, or with themes that use Javascript to handle comment submission? =
+
+*Conditional CAPTCHA* relies on WordPress' native form handling procedures. This means it will not work with plugins or themes that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms, Backtype and Contact Form 7. **If comment submissions on your site are processed using AJAX, then the plugin will not work.**
+
+= I'm curious about how the plugin works. At what point is an unanswered CAPTCHA considered a failure, and what happens to the corresponding comment in the mean time? =
+
+Basically the plugin will assume a flagged comment is spam unless a correctly solved CAPTCHA determines otherwise. The process depends partly on what your settings are.
+
+*If the plugin is set to discard failed comments:* When a comment is flagged as spam, it is sent (as hidden data) back to the client along with the CAPTCHA (and not stored in the database). When the user submits the CAPTCHA, they resubmit the comment along with it.
+
+*If the plugin is set to store failed comments in the trash or spam queue:* When the comment is flagged, it is added to the database as trash/spam. If the CAPTCHA is passed, then its status will be modified accordingly. You can configure what happens to passed comments.
+
+There is a time limit of 10 minutes for the CAPTCHA to be submitted, otherwise it will be ignored even if it is correct.
+
+= Can I see a demo of what the CAPTCHA looks like? =
+
+[Yes](http://rayofsolaris.net/code/captcha/).
+
+= Didn't you say before that the plugin works with TypePad Antispam? =
+
+Yes, and it still does. But the TypePad Antispam plugin hasn't been updated in over 4 years, and is not fully compatible with the latest version of WordPress, causing users to see error notices on the CAPTCHA page. I will probably drop support for it altogether in the near future.
 
 == Upgrade Notice ==
 
