@@ -2,7 +2,7 @@
 Contributors: solarissmoke
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
 Requires at least: 3.1
-Tested up to: 3.4
+Tested up to: 3.5
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. Eliminates false positives.
