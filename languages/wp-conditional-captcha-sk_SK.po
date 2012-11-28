@@ -1,0 +1,290 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Web Geeks\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-Language: Slovak\n"
+"X-Poedit-Country: SLOVAKIA\n"
+
+#: wp-conditional-captcha.php:86
+msgid "Conditional CAPTCHA is currently inactive. Please visit the plugin <a href=\"%s\">configuration page</a> for information on how to fix this."
+msgstr "Conditional CAPTCHA is currently inactive. Please visit the plugin<a href=\"%s\"> konfiguračnej stránke</a> informácie o tom, ako tento problém vyriešiť."
+
+#: wp-conditional-captcha.php:90
+#: wp-conditional-captcha.php:148
+msgid "Conditional CAPTCHA Settings"
+msgstr "Podmienené CAPTCHA nastavenia"
+
+#: wp-conditional-captcha.php:90
+msgid "Conditional CAPTCHA"
+msgstr "Podmienené CAPTCHA"
+
+#: wp-conditional-captcha.php:100
+msgid "The reCAPTCHA API keys you entered do not appear to be valid. Please check that each key is exactly 40 characters long and contains no spaces."
+msgstr "ReCAPTCHA API kľúče ste zadali nezdá byť platné. Skontrolujte, že každý kľúč je presne 40 znakov a neobsahuje žiadne medzery."
+
+#: wp-conditional-captcha.php:101
+msgid "You need to supply reCAPTCHA API keys if you want to use reCAPTCHA. Please enter private and public key values."
+msgstr "Musíte zadať reCAPTCHA API klávesov, ak chcete použiť reCAPTCHA. Zadajte hodnoty súkromných a verejných kľúčov."
+
+#: wp-conditional-captcha.php:118
+msgid "You cannot select the same action for both correctly and incorrectly completed CAPTCHAs. The action for incorrectly completed CAPTCHAs has been reset to \"Trash the comment\"."
+msgstr "You cannot select the same action for both correctly and incorrectly completed CAPTCHAs. The action for incorrectly completed CAPTCHAs has been reset to \"Trash the comment \"."
+
+#: wp-conditional-captcha.php:135
+msgid "Options updated."
+msgstr "Možnosti aktualizované."
+
+#: wp-conditional-captcha.php:138
+msgid "This plugin requires one of the following plugins to be active in order to work:"
+msgstr "Tento plugin vyžaduje jeden z nasledujúcich pluginov bude aktívna činnosť:"
+
+#: wp-conditional-captcha.php:138
+msgid "Please install and activate one of these plugins before changing the settings below."
+msgstr "Nainštalujte a aktivovať jeden z týchto pluginů pred zmenou doleuvedených nastavení."
+
+#: wp-conditional-captcha.php:151
+msgid "This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below."
+msgstr "Tento plugin poskytuje doplnok CAPTCHA spam detekcie pluginy. Ak vaším spam plugin detekcie identifikuje komentár ako spam, komentátor budú prezentované s CAPTCHA dokázať, že sú ľudské. Správanie plugin môže byť nakonfigurovaný pod."
+
+#: wp-conditional-captcha.php:154
+msgid "Basic setup"
+msgstr "Základné nastavenie"
+
+#: wp-conditional-captcha.php:156
+msgid "Anti-spam Plugin"
+msgstr "Anti-spam Plugin"
+
+#: wp-conditional-captcha.php:157
+msgid "Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam."
+msgstr "Podmienené CAPTCHA zistil, že <strong>%1$ s</strong> je nainštalovaný a aktívny na vašich stránkach. CAPTCHA bude slúžiť pri %1$ s identifikuje ako spam komentár."
+
+#: wp-conditional-captcha.php:159
+msgid "CAPTCHA Method"
+msgstr "CAPTCHA metóda"
+
+#: wp-conditional-captcha.php:160
+msgid "The default captcha is a simple text-based test, but if you prefer you can also use a <a href=\"%s\" target=\"_blank\">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA."
+msgstr "The default captcha is a simple text-based test, but if you prefer you can also use a <a href=\"%s\" target=\"_blank\"> reCAPTCHA </ a> Všimnite si, že budete potrebovať API kľúč použiť reCAPTCHA."
+
+#: wp-conditional-captcha.php:162
+msgid "Use the default text-based CAPTCHA"
+msgstr "Použiť predvolený textový CAPTCHA"
+
+#: wp-conditional-captcha.php:163
+msgid "Use reCAPTCHA"
+msgstr "Použitie reCAPTCHA"
+
+#: wp-conditional-captcha.php:166
+msgid "If you wish to use reCAPTCHA, please enter your keys here:"
+msgstr "Ak chcete použiť reCAPTCHA, prosím zadajte vaše kľúče tu:"
+
+#: wp-conditional-captcha.php:168
+msgid "Public key:"
+msgstr "Verejný kľúč:"
+
+#: wp-conditional-captcha.php:169
+msgid "Private key:"
+msgstr "Súkromný kľúč:"
+
+#: wp-conditional-captcha.php:171
+msgid "You can <a href=\"%s\" target=\"_blank\">sign up for a key here</a> (it's free)"
+msgstr "môžete<a href=\"%s\" target=\"_blank\">zaregistrovať za kľúčovú tu</a> (je to zadarmo)"
+
+#: wp-conditional-captcha.php:172
+msgid "reCAPTCHA offers some customisations that affect how it is displayed. You can modify these below."
+msgstr "reCAPTCHA ponúka niektoré kustomizáciu, ktoré ovplyvňujú, ako je zobrazené. Môžete upraviť toto nižšie."
+
+#: wp-conditional-captcha.php:174
+msgid "reCAPTCHA theme (see <a href=\"%s\" target=\"_blank\">here</a> for examples):"
+msgstr "reCAPTCHA motív (pozri <a href=\"%s\" target=\"_blank\">here</a>tu</a> pre príklady):"
+
+#: wp-conditional-captcha.php:184
+msgid "reCAPTCHA language:"
+msgstr "reCAPTCHA jazyk:"
+
+#: wp-conditional-captcha.php:197
+msgid "Comment Handling"
+msgstr "Komentár manipuláciu"
+
+#: wp-conditional-captcha.php:198
+msgid "When a CAPTCHA is completed correctly:"
+msgstr "Kedy CAPTCHA je správne vyplnené:"
+
+#: wp-conditional-captcha.php:200
+#: wp-conditional-captcha.php:206
+msgid "Leave the comment in the spam queue"
+msgstr "Zanechať komentár vo fronte spam"
+
+#: wp-conditional-captcha.php:201
+msgid "Queue the comment for moderation"
+msgstr "Frontu komentár pre moderovanie"
+
+#: wp-conditional-captcha.php:202
+msgid "Approve the comment"
+msgstr "Schváliť komentár"
+
+#: wp-conditional-captcha.php:204
+msgid "When a CAPTCHA is <strong>not</strong> completed correctly:"
+msgstr "<strong>Keď CAPTCHA je ukončená korektne:</strong>"
+
+#: wp-conditional-captcha.php:207
+msgid "Trash the comment"
+msgstr "Kôš komentár"
+
+#: wp-conditional-captcha.php:208
+msgid "Delete the comment permanently"
+msgstr "Natrvalo odstrániť komentár"
+
+#: wp-conditional-captcha.php:213
+msgid "Tweaks"
+msgstr "Vychytávky"
+
+#: wp-conditional-captcha.php:215
+msgid "CAPTCHA Page Style"
+msgstr "CAPTCHA štýl stránky"
+
+#: wp-conditional-captcha.php:216
+msgid "If you want to style your CAPTCHA page to fit with your own theme, you can modify the default style."
+msgstr "Ak chcete štýl vášho CAPTCHA stranu s vlastný motív, môžete zmeniť predvolený štýl."
+
+#: wp-conditional-captcha.php:218
+#: wp-conditional-captcha.php:223
+msgid "Empty this box to revert to the default."
+msgstr "Prázdny toto políčko, ak chcete obnoviť predvolené."
+
+#: wp-conditional-captcha.php:220
+msgid "CAPTCHA Prompt"
+msgstr "CAPTCHA riadka"
+
+#: wp-conditional-captcha.php:221
+msgid "Users will be presented with the following prompt text when a CAPTCHA is displayed. You can modify it if you want."
+msgstr "Užívatelia budú prezentované s nasledujúci text výzvy zobrazení CAPTCHA. Môžete to upraviť, ak chcete."
+
+#: wp-conditional-captcha.php:223
+msgid "HTML is not allowed."
+msgstr "HTML nie je povolené."
+
+#: wp-conditional-captcha.php:225
+msgid "CAPTCHA Preview"
+msgstr "CAPTCHA náhľad"
+
+#: wp-conditional-captcha.php:227
+msgid "Click the button below to view a preview of what the CAPTCHA page will look like. If you have made changes above, please submit them first."
+msgstr "Kliknite na tlačidlo nižšie zobrazíte ukážku vzhľadu stránky CAPTCHA. Ak ste vykonali vyššie uvedené zmeny, predložte im najprv."
+
+#: wp-conditional-captcha.php:228
+msgid "Show preview of CAPTCHA page (opens in new window)"
+msgstr "Zobraziť náhľad stránky CAPTCHA (otvorí sa v novom okne)"
+
+#: wp-conditional-captcha.php:232
+msgid "Update settings"
+msgstr "Nastavenie aktualizácie"
+
+#: wp-conditional-captcha.php:240
+msgid "You have changed some settings above that affect how the CAPTCHA is displayed. Please submit the changes to be able to see a preview."
+msgstr "Zmenili ste niektoré vyššie uvedené nastavenia, ktoré ovplyvňujú zobrazovanie CAPTCHA. Predložte zmeny mohli vidieť náhľad."
+
+#: wp-conditional-captcha.php:253
+msgid "You cannot select the same action for both successful and unsuccessful CAPTCHA responses."
+msgstr "Nemôžete vybrať rovnaké akcie pre úspešné aj neúspešné CAPTCHA reakcie."
+
+#: wp-conditional-captcha.php:291
+msgid "%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>."
+msgstr "%s spam Komentáre sa automaticky zrušili od <em>Podmienené CAPTCHA</em>."
+
+#: wp-conditional-captcha.php:299
+msgid "Comment Rejected"
+msgstr "Pripomienky zamietnuté"
+
+#: wp-conditional-captcha.php:299
+msgid "Your comment will not be accepted. If you want to try again, please use the back button in your browser."
+msgstr "Váš komentár nebudú akceptované. Ak chcete skúsiť znova, použite tlačidlo späť v prehliadači."
+
+#: wp-conditional-captcha.php:324
+msgid "Comment rejected"
+msgstr "Pripomienky zamietnuté"
+
+#: wp-conditional-captcha.php:324
+#: wp-conditional-captcha.php:426
+msgid "Trying something funny, are we?"
+msgstr "Snaží niečo vtipné, sme?"
+
+#: wp-conditional-captcha.php:366
+msgid "This CAPTCHA is a visual preview only; you cannot submit it."
+msgstr "Táto CAPTCHA je len vizuálna ukážka; nemôže predložiť ju."
+
+#: wp-conditional-captcha.php:382
+msgid "I'm human!"
+msgstr "Som človek!"
+
+#: wp-conditional-captcha.php:390
+msgid "Verification required"
+msgstr "Vyžaduje sa overenie"
+
+#: wp-conditional-captcha.php:418
+msgid "first"
+msgstr "prvý"
+
+#: wp-conditional-captcha.php:418
+msgid "second"
+msgstr "druhý"
+
+#: wp-conditional-captcha.php:418
+msgid "third"
+msgstr "tretí"
+
+#: wp-conditional-captcha.php:418
+msgid "fourth"
+msgstr "štvrtý"
+
+#: wp-conditional-captcha.php:418
+msgid "fifth"
+msgstr "piaty"
+
+#: wp-conditional-captcha.php:418
+msgid "sixth"
+msgstr "šiesty"
+
+#: wp-conditional-captcha.php:420
+msgid "What are the %1$s and %2$s characters of the following sequence?"
+msgstr "Aké sú %1$ s a %2$ s znaky nasledovné sekvencie?"
+
+#: wp-conditional-captcha.php:434
+msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
+msgstr "Ospravedlňujeme sa, CAPTCHA nebolo zadané správne. (reCAPTCHA povedal: % s)"
+
+#: wp-conditional-captcha.php:438
+msgid "Sorry, the CAPTCHA wasn't entered correctly."
+msgstr "Ospravedlňujeme sa, CAPTCHA nebolo zadané správne."
+
+#: wp-conditional-captcha.php:495
+msgid "Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human."
+msgstr "Ospravedlňujeme sa, ale myslím, že by ste mohli byť spambot. Prosím, vyplňte CAPTCHA nižšie dokázať, že ste človek."
+
+#. Plugin Name of the plugin/theme
+msgid "Conditional CAPTCHA for Wordpress"
+msgstr "Podmienené CAPTCHA pre Wordpress"
+
+#. Plugin URI of the plugin/theme
+msgid "http://rayofsolaris.net/code/conditional-captcha-for-wordpress"
+msgstr "http://rayofsolaris.net/code/conditional-captcha-for-WordPress"
+
+#. Description of the plugin/theme
+msgid "A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam."
+msgstr "Plugin, ktorý žiada komentátor na dokončenie Jednoduchá CAPTCHA ak detekciu spamu plugin myslia ich komentár je spam. V súčasnosti podporuje Akismet a TypePad AntiSpam."
+
+#. Author of the plugin/theme
+msgid "Samir Shah"
+msgstr "Samir Shah"
+
+#. Author URI of the plugin/theme
+msgid "http://rayofsolaris.net/"
+msgstr "http://rayofsolaris.net/"
+

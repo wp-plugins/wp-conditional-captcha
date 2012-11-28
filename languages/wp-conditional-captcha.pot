@@ -1,14 +1,14 @@
-# Copyright (C) 2010 Conditional CAPTCHA for Wordpress
+# Copyright (C) 2012 Conditional CAPTCHA for Wordpress
 # This file is distributed under the same license as the Conditional CAPTCHA for Wordpress package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Conditional CAPTCHA for Wordpress 3.2.4\n"
+"Project-Id-Version: Conditional CAPTCHA for Wordpress 3.2.6\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
-"POT-Creation-Date: 2011-12-27 05:59:41+00:00\n"
+"POT-Creation-Date: 2012-11-28 04:02:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2012-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -254,59 +254,59 @@ msgstr ""
 msgid "Comment rejected"
 msgstr ""
 
-#: wp-conditional-captcha.php:324 wp-conditional-captcha.php:426
+#: wp-conditional-captcha.php:324 wp-conditional-captcha.php:427
 msgid "Trying something funny, are we?"
 msgstr ""
 
-#: wp-conditional-captcha.php:366
+#: wp-conditional-captcha.php:367
 msgid "This CAPTCHA is a visual preview only; you cannot submit it."
 msgstr ""
 
-#: wp-conditional-captcha.php:382
+#: wp-conditional-captcha.php:383
 msgid "I'm human!"
 msgstr ""
 
-#: wp-conditional-captcha.php:390
+#: wp-conditional-captcha.php:391
 msgid "Verification required"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "first"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "second"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "third"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "fourth"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "fifth"
 msgstr ""
 
-#: wp-conditional-captcha.php:418
+#: wp-conditional-captcha.php:419
 msgid "sixth"
 msgstr ""
 
-#: wp-conditional-captcha.php:420
+#: wp-conditional-captcha.php:421
 msgid "What are the %1$s and %2$s characters of the following sequence?"
 msgstr ""
 
-#: wp-conditional-captcha.php:434
+#: wp-conditional-captcha.php:435
 msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
 msgstr ""
 
-#: wp-conditional-captcha.php:438
+#: wp-conditional-captcha.php:439
 msgid "Sorry, the CAPTCHA wasn't entered correctly."
 msgstr ""
 
-#: wp-conditional-captcha.php:495
+#: wp-conditional-captcha.php:496
 msgid ""
 "Sorry, but I think you might be a spambot. Please complete the CAPTCHA below "
 "to prove that you are human."
@@ -317,7 +317,7 @@ msgid "Conditional CAPTCHA for Wordpress"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://rayofsolaris.net/code/conditional-captcha-for-wordpress"
+msgid "http://wordpress.org/extend/plugins/wp-conditional-captcha/"
 msgstr ""
 
 #. Description of the plugin/theme

@@ -30,7 +30,7 @@ If you come across any bugs or have suggestions, please use the plugin support f
 
 Thanks to the following people for contributing translations of this plugin:
 
-Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Web Hosting Geeks](http://webhostinggeeks.com), Russian - [Serge](http://verevkin.info), Spanish - [Reinventia](http://www.reinventia.net), Ukranian - [Stas](http://velokosiv.if.ua).
+Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Web Hosting Geeks](http://webhostinggeeks.com), Russian - [Serge](http://verevkin.info), Slovak - Branco ([Web Hosting Geeks](http://webhostinggeeks.com)), Spanish - [Reinventia](http://www.reinventia.net), Ukranian - [Stas](http://velokosiv.if.ua).
 
 == Frequently Asked Questions ==
 
