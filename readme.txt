@@ -1,7 +1,7 @@
 === Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
-Requires at least: 3.1
+Requires at least: 3.2
 Tested up to: 3.5
 Stable tag: trunk
 
@@ -58,7 +58,7 @@ There is a time limit of 10 minutes for the CAPTCHA to be submitted, otherwise i
 
 = Didn't you say before that the plugin works with TypePad Antispam? =
 
-Yes, and it still does. But the TypePad Antispam plugin hasn't been updated in over 4 years, and is not fully compatible with the latest version of WordPress, causing users to see error notices on the CAPTCHA page. I will probably drop support for it altogether in the near future.
+Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
 == Upgrade Notice ==
 

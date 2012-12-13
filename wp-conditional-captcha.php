@@ -2,7 +2,7 @@
 /*
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
-Description: A plugin that asks the commenter to complete a simple CAPTCHA if a spam detection plugin thinks their comment is spam. Currently supports Akismet and TypePad AntiSpam.
+Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
 Version: 3.2.6
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
@@ -25,13 +25,21 @@ class Conditional_Captcha {
 		
 		if( is_admin() ) {
 			add_action('admin_menu', array($this, 'settings_menu')	);
-			add_action('rightnow_end', array($this, 'rightnow'), 11); 	// after akismet/typepad
+			add_action('rightnow_end', array($this, 'rightnow'), 11); 	// after akismet
 		}
 	}
 	
 	private function load_options() {
 		// load options into $this->options, checking for version changes
 		$this->options = get_option( 'conditional_captcha_options', array() );
+		
+		// If it looks like first run, check compat
+		if ( empty( $this->options ) && version_compare( $GLOBALS['wp_version'], '3.2', '<' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			deactivate_plugins( __FILE__ );
+			if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'activate' || $_GET['action'] == 'error_scrape' ) )
+				exit( 'Conditional CAPTCHA for WordPress requires WordPress version 3.2 or greater.' );
+		}
 		
 		// if db_version has changed...
 		if( !isset( $this->options['db_version'] ) || $this->options['db_version'] != self::db_version ) {
@@ -63,27 +71,20 @@ class Conditional_Captcha {
 	
 	function load() {
 		$this->load_options();
-		$antispam = array(
-			// key => (name, check_function, caught_action)
-			'akismet' => array('Akismet', 'akismet_auto_check_comment', 'akismet_spam_caught'),
-			'typepad' => array('TypePad AntiSpam', 'typepadantispam_auto_check_comment', 'typepadantispam_spam_caught')
-		);
-		
-		// figure out which antispam solution to hook into - first match wins
-		foreach($antispam as $k => $v) if( function_exists($v[1]) ) {
-			$this->antispam = array( 'name' => $v[0], 'check_function' => $v[1], 'caught_action' => $v[2] );
-			add_filter('preprocess_comment', array($this, 'check_captcha'), 0); // BEFORE akismet/typepad
+
+		if( function_exists( 'akismet_auto_check_comment' ) ) {
+			$this->antispam = array( 'name' => 'Akismet', 'check_function' => 'akismet_auto_check_comment', 'caught_action' => 'akismet_spam_caught' );
+			add_filter( 'preprocess_comment', array( $this, 'check_captcha' ), 0 ); // BEFORE akismet
 			$this->ready = true;
-			break;
 		}
 				
 		if( !$this->ready && is_admin() ) 
-			add_action( 'admin_notices', array($this, 'plugin_inactive') );
+			add_action( 'admin_notices', array( $this, 'plugin_inactive' ) );
 	}
 	
 	function plugin_inactive() {
-		if( !strpos($_SERVER['REQUEST_URI'], 'wp-admin/plugins.php?page=conditional_captcha_settings') )
-			printf('<div class="updated fade"><p><strong>'.__('Conditional CAPTCHA is currently inactive. Please visit the plugin <a href="%s">configuration page</a> for information on how to fix this.', 'wp-conditional-captcha').'</strong></div>', 'plugins.php?page=conditional_captcha_settings');
+		if( get_current_screen()->id != 'plugins_page_conditional_captcha_settings' )
+			printf('<div class="updated fade"><p><strong>'.__('Conditional CAPTCHA is currently inactive. Please visit the plugin <a href="%s">configuration page</a> for information on how to fix this.', 'wp-conditional-captcha').'</strong></div>', admin_url( 'plugins.php?page=conditional_captcha_settings' ) );
 	}
 	
 	function settings_menu() {
@@ -132,10 +133,10 @@ class Conditional_Captcha {
 			
 			update_option('conditional_captcha_options', $opts);
 			$this->options = $opts;
-			$message = $errors ? '<div id="message" class="error fade"><p>' . implode( '</p><p>', $errors ) . '</p></div>' : '<div id="message" class="updated fade"><p>'.__('Options updated.', 'wp-conditional-captcha').'</p></div>';
+			$message = $errors ? '<div class="error fade"><p>' . implode( '</p><p>', $errors ) . '</p></div>' : '<div id="message" class="updated fade"><p>'.__( 'Options updated.', 'wp-conditional-captcha' ) . '</p></div>';
 		}
 		if( !$this->ready )
-			$message = '<div id="message" class="error fade" style="font-weight:bold; line-height:140%"><p>'.__('This plugin requires one of the following plugins to be active in order to work:', 'wp-conditional-captcha').'</p><ul class="indent" style="list-style:disc"><li>Akismet</li><li>TypePad AntiSpam</li></ul><p>'.__('Please install and activate one of these plugins before changing the settings below.', 'wp-conditional-captcha').'</p></div>';
+			$message = '<div class="error fade" style="font-weight:bold; line-height:140%"><p>'.__( 'This plugin requires Akismet to be active in order to work. Please install and activate Akismet before changing the settings below.', 'wp-conditional-captcha' ).'</p></div>';
 	?>
 	<style>
 	.indent {padding-left: 2em}
@@ -350,7 +351,7 @@ class Conditional_Captcha {
 
 	function spam_handler() {
 		if( 'delete' != $this->options['fail_action'] ) {
-			add_filter( 'pre_comment_approved', array( $this, 'set_comment_status' ) ); // will happen after akismet/typepad
+			add_filter( 'pre_comment_approved', array( $this, 'set_comment_status' ) ); // will happen after akismet
 			add_action( 'comment_post', array($this, 'do_captcha') ); // do captcha after comment is stored
 		}
 		else $this->do_captcha(); // otherwise do captcha now
