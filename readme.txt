@@ -56,25 +56,20 @@ There is a time limit of 10 minutes for the CAPTCHA to be submitted, otherwise i
 
 [Yes](http://rayofsolaris.net/code/captcha/).
 
+= What does the option to disable Akismet's comment history do? =
+
+Akismet stores a history for all comments on your site. It records whether or not it flagged the comment as spam, and any changes that you or other administrators make to the comment's status afterwards. This history is **never** deleted, and (in my view) just bloats your WordPress database without being at all useful. Selecting this option will prevent Akismet from storing comment histories. Note that this is feature is somewhat experimental, and not endorsed by the folks who wrote Akismet.
+
 = Didn't you say before that the plugin works with TypePad Antispam? =
 
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
-== Upgrade Notice ==
-
-= 3.2.3 =
-Performance improvement to reduce the amount of data stored in the database.
-
-= 3.2.2 =
-Minor modifications in response to changes in the latest version of Akismet.
-
-= 3.2.1 =
-Fixes a bug on the settings page that prevented some users from using the reCAPTCHA option.
-
-= 3.2 =
-Adds more flexibility to CAPTCHA pass/fail handling, and fixes a bug in the plugin's upgrade routine.
-
 == Changelog ==
+
+= 3.3 =
+* Added some options to tweaks Akismet's behaviour: prevent history and prevent checking comments from logged-in users
+* Fix to ensure that XML-RPC requests are not intercepted
+* Introduced some compatibility checking
 
 = 3.2.6 =
 * Don't intercept comments submitted via AJAX.
