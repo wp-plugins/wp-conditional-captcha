@@ -375,7 +375,8 @@ class Conditional_Captcha {
 
 	function spam_handler() {
 		if( 'delete' != $this->options['fail_action'] ) {
-			add_filter( 'pre_comment_approved', array( $this, 'set_comment_status' ) ); // will happen after akismet
+			remove_filter( 'pre_comment_approved', 'akismet_result_spam' );		// Akismet breaks all filters on this hook by dynamic use of remove_filter
+			add_filter( 'pre_comment_approved', array( $this, 'set_comment_status' ), 50 );
 			add_action( 'comment_post', array( $this, 'do_captcha' ) ); // do captcha after comment is stored
 		}
 		else $this->do_captcha(); // otherwise do captcha now
