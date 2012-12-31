@@ -18,13 +18,13 @@ This plugin provides a CAPTCHA complement to Akismet:
 * If they pass, it will be allowed into the spam queue (or approved, if you so choose).
 * Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your site hassle-free.
 
-The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://recaptcha.net) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
+The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://www.google.com/recaptcha) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
 
 **Requirements:**
 
-* You must have [Akismet](http://akismet.com) installed and active in order for this plugin to work.
+* You must have [Akismet](http://wordpress.org/extend/plugins/akismet/) installed and active in order for this plugin to work.
 
-If you come across any bugs or have suggestions, please use the plugin support forum or contact me at [rayofsolaris.net](http://rayofsolaris.net). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
+If you come across any bugs or have suggestions, please use the plugin support forum or [email me](http://rayofsolaris.net/contact/). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
 
 **Translations**
 
