@@ -2,7 +2,7 @@
 /*
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
-Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
+Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
 Version: 3.4
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
