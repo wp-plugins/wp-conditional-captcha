@@ -5,7 +5,7 @@ Requires at least: 3.3
 Tested up to: 3.5
 Stable tag: trunk
 
-Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam. Eliminates false positives.
+Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam.
 
 == Description ==
 
