@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that asks the commenter to complete a simple CAPTCHA if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.3
+Version: 3.4
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -14,8 +14,8 @@ if( !defined( 'ABSPATH' ) )
 	exit;
 
 class Conditional_Captcha {
-	private $ready = false;
-	private $options, $cssfile, $antispam;
+	private $antispam = false;
+	private $options, $cssfile;
 	const db_version = 6;					// options version, introduced in v2.6
 	
 	function __construct() {
@@ -66,16 +66,12 @@ class Conditional_Captcha {
 	}
 	
 	function load() {
-		if( function_exists( 'akismet_auto_check_comment' ) ) {
+		if( function_exists( 'akismet_auto_check_comment' ) )
 			$this->antispam = array( 'name' => 'Akismet', 'check_function' => 'akismet_auto_check_comment', 'caught_action' => 'akismet_spam_caught' );
-			$this->ready = true;
-		}
 		
 		if( is_admin() ) {
 			add_action( 'admin_menu', array( $this, 'settings_menu' ) );
 			add_action( 'rightnow_end', array( $this, 'rightnow'), 11 ); 	// after akismet
-			if( !$this->ready  ) 
-				add_action( 'admin_notices', array( $this, 'plugin_inactive' ) );
 		}
 		else {
 			add_filter( 'preprocess_comment', array( $this, 'check_captcha' ), 0 ); // BEFORE akismet
@@ -90,11 +86,6 @@ class Conditional_Captcha {
 		if( in_array( $meta_key, array( 'akismet_result', 'akismet_history', 'akismet_user', 'akismet_user_result' ) ) )
 			return false;
 		return $check;
-	}
-	
-	function plugin_inactive() {
-		if( get_current_screen()->id != 'plugins_page_conditional_captcha_settings' )
-			printf('<div class="updated fade"><p><strong>'.__('Conditional CAPTCHA is currently inactive. Please visit the plugin <a href="%s">configuration page</a> for information on how to fix this.', 'wp-conditional-captcha').'</strong></div>', admin_url( 'plugins.php?page=conditional_captcha_settings' ) );
 	}
 	
 	function settings_menu() {
@@ -148,13 +139,10 @@ class Conditional_Captcha {
 			$this->options = $opts;
 			$message = $errors ? '<div class="error fade"><p>' . implode( '</p><p>', $errors ) . '</p></div>' : '<div id="message" class="updated fade"><p>'.__( 'Options updated.', 'wp-conditional-captcha' ) . '</p></div>';
 		}
-		if( !$this->ready )
-			$message = '<div class="error fade" style="font-weight:bold; line-height:140%"><p>'.__( 'This plugin requires Akismet to be active in order to work. Please install and activate Akismet before changing the settings below.', 'wp-conditional-captcha' ).'</p></div>';
 	?>
 	<style>
 	.indent {padding-left: 2em}
 	#settings .input-error {border-color: red; background-color: #FFEBE8}
-	.akismet-not-ready, .disabled-option {color: #999 !important }
 	table textarea {font-family: Consolas,Monaco,monospace; background: #FAFAFA}
 	.form-table tr {border-top: 1px solid #EEE}
 	.form-table tr:first-child {border-top: none}
@@ -163,14 +151,20 @@ class Conditional_Captcha {
 	<?php screen_icon() ;?>
 	<h2><?php _e('Conditional CAPTCHA Settings', 'wp-conditional-captcha');?></h2>
 	<?php echo $message; ?>
-	<div id="settings" <?php if(!$this->ready) echo 'class="akismet-not-ready"';?>>
+	<div id="settings">
 	<p><?php _e("This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below.", 'wp-conditional-captcha');?></p>
 	<form action="" method="post" id="conditional-captcha-settings">
 	
 	<h3><?php _e( 'Basic setup', 'wp-conditional-captcha' ) ?></h3>
 	<table class="form-table"><tbody>
-	<tr><th><?php _e('Anti-spam Plugin', 'wp-conditional-captcha');?></th><td>
-	<p><?php printf( __('Conditional CAPTCHA has detected that <strong>%1$s</strong> is installed and active on your site. It will serve a CAPTCHA when %1$s identifies a comment as spam.', 'wp-conditional-captcha'), $this->antispam['name']);?></p>
+	<tr><th><?php _e('Plugin Mode', 'wp-conditional-captcha');?></th><td>
+	<p><?php 
+	if( $this->antispam )
+		_e( '<strong>Akismet-enhanced mode</strong>. Akismet is installed and active on your site. <em>Conditional CAPTCHA</em> will serve a CAPTCHA when Akismet identifies a comment as spam.', 'wp-conditional-captcha' );
+	else
+		echo __( '<strong>Basic mode</strong>. <em>Conditional CAPTCHA</em> will serve a CAPTCHA to all new commenters on your site.', 'wp-conditional-captcha' ) . '</p><p>' . __( 'If you install and activate the Akismet plugin, then it will only serve a CAPTCHA to comments that Akismet identifies as spam. This is recommended because it will reduce the number of commenters that ever have to complete a CAPTCHA.', 'wp-conditional-captcha' );
+	?>
+	</p>
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Method', 'wp-conditional-captcha');?></th><td>
 	<p><?php printf( __('The default captcha is a simple text-based test, but if you prefer you can also use a <a href="%s" target="_blank">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA.', 'wp-conditional-captcha'), 'http://www.google.com/recaptcha');?></p>
@@ -223,6 +217,7 @@ class Conditional_Captcha {
 	<li><input type="radio" name="fail_action" id="fail_action_trash" value="trash" <?php checked( $opts['fail_action'], 'trash' );?> /> <label for="fail_action_trash"><?php _e('Trash the comment', 'wp-conditional-captcha');?></label></li>
 	<li><input type="radio" name="fail_action" id="fail_action_delete" value="delete" <?php checked( $opts['fail_action'], 'delete' );?> /> <label for="fail_action_delete"><?php _e('Delete the comment permanently', 'wp-conditional-captcha');?></label></li>
 	</ul>
+	<p><?php printf( __( 'Note: this behaviour only applies if a CAPTCHA is served. The rest of the time, the <a href="%s" target="_blank">default WordPress settings</a> apply.', 'wp-conditional-captcha' ), admin_url( 'options-discussion.php' ) ) ;?></p>
 	</td></tr>
 	</table>
 	
@@ -244,12 +239,14 @@ class Conditional_Captcha {
 		<p><a class="button-secondary" target="_blank" href="<?php echo wp_nonce_url( menu_page_url('conditional_captcha_settings', false), 'conditional_captcha_preview' ) . '&amp;captcha_preview=1&amp;noheader=true'; ?>"><?php _e('Show preview of CAPTCHA page (opens in new window)', 'wp-conditional-captcha');?></a></p>
 	</div>
 	</td></tr>
+	<?php if( $this->antispam ): ?>
 	<tr><th><?php _e('Akismet Behaviour', 'wp-conditional-captcha');?></th><td>
 	<ul>
 	<li><input type="checkbox" name="akismet_no_login" id="akismet_no_login" value="1" <?php checked($opts['akismet_no_login']);?> /> <label for="akismet_no_login"><?php _e('Preventing Akismet from checking comments for logged-in users', 'wp-conditional-captcha');?></label></li>
 	<li><input type="checkbox" name="akismet_no_history" id="akismet_no_history" value="1" <?php checked($opts['akismet_no_history']);?> /> <label for="akismet_no_history"><?php printf( __('Prevent Akismet from storing comment histories (see <a href="%s" target="_blank">the FAQs</a> for more on this)', 'wp-conditional-captcha'), 'http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/' ) ;?></label></li>
 	</ul>
 	</td></tr>
+	<?php endif; // Akismet tweaks ?>
 	</tbody></table>
 	<p class="submit"><input class="button-primary" type="submit" name="submit" value="<?php _e('Update settings', 'wp-conditional-captcha');?>" /></p>
 	</form>
@@ -348,7 +345,8 @@ class Conditional_Captcha {
 				}
 				else {
 					// remove the spam plugin's hook - there is no point in checking again
-					remove_action( 'preprocess_comment', $this->antispam['check_function'], 1 );
+					if( $this->antispam )
+						remove_action( 'preprocess_comment', $this->antispam['check_function'], 1 );
 					// hook to set the comment status ourselves
 					add_filter( 'pre_comment_approved', array($this, 'set_passed_comment_status') );
 				}
@@ -356,7 +354,16 @@ class Conditional_Captcha {
 		}
 		elseif( !is_user_logged_in() && empty( $comment['comment_type'] ) && empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( !defined( 'XMLRPC_REQUEST' ) || !XMLRPC_REQUEST ) ) {	
 			// don't mess with pingbacks and trackbacks and logged in users and AJAX/XML-RPC requests
-			add_action( $this->antispam['caught_action'], array( $this, 'spam_handler' ) );	// set up spam intercept 
+			if( $this->antispam ) {
+				add_action( $this->antispam['caught_action'], array( $this, 'spam_handler' ) );	// set up spam intercept 
+			}
+			else {
+				// check if this appears to be a new commenter
+				global $wpdb;
+				$allowed = $wpdb->get_var( $wpdb->prepare( "SELECT comment_approved FROM $wpdb->comments WHERE comment_author = %s AND comment_author_email = %s and comment_approved = '1' LIMIT 1", $comment['comment_author'], $comment['comment_author_email'] ) );
+				if( $allowed != 1 )
+					$this->spam_handler();
+			}
 		}
 		
 		if( $this->options['akismet_no_login'] && is_user_logged_in() )

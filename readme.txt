@@ -1,28 +1,28 @@
 === Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
-Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet, TypePad AntiSpam
-Requires at least: 3.2
+Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
+Requires at least: 3.3
 Tested up to: 3.5
 Stable tag: trunk
 
-Asks commenters to complete a simple CAPTCHA if Akismet thinks their comment is spam. Eliminates false positives.
+Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam. Eliminates false positives.
 
 == Description ==
 
-Akismet is great at detecting spam, but if you get lots of it then you have to trawl through the spam queue in case there are any false positives.
+This plugin has two modes - basic and Akismet-enhanced.
 
-This plugin provides a CAPTCHA complement to Akismet:
+**Basic mode**: the plugin will serve a CAPTCHA to all commenters that aren't logged in and don't have a previously approved comment. Repeat commenters will never see a CAPTCHA.
 
-* If Akismet identifies a comment as spam, it will ask the commenter to complete a simple CAPTCHA.
+**Akismet-enhanced mode (recommended)**: the plugin will serve a CAPTCHA only if Akismet identifies a comment as spam (much less frequently than the basic mode). Just install an activate [Akismet](http://wordpress.org/extend/plugins/akismet/) to enable this mode.
+
+Note that a CAPTCHA will only appear **after** a comment is submitted. When a commenter is served a CAPTCHA:
+
 * If they fail, then the comment will be automatically discarded or trashed (and won't clutter up your spam queue). 
-* If they pass, it will be allowed into the spam queue (or approved, if you so choose).
-* Meanwhile, genuine commenters (i.e., those not flagged by Akismet) will be able to comment on your site hassle-free.
+* If they pass, it will be allowed into the spam queue (or approved, if you so choose). This means that any false positives from Akismet will be easily identified without you having to trawl through all the spam comments manually.
 
-The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://www.google.com/recaptcha) if you want something more robust (note: this requires getting a free API key). You can also style the CAPTCHA page to fit with your own Wordpress theme.
+Most genuine commenters will be able to comment on your site hassle-free, without ever seeing a CAPTCHA.
 
-**Requirements:**
-
-* You must have [Akismet](http://wordpress.org/extend/plugins/akismet/) installed and active in order for this plugin to work.
+The default CAPTCHA is a simple text-based test. There is also the option to use [reCAPTCHA](http://www.google.com/recaptcha) if you want something more robust (free API key required). You can also style the CAPTCHA page to fit with your own WordPress theme.
 
 If you come across any bugs or have suggestions, please use the plugin support forum or [email me](http://rayofsolaris.net/contact/). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
 
@@ -36,19 +36,13 @@ Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Dan
 
 = I've installed it, now how do I check that it works? =
 
-You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with `viagra-test-123` in the author/name field will always get it flagged by Akismet.
+You can try posting a spammy comment on your blog (make sure you're logged out) to check that it works, and to see what it looks like. Posting a comment with `viagra-test-123` in the author/name field will always get it flagged by Akismet. If you are using basic mode, make sure you use a name and email that have not got a previously approved comment.
 
 = Does this plugin work with other comment form modification plugins, or with themes that use Javascript to handle comment submission? =
 
 *Conditional CAPTCHA* relies on WordPress' native form handling procedures. This means it will not work with plugins or themes that generate and process their own comment forms. Such plugins include WP AJAX Edit Comments, tdo-miniforms, Backtype and Contact Form 7. **If comment submissions on your site are processed using AJAX, then the plugin will not work.**
 
-= I'm curious about how the plugin works. At what point is an unanswered CAPTCHA considered a failure, and what happens to the corresponding comment in the mean time? =
-
-Basically the plugin will assume a flagged comment is spam unless a correctly solved CAPTCHA determines otherwise. The process depends partly on what your settings are.
-
-*If the plugin is set to discard failed comments:* When a comment is flagged as spam, it is sent (as hidden data) back to the client along with the CAPTCHA (and not stored in the database). When the user submits the CAPTCHA, they resubmit the comment along with it.
-
-*If the plugin is set to store failed comments in the trash or spam queue:* When the comment is flagged, it is added to the database as trash/spam. If the CAPTCHA is passed, then its status will be modified accordingly. You can configure what happens to passed comments.
+= How long does the commenter have to complete the CAPTCHA? =
 
 There is a time limit of 10 minutes for the CAPTCHA to be submitted, otherwise it will be ignored even if it is correct.
 
@@ -65,6 +59,9 @@ Akismet stores a history for all comments on your site. It records whether or no
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
 == Changelog ==
+
+= 3.4 =
+* Added a basic mode. The plugin no longer needs Akismet in order to work!
 
 = 3.3 =
 * Added some options to tweaks Akismet's behaviour: prevent history and prevent checking comments from logged-in users
