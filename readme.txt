@@ -26,11 +26,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 If you come across any bugs or have suggestions, please use the plugin support forum or [email me](http://rayofsolaris.net/contact/). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
 
-**Translations**
-
-Thanks to the following people for contributing translations of this plugin:
-
-Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Lotus](http://simplu.mixnet.ro), Russian - [Serge](http://verevkin.info), Slovak - Branco ([Web Hosting Geeks](http://webhostinggeeks.com)), Spanish - [Reinventia](http://www.reinventia.net), Ukranian - [Stas](http://velokosiv.if.ua).
+Thanks to the following people for contributing translations of this plugin: Belorussian - [Marcis G](http://pc.de), Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Lotus](http://simplu.mixnet.ro), Russian - [Serge](http://verevkin.info), Spanish - [Reinventia](http://www.reinventia.net), Ukranian - [Stas](http://velokosiv.if.ua). Some of these translations are a bit out of date - updates welcome!
 
 == Frequently Asked Questions ==
 
