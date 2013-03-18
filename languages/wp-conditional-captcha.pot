@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Conditional CAPTCHA for Wordpress 3.4\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-conditional-captcha\n"
-"POT-Creation-Date: 2013-03-10 04:45:41+00:00\n"
+"POT-Creation-Date: 2013-03-18 03:58:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,77 +204,73 @@ msgstr ""
 msgid "You cannot select the same action for both successful and unsuccessful CAPTCHA responses."
 msgstr ""
 
-#: wp-conditional-captcha.php:310
-msgid "%s spam comment has been automatically discarded by <em>Conditional CAPTCHA</em>."
-msgid_plural "%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>."
+#: wp-conditional-captcha.php:311
+msgid "%s spam comment has been blocked by <em>Conditional CAPTCHA</em>."
+msgid_plural "%s spam comments have been blocked by <em>Conditional CAPTCHA</em>."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wp-conditional-captcha.php:318
+#: wp-conditional-captcha.php:319 wp-conditional-captcha.php:344
 msgid "Comment Rejected"
 msgstr ""
 
-#: wp-conditional-captcha.php:318
+#: wp-conditional-captcha.php:319
 msgid "Your comment will not be accepted. If you want to try again, please use the back button in your browser."
 msgstr ""
 
-#: wp-conditional-captcha.php:343
-msgid "Comment rejected"
-msgstr ""
-
-#: wp-conditional-captcha.php:343 wp-conditional-captcha.php:460
+#: wp-conditional-captcha.php:344 wp-conditional-captcha.php:461
 msgid "Trying something funny, are we?"
 msgstr ""
 
-#: wp-conditional-captcha.php:400
+#: wp-conditional-captcha.php:401
 msgid "This CAPTCHA is a visual preview only; you cannot submit it."
 msgstr ""
 
-#: wp-conditional-captcha.php:416
+#: wp-conditional-captcha.php:417
 msgid "I'm human!"
 msgstr ""
 
-#: wp-conditional-captcha.php:424
+#: wp-conditional-captcha.php:425
 msgid "Verification required"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "first"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "second"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "third"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "fourth"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "fifth"
 msgstr ""
 
-#: wp-conditional-captcha.php:452
+#: wp-conditional-captcha.php:453
 msgid "sixth"
 msgstr ""
 
-#: wp-conditional-captcha.php:454
+#: wp-conditional-captcha.php:455
 msgid "What are the %1$s and %2$s characters of the following sequence?"
 msgstr ""
 
-#: wp-conditional-captcha.php:468
+#: wp-conditional-captcha.php:469
 msgid "Sorry, the CAPTCHA wasn't entered correctly. (reCAPTCHA said: %s)"
 msgstr ""
 
-#: wp-conditional-captcha.php:472
+#: wp-conditional-captcha.php:473
 msgid "Sorry, the CAPTCHA wasn't entered correctly."
 msgstr ""
 
-#: wp-conditional-captcha.php:529
+#: wp-conditional-captcha.php:530
 msgid "Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human."
 msgstr ""
 
@@ -285,4 +281,3 @@ msgstr ""
 #. Description of the plugin/theme
 msgid "A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA."
 msgstr ""
-

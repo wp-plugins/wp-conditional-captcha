@@ -307,7 +307,8 @@ class Conditional_Captcha {
 	}
 	
 	function rightnow() {
-		if ($n = get_option('conditional_captcha_count') ) printf('<p class="conditional-captcha-stats">'._n('%s spam comment has been automatically discarded by <em>Conditional CAPTCHA</em>.', '%s spam comments have been automatically discarded by <em>Conditional CAPTCHA</em>.', $n, 'wp-conditional-captcha').'</p>', number_format_i18n($n) );
+		if ( current_user_can( 'moderate_comments' ) && $n = get_option('conditional_captcha_count') ) 
+			printf('<p class="conditional-captcha-stats">'._n('%s spam comment has been blocked by <em>Conditional CAPTCHA</em>.', '%s spam comments have been blocked by <em>Conditional CAPTCHA</em>.', $n, 'wp-conditional-captcha').'</p>', number_format_i18n( $n ) );
 	}
 
 	function check_captcha($comment) {
@@ -340,7 +341,7 @@ class Conditional_Captcha {
 					}
 					else {
 						// the comment doesn't exist!
-						$this->page(__('Comment rejected', 'wp-conditional-captcha'), '<p>'.__('Trying something funny, are we?', 'wp-conditional-captcha').'</p>');
+						$this->page(__('Comment Rejected', 'wp-conditional-captcha'), '<p>'.__('Trying something funny, are we?', 'wp-conditional-captcha').'</p>');
 					}
 				}
 				else {
