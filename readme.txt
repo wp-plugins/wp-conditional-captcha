@@ -56,6 +56,9 @@ Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4
 
 == Changelog ==
 
+= 3.4.1 =
+* Bugfix: make sure that WordPress can set commenter cookies when a CAPTCHA is completed correctly.
+
 = 3.4 =
 * Added a basic mode. The plugin no longer needs Akismet in order to work!
 
