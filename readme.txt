@@ -1,8 +1,9 @@
 === Conditional CAPTCHA for WordPress ===
 Contributors: solarissmoke
+Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
 Requires at least: 3.3
-Tested up to: 3.5
+Tested up to: 3.6
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam.
