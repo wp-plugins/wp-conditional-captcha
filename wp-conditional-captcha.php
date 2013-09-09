@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.4.1
+Version: 3.4.2
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -443,7 +443,7 @@ class Conditional_Captcha {
 	private function create_captcha() {
 		if( 'recaptcha' == $this->options['captcha-type'] ) {	
 			$html = '<script> var RecaptchaOptions = {theme: "' . $this->options['recaptcha_theme'] . '", lang: "' . $this->options['recaptcha_lang'] . '"}; </script>';
-			$html .= '<script src="http://www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="http://www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+			$html .= '<script src="//www.google.com/recaptcha/api/challenge?k='.$this->options['recaptcha-public-key'].'"></script><noscript><iframe id="recaptcha-no-js" src="//www.google.com/recaptcha/api/noscript?k='.$this->options['recaptcha-public-key'].'" height="300" width="700" frameborder="0"></iframe><br><textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
        <input type="hidden" name="recaptcha_response_field" value="manual_challenge"></noscript>';
 			return $html;
 		}

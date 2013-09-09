@@ -57,6 +57,9 @@ Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4
 
 == Changelog ==
 
+= 3.4.2 =
+* Added HTTPS compatibility for ReCAPTCHA.
+
 = 3.4.1 =
 * Bugfix: make sure that WordPress can set commenter cookies when a CAPTCHA is completed correctly.
 
