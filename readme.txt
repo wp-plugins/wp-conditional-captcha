@@ -2,8 +2,8 @@
 Contributors: solarissmoke
 Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
-Requires at least: 3.3
-Tested up to: 3.6
+Requires at least: 3.4
+Tested up to: 3.7
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam.
@@ -55,7 +55,16 @@ Akismet stores a history for all comments on your site. It records whether or no
 
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
+= What about the default WordPress comment settings? =
+
+All the default settings have priority (so it is recommended that you turn off the "Comment must be manually approved" and "Comment author must have a previously approved comment" settings as they will prevent the plugin from having any effect!). 
+
+The moderation keywords and blacklist on the discussion settings page also take priority - if a comment matches them it will be sent directly to moderation/spam, without the opportunity for the commenter to complete a CAPTCHA.
+
 == Changelog ==
+
+= 3.5 =
+* Changed logic to give priority to WordPress' built-in discussion options (especially moderation keywords/blacklist).
 
 = 3.4.2 =
 * Added HTTPS compatibility for ReCAPTCHA.

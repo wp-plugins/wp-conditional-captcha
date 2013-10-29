@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.4.2
+Version: 3.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -14,9 +14,9 @@ if( !defined( 'ABSPATH' ) )
 	exit;
 
 class Conditional_Captcha {
-	private $antispam = false;
+	private $antispam = false, $serve_captcha = false;
 	private $options, $cssfile;
-	const db_version = 6;					// options version, introduced in v2.6
+	const db_version = 7;					// options version, introduced in v2.6
 	
 	function __construct() {
 		$this->cssfile = dirname( __FILE__ ) . '/captcha-style.css';
@@ -59,6 +59,12 @@ class Conditional_Captcha {
 			// don't store CSS if it's the default
 			if( trim( str_replace( "\r\n", "\n", file_get_contents( $this->cssfile ) ) ) == trim( str_replace( "\r\n", "\n", $this->options['style'] ) ) )
 				$this->options['style'] = '';
+			
+			// Silently turn off comment_moderation/whitelist if it's an update from dbv6 - otherwise people will think it's stopped working
+			if( isset( $this->options['db_version'] ) && $this->options['db_version'] < 7 ) {
+				update_option( 'comment_moderation', '0' );
+				update_option( 'comment_whitelist', '0' );
+			}
 			
 			$this->options['db_version'] = self::db_version;
 			update_option('conditional_captcha_options', $this->options);
@@ -135,6 +141,12 @@ class Conditional_Captcha {
 			$opts['akismet_no_login'] = isset( $_POST['akismet_no_login'] );
 			$opts['akismet_no_history'] = isset( $_POST['akismet_no_history'] );
 			
+			// comment_moderation/whitelist
+			if( empty( $_POST['comment_moderation_on'] ) )
+				update_option( 'comment_moderation', '0' );
+			if( empty( $_POST['comment_whitelist_on'] ) )
+				update_option( 'comment_whitelist', '0' );
+
 			update_option('conditional_captcha_options', $opts);
 			$this->options = $opts;
 			$message = $errors ? '<div class="error fade"><p>' . implode( '</p><p>', $errors ) . '</p></div>' : '<div id="message" class="updated fade"><p>'.__( 'Options updated.', 'wp-conditional-captcha' ) . '</p></div>';
@@ -146,6 +158,7 @@ class Conditional_Captcha {
 	table textarea {font-family: Consolas,Monaco,monospace; background: #FAFAFA}
 	.form-table tr {border-top: 1px solid #EEE}
 	.form-table tr:first-child {border-top: none}
+	.cc-warning {border: 1px solid #900; border-radius: 5px; padding: 0 10px}
 	</style>
 	<div class="wrap">
 	<?php screen_icon() ;?>
@@ -169,19 +182,19 @@ class Conditional_Captcha {
 	<tr><th><?php _e('CAPTCHA Method', 'wp-conditional-captcha');?></th><td>
 	<p><?php printf( __('The default captcha is a simple text-based test, but if you prefer you can also use a <a href="%s" target="_blank">reCAPTCHA</a>. Note that you will need an API key to use reCAPTCHA.', 'wp-conditional-captcha'), 'http://www.google.com/recaptcha');?></p>
 	<ul class="indent">
-	<li><label for="type-default"><input type="radio" name="captcha-type" class="captcha-type" id="type-default" value="default" <?php checked( $opts['captcha-type'], 'default' );?> /> <?php _e('Use the default text-based CAPTCHA', 'wp-conditional-captcha');?></label></li>
-	<li><label for="type-recaptcha"><input type="radio" name="captcha-type" class="captcha-type" id="type-recaptcha" value="recaptcha" <?php checked( $opts['captcha-type'], 'recaptcha' );?> /> <?php _e('Use reCAPTCHA', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="captcha-type" class="captcha-type" id="type-default" value="default" <?php checked( $opts['captcha-type'], 'default' );?> /> <?php _e('Use the default text-based CAPTCHA', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="captcha-type" class="captcha-type" id="type-recaptcha" value="recaptcha" <?php checked( $opts['captcha-type'], 'recaptcha' );?> /> <?php _e('Use reCAPTCHA', 'wp-conditional-captcha');?></label></li>
 	</ul>
 	<div id="recaptcha-settings" class="indent">
 		<p><?php _e('If you wish to use reCAPTCHA, please enter your keys here:', 'wp-conditional-captcha');?></p>
 		<ul class="indent">
-		<li><label for="recaptcha-public-key"><?php _e('Public key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-public-key" id="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></label></li>
-		<li><label for="recaptcha-private-key"><?php _e('Private key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-private-key" id="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></label></li>
+		<li><label><?php _e('Public key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-public-key" id="recaptcha-public-key" size="50" value="<?php echo $opts['recaptcha-public-key'] ?>" /></label></li>
+		<li><label><?php _e('Private key:', 'wp-conditional-captcha');?> <input type="text" name="recaptcha-private-key" id="recaptcha-private-key" size="50" value="<?php echo $opts['recaptcha-private-key'] ?>" /></label></li>
 		</ul>
 		<p><small><?php printf(__('You can <a href="%s" target="_blank">sign up for a key here</a> (it\'s free)', 'wp-conditional-captcha'), 'http://www.google.com/recaptcha/whyrecaptcha');?></small></p>
 		<p><?php _e('reCAPTCHA offers some customisations that affect how it is displayed. You can modify these below.', 'wp-conditional-captcha') ?></p>
 		<ul class="indent">
-		<li><label for="recaptcha_theme"><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', 'wp-conditional-captcha'), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
+		<li><label><?php printf( __('reCAPTCHA theme (see <a href="%s" target="_blank">here</a> for examples):', 'wp-conditional-captcha'), 'http://code.google.com/apis/recaptcha/docs/customization.html') ?>
 		<select name="recaptcha_theme" id="recaptcha_theme">
 			<?php
 			$rc_themes = array('red' => 'Red (default)', 'white' => 'White', 'blackglass' => 'Blackglass', 'clean' => 'Clean');
@@ -191,7 +204,7 @@ class Conditional_Captcha {
 			}
 			?>
 		</select></label></li>
-		<li><label for="recaptcha_lang"><?php _e('reCAPTCHA language:', 'wp-conditional-captcha') ?>
+		<li><label><?php _e('reCAPTCHA language:', 'wp-conditional-captcha') ?>
 		<select name="recaptcha_lang" id="recaptcha_lang">
 			<?php
 			$rc_langs = array('en' => 'English (default)', 'nl' => 'Dutch', 'fr' => 'French', 'de' => 'German', 'pt' => 'Portuguese', 'ru' => 'Russian', 'es' => 'Spanish', 'tr' => 'Turkish');
@@ -205,17 +218,31 @@ class Conditional_Captcha {
 	</div>
 	</td></tr>
 	<tr><th><?php _e('Comment Handling', 'wp-conditional-captcha');?></th><td>
+	<?php 
+	if( get_option( 'comment_moderation' ) == 1 || get_option( 'comment_whitelist' ) == 1 ) {
+	?>
+	<div class="cc-warning">
+		<p style="color: #900"><?php printf( __( '<strong>Warning</strong>: the following WordPress <a href="%s" target="_blank">discussion settings</a> take priority over this plugin and will prevent it from displaying a CAPTCHA. It is recommended that you turn them off by <strong>unchecking</strong> the boxes below.', 'wp-conditional-captcha' ), admin_url( 'options-discussion.php' ) ); ?></p>
+		<p><?php _e( 'Before a comment appears' ); ?>:
+		<ul class="indent">
+		<li><label><input type="checkbox" name="comment_moderation_on" value="1" <?php checked( get_option( 'comment_moderation' ) ); ?> /> <?php _e( 'Comment must be manually approved' ) ?></label></li>
+		<li><label><input type="checkbox" name="comment_whitelist_on" value="1" <?php checked( get_option( 'comment_whitelist' ) ); ?> /> <?php _e( 'Comment author must have a previously approved comment' ) ?></label></li>
+		</ul>
+	</div>
+	<?php
+	}
+	?>
 	<p><?php _e('When a CAPTCHA is completed correctly:', 'wp-conditional-captcha');?></p>
 	<ul class="indent plugin-actions">
-	<li><input type="radio" name="pass_action" id="pass_action_spam" value="spam" <?php checked($opts['pass_action'], 'spam');?> /> <label for="pass_action_spam"><?php _e('Leave the comment in the spam queue', 'wp-conditional-captcha');?></label></li>
-	<li><input type="radio" name="pass_action" id="pass_action_hold" value="hold" <?php checked( $opts['pass_action'], 'hold');?> /> <label for="pass_action_hold"><?php _e('Queue the comment for moderation', 'wp-conditional-captcha');?></label></li>
-	<li><input type="radio" name="pass_action" id="pass_action_approve" value="approve" <?php checked( $opts['pass_action'], 'approve');?> /> <label for="pass_action_approve"><?php _e('Approve the comment', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="pass_action" id="pass_action_spam" value="spam" <?php checked($opts['pass_action'], 'spam');?> /> <?php _e('Leave the comment in the spam queue', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="pass_action" id="pass_action_hold" value="hold" <?php checked( $opts['pass_action'], 'hold');?> /> <?php _e('Queue the comment for moderation', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="pass_action" id="pass_action_approve" value="approve" <?php checked( $opts['pass_action'], 'approve');?> /> <?php _e('Approve the comment', 'wp-conditional-captcha');?></label></li>
 	</ul>
 	<p><?php _e('When a CAPTCHA is <strong>not</strong> completed correctly:', 'wp-conditional-captcha');?></p>
 	<ul class="indent plugin-actions">
-	<li><input type="radio" name="fail_action" id="fail_action_spam" value="spam" <?php checked( $opts['fail_action'], 'spam' );?> /> <label for="fail_action_spam"><?php _e('Leave the comment in the spam queue', 'wp-conditional-captcha');?></label></li>
-	<li><input type="radio" name="fail_action" id="fail_action_trash" value="trash" <?php checked( $opts['fail_action'], 'trash' );?> /> <label for="fail_action_trash"><?php _e('Trash the comment', 'wp-conditional-captcha');?></label></li>
-	<li><input type="radio" name="fail_action" id="fail_action_delete" value="delete" <?php checked( $opts['fail_action'], 'delete' );?> /> <label for="fail_action_delete"><?php _e('Delete the comment permanently', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="fail_action" id="fail_action_spam" value="spam" <?php checked( $opts['fail_action'], 'spam' );?> /> <?php _e('Leave the comment in the spam queue', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="fail_action" id="fail_action_trash" value="trash" <?php checked( $opts['fail_action'], 'trash' );?> /> <?php _e('Trash the comment', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="radio" name="fail_action" id="fail_action_delete" value="delete" <?php checked( $opts['fail_action'], 'delete' );?> /> <?php _e('Delete the comment permanently', 'wp-conditional-captcha');?></label></li>
 	</ul>
 	<p><?php printf( __( 'Note: this behaviour only applies if a CAPTCHA is served. The rest of the time, the <a href="%s" target="_blank">default WordPress settings</a> apply.', 'wp-conditional-captcha' ), admin_url( 'options-discussion.php' ) ) ;?></p>
 	</td></tr>
@@ -242,8 +269,8 @@ class Conditional_Captcha {
 	<?php if( $this->antispam ): ?>
 	<tr><th><?php _e('Akismet Behaviour', 'wp-conditional-captcha');?></th><td>
 	<ul>
-	<li><input type="checkbox" name="akismet_no_login" id="akismet_no_login" value="1" <?php checked($opts['akismet_no_login']);?> /> <label for="akismet_no_login"><?php _e('Preventing Akismet from checking comments for logged-in users', 'wp-conditional-captcha');?></label></li>
-	<li><input type="checkbox" name="akismet_no_history" id="akismet_no_history" value="1" <?php checked($opts['akismet_no_history']);?> /> <label for="akismet_no_history"><?php printf( __('Prevent Akismet from storing comment histories (see <a href="%s" target="_blank">the FAQs</a> for more on this)', 'wp-conditional-captcha'), 'http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/' ) ;?></label></li>
+	<li><label><input type="checkbox" name="akismet_no_login" id="akismet_no_login" value="1" <?php checked($opts['akismet_no_login']);?> /> <?php _e('Preventing Akismet from checking comments for logged-in users', 'wp-conditional-captcha');?></label></li>
+	<li><label><input type="checkbox" name="akismet_no_history" id="akismet_no_history" value="1" <?php checked($opts['akismet_no_history']);?> /> <?php printf( __('Prevent Akismet from storing comment histories (see <a href="%s" target="_blank">the FAQs</a> for more on this)', 'wp-conditional-captcha'), 'http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/' ) ;?></label></li>
 	</ul>
 	</td></tr>
 	<?php endif; // Akismet tweaks ?>
@@ -264,8 +291,8 @@ class Conditional_Captcha {
 			p.attr('disabled', f.is(':checked'));	// this should really use prop() but only works for jQuery > 1.6 (WP > 3.2)
 			f.attr('disabled', p.is(':checked'));
 			
-			p.parent().toggleClass('disabled-option',  p.is(':disabled'));
-			f.parent().toggleClass('disabled-option', f.is(':disabled'));
+			p.closest("li").toggleClass('disabled-option',  p.is(':disabled'));
+			f.closest("li").toggleClass('disabled-option', f.is(':disabled'));
 				
 			$('.plugin-actions li').unbind('click');
 			$('li.disabled-option').click( function(){
@@ -359,15 +386,18 @@ class Conditional_Captcha {
 		}
 		elseif( !is_user_logged_in() && empty( $comment['comment_type'] ) && empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( !defined( 'XMLRPC_REQUEST' ) || !XMLRPC_REQUEST ) ) {	
 			// don't mess with pingbacks and trackbacks and logged in users and AJAX/XML-RPC requests
+			add_filter( 'pre_comment_approved', array( $this, 'maybe_do_captcha' ), 1, 1 );
+
 			if( $this->antispam ) {
-				add_action( $this->antispam['caught_action'], array( $this, 'spam_handler' ) );	// set up spam intercept 
+				add_action( $this->antispam['caught_action'], array( $this, 'is_spam' ) );	// set up spam intercept
+				remove_filter( 'pre_comment_approved', 'akismet_result_spam' );		// Akismet breaks all filters on this hook by dynamic use of remove_filter
 			}
 			else {
 				// check if this appears to be a new commenter
 				global $wpdb;
 				$allowed = $wpdb->get_var( $wpdb->prepare( "SELECT comment_approved FROM $wpdb->comments WHERE comment_author = %s AND comment_author_email = %s and comment_approved = '1' LIMIT 1", $comment['comment_author'], $comment['comment_author_email'] ) );
 				if( $allowed != 1 )
-					$this->spam_handler();
+					$this->is_spam();
 			}
 		}
 		
@@ -375,6 +405,27 @@ class Conditional_Captcha {
 			remove_action( 'preprocess_comment', $this->antispam['check_function'], 1 );
 		
 		return $comment;
+	}
+	
+	/*
+	 * Decide whether to serve a captcha, and when.
+	 */
+	function maybe_do_captcha( $status ) {
+		// If WP has already spammed/moderated the comment, don't mess.
+		if( strval( $status ) !== '1' )
+			return $status;
+
+		if( $this->serve_captcha ) {
+			if( 'delete' != $this->options['fail_action'] ) {
+				add_action( 'comment_post', array( $this, 'do_captcha' ) ); // do captcha after comment is stored
+				return $this->options['fail_action'];
+			}
+			else {
+				$this->do_captcha(); // do it now and exit
+			}
+		}
+
+		return $status;
 	}
 	
 	function set_passed_comment_status() {
@@ -385,17 +436,8 @@ class Conditional_Captcha {
 		return $status;
 	}
 
-	function spam_handler() {
-		if( 'delete' != $this->options['fail_action'] ) {
-			remove_filter( 'pre_comment_approved', 'akismet_result_spam' );		// Akismet breaks all filters on this hook by dynamic use of remove_filter
-			add_filter( 'pre_comment_approved', array( $this, 'set_comment_status' ), 50 );
-			add_action( 'comment_post', array( $this, 'do_captcha' ) ); // do captcha after comment is stored
-		}
-		else $this->do_captcha(); // otherwise do captcha now
-	}
-	
-	function set_comment_status(){
-		return $this->options['fail_action'];
+	function is_spam() {
+		$this->serve_captcha = true;
 	}
 	
 	function do_captcha($comment_id = false, $real = true) {
@@ -533,7 +575,6 @@ class Conditional_Captcha {
 	private function prompt_text( $force_default = false ) {
 		return ( ! $force_default && $this->options['prompt_text'] ) ? $this->options['prompt_text'] : __( 'Sorry, but I think you might be a spambot. Please complete the CAPTCHA below to prove that you are human.', 'wp-conditional-captcha' );
 	}
-
 } // class
 
 // load
