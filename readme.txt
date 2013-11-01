@@ -63,6 +63,9 @@ The moderation keywords and blacklist on the discussion settings page also take 
 
 == Changelog ==
 
+= 3.6 =
+* Revert all the changes made in version 3.5. It breaks way too many things.
+
 = 3.5 =
 * Changed logic to give priority to WordPress' built-in discussion options (especially moderation keywords/blacklist).
 
