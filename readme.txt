@@ -55,12 +55,6 @@ Akismet stores a history for all comments on your site. It records whether or no
 
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
-= What about the default WordPress comment settings? =
-
-All the default settings have priority (so it is recommended that you turn off the "Comment must be manually approved" and "Comment author must have a previously approved comment" settings as they will prevent the plugin from having any effect!). 
-
-The moderation keywords and blacklist on the discussion settings page also take priority - if a comment matches them it will be sent directly to moderation/spam, without the opportunity for the commenter to complete a CAPTCHA.
-
 == Changelog ==
 
 = 3.6 =
