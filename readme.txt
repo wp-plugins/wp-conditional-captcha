@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
 Requires at least: 3.4
-Tested up to: 3.7
+Tested up to: 3.8
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam.
@@ -27,7 +27,7 @@ The default CAPTCHA is a simple text-based test. There is also the option to use
 
 If you come across any bugs or have suggestions, please use the plugin support forum or [email me](http://rayofsolaris.net/contact/). I can't fix it if I don't know it's broken! Please check the [FAQs](http://wordpress.org/extend/plugins/wp-conditional-captcha/faq/) for common issues.
 
-Thanks to the following people for contributing translations of this plugin: Belorussian - [Marcis G](http://pc.de), Brazilian Portuguese - Stefano, Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Lotus](http://simplu.mixnet.ro), Russian - [Serge](http://verevkin.info), Spanish - [Reinventia](http://www.reinventia.net), Swedish - [Hugo](http://www.umu.se), Ukranian - [Stas](http://velokosiv.if.ua). Some of these translations are a bit out of date - updates welcome!
+Thanks to the following people for contributing translations of this plugin: Belorussian - [Marcis G](http://pc.de), Brazilian Portuguese - Stefano, Czech - [Ted](http://trumplin.com/), Danish - Jesper, Dutch - [Rene](http://wpwebshop.com/books/), Estonian - [Itransition](http://www.itransition.com), Finnish - Jani, French - [Laurent](http://android-software.fr), German - [Jochen](http://jochenpreusche.com), Hindi - [Outshine Solutions](http://outshinesolutions.com), Hungarian - [Gyula](http://www.televizio.sk), Italian - [Gianni](http://gidibao.net), Lithuanian - Mantas, Polish - [Pawel](http://www.spin.siedlce.pl), Romanian - [Lotus](http://simplu.mixnet.ro), Russian - [Serge](http://verevkin.info), Spanish - [Reinventia](http://www.reinventia.net), Swedish - [Hugo](http://www.umu.se), Turkish - Tony, Ukranian - [Stas](http://velokosiv.if.ua). Some of these translations are a bit out of date - updates welcome!
 
 == Frequently Asked Questions ==
 
