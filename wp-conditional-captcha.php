@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA for Wordpress
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.6
+Version: 3.6.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -103,6 +103,7 @@ class Conditional_Captcha {
 		$missing_keys = __('You need to supply reCAPTCHA API keys if you want to use reCAPTCHA. Please enter private and public key values.', 'wp-conditional-captcha');
 		
 		if ( isset($_POST['submit']) ) {
+			check_admin_referer( 'conditional-captcha-settings' );
 			$errors = array();
 			foreach( array( 'pass_action', 'fail_action', 'style', 'captcha-type', 'recaptcha-private-key', 'recaptcha-public-key', 'recaptcha_theme', 'recaptcha_lang', 'prompt_text' ) as $o )
 				$opts[$o] = trim( $_POST[$o] );
@@ -248,6 +249,7 @@ class Conditional_Captcha {
 	</td></tr>
 	<?php endif; // Akismet tweaks ?>
 	</tbody></table>
+	<?php wp_nonce_field( 'conditional-captcha-settings' );?>
 	<p class="submit"><input class="button-primary" type="submit" name="submit" value="<?php _e('Update settings', 'wp-conditional-captcha');?>" /></p>
 	</form>
 	</div>

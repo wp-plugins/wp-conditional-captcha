@@ -57,6 +57,9 @@ Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4
 
 == Changelog ==
 
+= 3.6.1 =
+* Add CSRF protection to settings page.
+
 = 3.6 =
 * Revert all the changes made in version 3.5. It breaks way too many things.
 
