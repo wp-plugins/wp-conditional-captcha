@@ -1,4 +1,4 @@
-=== Conditional CAPTCHA for WordPress ===
+=== Conditional CAPTCHA ===
 Contributors: solarissmoke
 Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
