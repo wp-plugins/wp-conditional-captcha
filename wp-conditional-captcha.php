@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Conditional CAPTCHA for Wordpress
+Plugin Name: Conditional CAPTCHA
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.6.1
+Version: 3.6.2
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -231,7 +231,7 @@ class Conditional_Captcha {
 	</td></tr>
 	<tr><th><?php _e('CAPTCHA Prompt', 'wp-conditional-captcha');?></th><td>
 	<p><?php _e('Users will be presented with the following prompt text when a CAPTCHA is displayed. You can modify it if you want.', 'wp-conditional-captcha');?></p>
-	<textarea id="prompt_text" name="prompt_text" rows="2" cols="80"><?php echo esc_html( $this->prompt_text() );?></textarea>
+	<textarea id="prompt_text" name="prompt_text" rows="4" cols="80"><?php echo esc_html( $this->prompt_text() );?></textarea>
 	<p><small><?php echo __( 'Empty this box to revert to the default.', 'wp-conditional-captcha' ) . ' ' . __( 'HTML is not allowed.', 'wp-conditional-captcha' );?></small></p>
 	</td></tr>
 	<tr id="captcha_preview_row" class="hide-if-no-js"><th><?php _e('CAPTCHA Preview', 'wp-conditional-captcha');?></th><td>
@@ -318,7 +318,7 @@ class Conditional_Captcha {
 			$result = $this->captcha_is_valid();
 			if($result !== true) {
 				// they failed the captcha!
-				$this->page(__('Comment Rejected', 'wp-conditional-captcha'), '<p>'.$result.' '.__('Your comment will not be accepted. If you want to try again, please use the back button in your browser.', 'wp-conditional-captcha').'</p>');
+				$this->page( __('Comment Rejected', 'wp-conditional-captcha'), '<p>' . $result . ' ' . __( 'Your comment will not be accepted.', 'wp-conditional-captcha' ) . '</p><p><input type="button" onclick="history.go(-1);" value="' . __( 'Try Again', 'wp-conditional-captcha' ) . '"></p>' );
 			}
 			else {	
 				// the captcha was passed, so rewind the stats
@@ -405,7 +405,7 @@ class Conditional_Captcha {
 		// if $real is false, we are just showing a preview
 		
 		$nosubmit = $real ? '' : 'onsubmit=\'alert("'.__('This CAPTCHA is a visual preview only; you cannot submit it.', 'wp-conditional-captcha').'"); return false;\'';
-		$html = '<p>' . esc_html( $this->prompt_text() ) . '</p><form method="post" '.$nosubmit.'>';
+		$html = '<p>' . preg_replace( '#\n+#', '</p><p>', esc_html( $this->prompt_text() ) ) . '</p><form method="post" '.$nosubmit.'>';
 		
 		if($real){
 			// original post contents as hidden values, except the submit

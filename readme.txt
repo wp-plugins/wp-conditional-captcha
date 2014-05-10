@@ -43,10 +43,6 @@ You can try posting a spammy comment on your blog (make sure you're logged out) 
 
 There is a time limit of 10 minutes for the CAPTCHA to be submitted, otherwise it will be ignored even if it is correct.
 
-= Can I see a demo of what the CAPTCHA looks like? =
-
-[Yes](http://rayofsolaris.net/code/captcha/).
-
 = What does the option to disable Akismet's comment history do? =
 
 Akismet stores a history for all comments on your site. It records whether or not it flagged the comment as spam, and any changes that you or other administrators make to the comment's status afterwards. This history is **never** deleted, and (in my view) just bloats your WordPress database without being at all useful. Selecting this option will prevent Akismet from storing comment histories. Note that this is feature is somewhat experimental, and not endorsed by the folks who wrote Akismet.
@@ -56,6 +52,10 @@ Akismet stores a history for all comments on your site. It records whether or no
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
 == Changelog ==
+
+= 3.6.2 =
+* Allow line breaks in custom prompt message.
+* Add a "Try Again" button for failed CAPTCHAs, instead of telling users to go back in their browser.
 
 = 3.6.1 =
 * Add CSRF protection to settings page.
