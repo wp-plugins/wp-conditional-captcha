@@ -53,6 +53,9 @@ Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4
 
 == Changelog ==
 
+= 3.6.3 =
+* Fix PHP warnings on CAPTCHA page when other plugins have injected arrayed content into the contact form.
+
 = 3.6.2 =
 * Allow line breaks in custom prompt message.
 * Add a "Try Again" button for failed CAPTCHAs, instead of telling users to go back in their browser.

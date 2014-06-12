@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.6.2
+Version: 3.6.3
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -411,7 +411,7 @@ class Conditional_Captcha {
 			// original post contents as hidden values, except the submit
 			foreach ( $_POST as $k => $v ) 
 				if( 'submit' != $k ) 
-					$html .= '<input type="hidden" name="'.htmlspecialchars( $k ).'" value="'.htmlspecialchars( stripslashes($v) ).'" />';
+					$html .= '<input type="hidden" name="'.htmlspecialchars( $k ).'" value="'.htmlspecialchars( stripslashes_deep($v) ).'" />';
 			if('delete' != $this->options['fail_action']) $html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
 			// nonce
 			$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'">';
