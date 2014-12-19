@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Donate link: http://rayofsolaris.net/donate.php
 Tags: anti-spam, captcha, comments, spam, bot, robot, human, reCAPTCHA, Akismet
 Requires at least: 3.6
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 
 Asks commenters to complete a simple CAPTCHA if they don't have a previously approved comment, or if Akismet thinks their comment is spam.
@@ -52,6 +52,9 @@ Akismet stores a history for all comments on your site. It records whether or no
 Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4 years, and is not compatible with the latest version of WordPress.
 
 == Changelog ==
+
+= 3.7 =
+* Add support for the new No CAPTCHA ReCAPTCHA
 
 = 3.6.3 =
 * Fix PHP warnings on CAPTCHA page when other plugins have injected arrayed content into the contact form.
