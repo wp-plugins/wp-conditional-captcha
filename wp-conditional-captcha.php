@@ -3,7 +3,7 @@
 Plugin Name: Conditional CAPTCHA
 Plugin URI: http://wordpress.org/extend/plugins/wp-conditional-captcha/
 Description: A plugin that serves a CAPTCHA to new commenters, or if Akismet thinks their comment is spam. All other commenters never see a CAPTCHA.
-Version: 3.7
+Version: 3.7.1
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -401,10 +401,21 @@ class Conditional_Captcha {
 
 		if($real){
 			// original post contents as hidden values, except the submit
-			foreach ( $_POST as $k => $v )
-				if( 'submit' != $k )
-					$html .= '<input type="hidden" name="'.htmlspecialchars( $k ).'" value="'.htmlspecialchars( stripslashes_deep($v) ).'" />';
-			if('delete' != $this->options['fail_action']) $html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
+			foreach ( $_POST as $k => $v ) {
+				if( is_string( $v ) && 'submit' != $k ) {
+					$html .= '<input type="hidden" name="'.htmlspecialchars( $k ).'" value="'.htmlspecialchars( $v ).'" />';
+				}
+				elseif( is_array( $v ) ) {
+					$parts = explode( '&', http_build_query( $v ) );
+					foreach( $parts as $part ) {
+						list( $part_k, $part_v ) = explode( '=', $part );
+						$html .= '<input type="hidden" name="'.htmlspecialchars( urldecode( $part_k ) ).'" value="'.htmlspecialchars( urldecode( $part_v ) ).'" />';
+					}
+				}
+			}
+			if('delete' != $this->options['fail_action']) {
+				$html .= '<input type="hidden" name="trashed_id" value="'.$comment_id.'" />';
+			}
 			// nonce
 			$html .= '<input type="hidden" name="captcha_nonce" value="'.$this->get_nonce().'">';
 		}
@@ -414,12 +425,14 @@ class Conditional_Captcha {
 		$html .= $this->create_captcha();
 		$html .= '<p><input class="submit" type="submit" id="submit" value="'.__("I'm human!", 'wp-conditional-captcha').'" '. $disabled .'/></p></form>';
 
-		if( !$real )
+		if( !$real ) {
 			$html .= '<script type="text/javascript"> document.getElementById("submit").disabled = false; </script>';	// onsubmit event will stop submission
+		}
 
 		// stats - this count will be reversed if they correctly complete the CAPTCHA
-		if( $real )
+		if( $real ) {
 			update_option('conditional_captcha_count', get_option('conditional_captcha_count') + 1);
+		}
 		$this->page(__('Verification required', 'wp-conditional-captcha'), $html);
 	}
 

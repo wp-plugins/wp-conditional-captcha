@@ -53,6 +53,9 @@ Yes, but not any more. The TypePad Antispam plugin hasn't been updated in over 4
 
 == Changelog ==
 
+= 3.7.1 =
+* Fix handling of array inputs that other plugins might inject into the comment form.
+
 = 3.7 =
 * Add support for the new No CAPTCHA ReCAPTCHA
 
