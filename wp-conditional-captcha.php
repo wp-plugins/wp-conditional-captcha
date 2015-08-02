@@ -163,14 +163,13 @@ class Conditional_Captcha {
 	.form-table tr:first-child {border-top: none}
 	</style>
 	<div class="wrap">
-	<?php screen_icon() ;?>
-	<h2><?php _e('Conditional CAPTCHA Settings', 'wp-conditional-captcha');?></h2>
+	<h1><?php _e('Conditional CAPTCHA Settings', 'wp-conditional-captcha');?></h1>
 	<?php echo $message; ?>
 	<div id="settings">
 	<p><?php _e("This plugin provides a CAPTCHA complement to spam detection plugins. If your spam detection plugin identifies a comment as spam, the commenter will be presented with a CAPTCHA to prove that they are human. The behaviour of the plugin can be configured below.", 'wp-conditional-captcha');?></p>
 	<form action="" method="post" id="conditional-captcha-settings">
 
-	<h3><?php _e( 'Basic setup', 'wp-conditional-captcha' ) ?></h3>
+	<h2><?php _e( 'Basic setup', 'wp-conditional-captcha' ) ?></h2>
 	<table class="form-table"><tbody>
 	<tr><th><?php _e('Plugin Mode', 'wp-conditional-captcha');?></th><td>
 	<p><?php
@@ -213,7 +212,7 @@ class Conditional_Captcha {
 	</td></tr>
 	</table>
 
-	<h3><?php _e( 'Tweaks', 'wp-conditional-captcha' ) ?></h3>
+	<h2><?php _e( 'Tweaks', 'wp-conditional-captcha' ) ?></h2>
 	<table class="form-table">
 	<tr><th><?php _e('CAPTCHA Page Style', 'wp-conditional-captcha');?></th><td>
 	<p><?php _e('If you want to style your CAPTCHA page to fit with your own theme, you can modify the default style.', 'wp-conditional-captcha');?></p>
